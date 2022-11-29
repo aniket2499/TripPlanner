@@ -8,7 +8,7 @@ const PlacesSchema = new Schema({
   location: { type: String },
   imagesURL: { type: String },
   description: { type: String },
-  rating: { type: NumberString },
+  rating: { type: String },
   link: { type: String },
 });
 

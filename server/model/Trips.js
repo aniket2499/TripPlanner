@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const TripsSchema = new Schema({
-  tripName: { type: String, required: true },
+  tripName: { type: String },
   location: { type: String, required: true },
   destination: { type: String, required: true },
   tripDate: {
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
+    startDate: { type: Date },
+    endDate: { type: Date },
   },
   invites: [
     {

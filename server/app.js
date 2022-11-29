@@ -19,23 +19,6 @@ connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
 
-app.post("/users", async (req, res) => {
-  try {
-    const User = new Users({
-      FirstName: req.body.FirstName,
-      LastName: req.body.LastName,
-      Email: req.body.Email,
-      Password: req.body.Password,
-      DateOfBirth: req.body.DateOfBirth,
-    });
-    await Users.create(User);
-
-    res.status(201).send(User);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
-
 app.listen(port, () => {
   console.log(`Server running on port http://localhost:${port}`);
 });
