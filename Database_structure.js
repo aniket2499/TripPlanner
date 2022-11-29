@@ -2,8 +2,8 @@ const user_collection = {
   users: [
     {
       _id: "object ID",
-      FirstName: "Nirav",
-      LastName: "Jain",
+      FirstName: "Neel",
+      LastName: "Tejani",
       DateofBirth: "DOB",
       emailID: "",
       password: "", //HASHED PASS,
