@@ -4,7 +4,7 @@ const user_collection = {
       _id: "object ID",
       FirstName: "Nirav",
       LastName: "Jain",
-      DateofBirth: "DOB",
+      DateOfBirth: "DOB",
       emailID: "",
       password: "", //HASHED PASS,
       Trips: [id],
@@ -17,7 +17,7 @@ const trips_collection = {
     {
       id: "id",
       Location: "location",
-      Destination: "Amstredam",
+      Destination: "Amsterdam",
       StartDate: "Date", //OPTIONAL
       EndDate: "Date", //OPTIONAL
       Invites: [
@@ -41,7 +41,7 @@ const trips_collection = {
         {
           Date: "Data",
           WeatherDetails: {
-            Temerature: 0,
+            Temperature: 0,
             Description: "String",
             Icon: "id",
             Weather: "main",
@@ -50,7 +50,7 @@ const trips_collection = {
         },
       ],
       Hotels: [id],
-      Restraunts: [id],
+      Restaurants: [id],
       Attractions: [id],
     },
   ],
@@ -59,7 +59,7 @@ const trips_collection = {
 const hotel_collection = {
   id: "id",
   Name: "name",
-  Catrgory: "category",
+  Category: "category",
   Image: "image",
   Location: "address",
   Link: "link",
@@ -68,10 +68,10 @@ const hotel_collection = {
   Pricing: "pricing",
 };
 
-const restraunts_collection = {
+const restaurants_collection = {
   id: "id",
   Name: "name",
-  Catrgory: "category",
+  Category: "category",
   Image: "image",
   Location: "loc",
   Link: "Link",
@@ -86,7 +86,7 @@ const restraunts_collection = {
 const attractions_collection = {
   id: "id",
   Name: "name",
-  Catrgory: "category",
+  Category: "category",
   Location: "loc",
   ImagesURL: "image",
   Description: "desc",
