@@ -7,10 +7,10 @@ const RestaurantsSchema = new Schema({
   location: { type: String },
   link: { type: String },
   cuisine: { type: Array },
-  rating: { type: Number },
+  rating: { type: String },
   review: { type: String },
   description: { type: String },
   contact: { type: String },
-  pricing: { type: Number },
+  pricing: { type: String },
 });
 module.exports = mongoose.model("Restaurants", RestaurantsSchema);

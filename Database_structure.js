@@ -52,6 +52,22 @@ const trips_collection = {
       Hotels: [id],
       Restraunts: [id],
       Attractions: [id],
+      // Flights:{
+      //   Departure:"String",
+      //   Arrival:"String",
+      //   Price:"String",
+      //   Airline:"String",
+      //   Duration:"String",
+      //   Stops:"String",
+      //   DepartureTime:"String",
+      //   ArrivalTime:"String",
+      //   DepartureDate:"String",
+      //   ArrivalDate:"String",
+      //   DepartureAirport:"String",
+      //   ArrivalAirport:"String",
+      //   DepartureCity:"String",
+      //   ArrivalCity:"String",
+      // }
     },
   ],
 };
