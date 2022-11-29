@@ -16,8 +16,9 @@ const trips_collection = {
   trips: [
     {
       id: "id",
+      TripName: "trip name",
       Location: "location",
-      Destination: "Amsterdam",
+      Destination: "Amstredam",
       StartDate: "Date", //OPTIONAL
       EndDate: "Date", //OPTIONAL
       Invites: [
@@ -41,7 +42,7 @@ const trips_collection = {
         {
           Date: "Data",
           WeatherDetails: {
-            Temperature: 0,
+            Temerature: 0,
             Description: "String",
             Icon: "id",
             Weather: "main",
@@ -50,7 +51,7 @@ const trips_collection = {
         },
       ],
       Hotels: [id],
-      Restaurants: [id],
+      Restraunts: [id],
       Attractions: [id],
     },
   ],
@@ -59,7 +60,7 @@ const trips_collection = {
 const hotel_collection = {
   id: "id",
   Name: "name",
-  Category: "category",
+  Catrgory: "category",
   Image: "image",
   Location: "address",
   Link: "link",
@@ -68,10 +69,10 @@ const hotel_collection = {
   Pricing: "pricing",
 };
 
-const restaurants_collection = {
+const restraunts_collection = {
   id: "id",
   Name: "name",
-  Category: "category",
+  Catrgory: "category",
   Image: "image",
   Location: "loc",
   Link: "Link",
@@ -86,7 +87,7 @@ const restaurants_collection = {
 const attractions_collection = {
   id: "id",
   Name: "name",
-  Category: "category",
+  Catrgory: "category",
   Location: "loc",
   ImagesURL: "image",
   Description: "desc",

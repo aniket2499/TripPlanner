@@ -22,11 +22,12 @@ connection.once("open", () => {
 app.post("/users", async (req, res) => {
   try {
     const User = new Users({
-      FirstName: req.body.FirstName,
-      LastName: req.body.LastName,
-      Email: req.body.Email,
-      Password: req.body.Password,
-      DateOfBirth: req.body.DateOfBirth,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+      dateOfBirth: req.body.dateOfBirth,
+      trips: [],
     });
     await Users.create(User);
 
