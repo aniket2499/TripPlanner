@@ -1,4 +1,4 @@
-const main_collection = {
+const user_collection = {
   users: [
     {
       _id: "object ID",
@@ -7,72 +7,94 @@ const main_collection = {
       DateofBirth: "DOB",
       emailID: "",
       password: "", //HASHED PASS,
-      Trips: [
-        {
-          id: "id",
-          Destination: "Amstredam",
-          StartDate: "Date", //OPTIONAL
-          EndDate: "Date", //OPTIONAL
-          Invites: [
-            {
-              Email: "email",
-              Name: "name",
-            },
-          ], //OPTIONAL
-          Details: {
-            Notes: "String",
-            Explore: [
-              {
-                Image: "Image",
-                Title: "Title",
-                Link: "Link",
-              },
-            ], // OPTIONAL
-            PlacesToVisit: [
-              {
-                Name: "Name",
-                Image: "Image",
-                Link: "Link",
-              },
-            ],
-            Itinerary: [
-              {
-                Date: "Data",
-                PlacesToVisit: [
-                  {
-                    Name: "Name",
-                    Image: "Image",
-                    Link: "Link",
-                  },
-                ],
-              },
-            ],
-            Hotels: [
-              {
-                Name: "name",
-                Image: "image",
-                Location: "loc",
-                Link: "Link",
-              },
-            ],
-            Restraunts: [
-              {
-                Name: "name",
-                Image: "image",
-                Location: "loc",
-                Link: "Link",
-                Cuisine: "cuisine",
-              },
-            ],
-            Attractions: [
-              {
-                Name: "name",
-                Location: "loc",
-              },
-            ],
-          },
-        },
-      ],
+      Trips: [id],
     },
   ],
+};
+
+const trips_collection = {
+  trips: [
+    {
+      id: "id",
+      Location: "location",
+      Destination: "Amstredam",
+      StartDate: "Date", //OPTIONAL
+      EndDate: "Date", //OPTIONAL
+      Invites: [
+        {
+          Email: "email",
+          Name: "name",
+        },
+      ], //OPTIONAL
+
+      Notes: "String",
+      Explore: [
+        {
+          id: "id",
+          Image: "Image",
+          Title: "Title",
+          Link: "Link",
+        },
+      ], // OPTIONAL
+      PlacesToVisit: [id],
+      Itinerary: [
+        {
+          Date: "Data",
+          WeatherDetails: {
+            Temerature: 0,
+            Description: "String",
+            Icon: "id",
+            Weather: "main",
+          },
+          PlacesToVisit: [id],
+        },
+      ],
+      Hotels: [id],
+      Restraunts: [id],
+      Attractions: [id],
+    },
+  ],
+};
+
+const hotel_collection = {
+  id: "id",
+  Name: "name",
+  Catrgory: "category",
+  Image: "image",
+  Location: "address",
+  Link: "link",
+  Rating: "rating",
+  Review: "review",
+  Pricing: "pricing",
+};
+
+const restraunts_collection = {
+  id: "id",
+  Name: "name",
+  Catrgory: "category",
+  Image: "image",
+  Location: "loc",
+  Link: "Link",
+  Cuisine: ["Cuisine"],
+  Rating: "rating",
+  Review: "review",
+  Description: "desc",
+  Contact: "contact",
+  Pricing: "pricing",
+};
+
+const attractions_collection = {
+  id: "id",
+  Name: "name",
+  Catrgory: "category",
+  Location: "loc",
+  ImagesURL: "image",
+  Description: "desc",
+  Rating: "rating",
+  Link: "link",
+};
+
+const places_collection = {
+  id: "id",
+  Name: "name",
 };
