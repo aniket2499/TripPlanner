@@ -1,11 +1,13 @@
 const dataValidation = require("./validation.js");
 const axios = require("axios");
-
-require("dotenv").config();
+const dotenv = require("dotenv");
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const RESTAURANT_URL = "https://travel-advisor.p.rapidapi.com/restaurants/list";
 const ATTRACTIONS_URL =
   "https://travel-advisor.p.rapidapi.com/attractions/list";
+const API_KEY = process.env.API_KEY;
 
 const getAllRestaurant = async (code, pg, rating) => {
   code = dataValidation.checkLocationId(code);
@@ -24,8 +26,8 @@ const getAllRestaurant = async (code, pg, rating) => {
         min_rating: minimum_rating,
       },
       headers: {
-        "X-RapidAPI-Key": "56d61d7538msh1377dd7969b00bcp1bbbb3jsn5ccba37e3cee",
-        "X-RapidAPI-Host": process.env.API_KEY,
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
       },
     });
     console.log(data);
@@ -53,8 +55,8 @@ const getAllAttractions = async (code, pg, rating) => {
         sort: "recommended",
       },
       headers: {
-        "X-RapidAPI-Key": "56d61d7538msh1377dd7969b00bcp1bbbb3jsn5ccba37e3cee",
-        "X-RapidAPI-Host": process.env.API_KEY,
+        "X-RapidAPI-Key": API_KEY,
+        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
       },
     });
     console.log(data);

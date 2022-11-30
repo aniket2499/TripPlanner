@@ -45,7 +45,7 @@ app.use(
     secret: "This is A Secret Key for Signing Cookies",
     resave: false,
     saveUninitialized: true,
-  }),
+  })
 );
 
 // configMiddlewares(app);
