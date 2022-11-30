@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const UsersSchema = new Schema({
+const UserSchema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true, dropDups: true },
@@ -9,4 +9,4 @@ const UsersSchema = new Schema({
   trips: [{ type: Schema.Types.ObjectId, ref: "Trips" }],
 });
 
-module.exports = mongoose.model("Users", UsersSchema);
+module.exports = mongoose.model("User", UserSchema);
