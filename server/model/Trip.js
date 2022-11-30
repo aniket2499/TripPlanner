@@ -41,4 +41,4 @@ const TripSchema = new Schema({
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
 });
 
-module.exports = mongoose.model("Trip", TripsSchema);
+module.exports = mongoose.model("Trip", TripSchema);
