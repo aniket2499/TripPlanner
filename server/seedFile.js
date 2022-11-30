@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 // const Users = require("./model/Users");
 const Trips = require("./model/Trips");
 const Hotels = require("./model/Hotels");
+const Restaurants = require("./model/Restaurants");
+const Attractions = require("./model/Attractions");
+const Places = require("./model/Places");
 require("dotenv").config();
 
 const app = express();
@@ -70,25 +73,83 @@ connection.once("open", () => {
 //   }
 // });
 
-app.post("/hotels", async (req, res) => {
-  try {
-    const Hotel = new Hotels({
-      name: req.body.name,
-      category: req.body.category,
-      image: req.body.image,
-      location: req.body.location,
-      link: req.body.link,
-      rating: req.body.rating,
-      review: req.body.review,
-      pricing: req.body.pricing,
-    });
-    await Hotels.create(Hotel);
-    res.status(201).send(Hotel);
-  } catch (e) {
-    res.status(400).send(e);
-  }
-});
+// app.post("/hotels", async (req, res) => {
+//   try {
+//     const Hotel = new Hotels({
+//       name: req.body.name,
+//       category: req.body.category,
+//       image: req.body.image,
+//       location: req.body.location,
+//       link: req.body.link,
+//       rating: req.body.rating,
+//       review: req.body.review,
+//       pricing: req.body.pricing,
+//     });
+//     await Hotels.create(Hotel);
+//     res.status(201).send(Hotel);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
 
-app.listen(port, () => {
-  console.log(`Server running on port http://localhost:${port}`);
-});
+// app.post("/restaurants", async (req, res) => {
+//   try {
+//     const Restaurant = new Restaurants({
+//       name: req.body.name,
+//       category: req.body.category,
+//       image: req.body.image,
+//       location: req.body.location,
+//       link: req.body.link,
+//       cuisine: req.body.cuisine,
+//       rating: req.body.rating,
+//       review: req.body.review,
+//       description: req.body.description,
+//       contact: req.body.contact,
+//       pricing: req.body.pricing,
+//     });
+//     await Restaurants.create(Restaurant);
+//     res.status(201).send(Restaurant);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
+
+// app.post("/attractions", async (req, res) => {
+//   try {
+//     const Attraction = new Attractions({
+//       name: req.body.name,
+//       category: req.body.category,
+//       imagesURL: req.body.imagesURL,
+//       location: req.body.location,
+//       link: req.body.link,
+//       rating: req.body.rating,
+//       description: req.body.description,
+//     });
+//     await Attractions.create(Attraction);
+//     res.status(201).send(Attraction);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
+
+// app.post("/places", async (req, res) => {
+//   try {
+//     const Place = new Places({
+//       name: req.body.name,
+//       category: req.body.category,
+//       imagesURL: req.body.imagesURL,
+//       location: req.body.location,
+//       link: req.body.link,
+//       rating: req.body.rating,
+//       description: req.body.description,
+//     });
+//     await Places.create(Place);
+//     res.status(201).send(Place);
+//   } catch (e) {
+//     res.status(400).send(e);
+//   }
+// });
+
+// app.listen(port, () => {
+//   console.log(`Server running on port http://localhost:${port}`);
+// });
