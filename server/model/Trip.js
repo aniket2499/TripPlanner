@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const TripSchema = new Schema({
   tripName: { type: String },
-  location: { type: String, required: true },
+  cur_location: { type: String, required: true },
   destination: { type: String, required: true },
   tripDate: {
     startDate: { type: Date },
