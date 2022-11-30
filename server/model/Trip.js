@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const TripsSchema = new Schema({
+const TripSchema = new Schema({
   tripName: { type: String, required: true },
   location: { type: String, required: true },
   destination: { type: String, required: true },
@@ -41,4 +41,4 @@ const TripsSchema = new Schema({
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
 });
 
-module.exports = mongoose.model("Trips", TripsSchema);
+module.exports = mongoose.model("Trip", TripSchema);
