@@ -18,7 +18,7 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-const createUserById = async (req, res) => {
+const createUser = async (req, res) => {
   const newUser = new User(req.body);
 
   try {
@@ -54,7 +54,7 @@ const deleteUserById = async (req, res) => {
 module.exports = {
   getUserById,
   getAllUsers,
-  createUserById,
+  createUser,
   updateUserById,
   deleteUserById,
 };
