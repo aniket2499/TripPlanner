@@ -31,7 +31,6 @@ connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
 
-<<<<<<< HEAD
 mongoose.connection.on("disconnected", () => {
   console.log("mongoDB disconnected!");
 });
@@ -71,8 +70,6 @@ configRoutes(app);
 //   });
 // });
 
-=======
->>>>>>> d0c77cced7c73e41d497eea1dee743cdf1d7652a
 app.listen(port, () => {
   connect();
   console.log(`Server running on port http://localhost:${port}`);
