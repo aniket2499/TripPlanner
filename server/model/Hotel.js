@@ -6,8 +6,8 @@ const HotelSchema = new Schema({
   image: { type: String },
   location: { type: String },
   link: { type: String },
-  rating: { type: Number },
+  rating: { type: String },
   review: { type: String },
-  pricing: { type: Number },
+  pricing: { type: String },
 });
 module.exports = mongoose.model("Hotel", HotelSchema);

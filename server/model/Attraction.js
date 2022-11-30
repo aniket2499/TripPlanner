@@ -6,7 +6,7 @@ const AttractionSchema = new Schema({
   location: { type: String },
   imagesURL: { type: String },
   description: { type: String },
-  rating: { type: Number },
+  rating: { type: String },
   link: { type: String },
 });
 module.exports = mongoose.model("Attraction", AttractionSchema);
