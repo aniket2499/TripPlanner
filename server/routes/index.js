@@ -5,6 +5,7 @@ const hotelsRoute = require("./hotels");
 const placesRoute = require("./places");
 const restaurantsRoute = require("./restaurants");
 const tripsRoute = require("./trips");
+const flightsRoute = require("./flights");
 
 module.exports = async (app) => {
   app.use("/api/attractions", attractionsRoute);
@@ -14,7 +15,7 @@ module.exports = async (app) => {
   app.use("/api/places", placesRoute);
   app.use("/api/restaurants", restaurantsRoute);
   app.use("/api/trips", tripsRoute);
-
+  app.use("/api/flights", flightsRoute);
   app.use((err, req, res, next) => {
     const errorStatus = err.status || 500;
     const errorMessage = err.message || "Something went wrong!";
