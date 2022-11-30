@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const AttractionsSchema = new Schema({
+const AttractionSchema = new Schema({
   name: { type: String },
   category: { type: String },
   location: { type: String },
@@ -9,4 +9,4 @@ const AttractionsSchema = new Schema({
   rating: { type: String },
   link: { type: String },
 });
-module.exports = mongoose.model("Attractions", AttractionsSchema);
+module.exports = mongoose.model("Attraction", AttractionSchema);

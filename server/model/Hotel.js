@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const HotelsSchema = new Schema({
+const HotelSchema = new Schema({
   name: { type: String },
   category: { type: String },
   image: { type: String },
@@ -10,4 +10,4 @@ const HotelsSchema = new Schema({
   review: { type: String },
   pricing: { type: String },
 });
-module.exports = mongoose.model("Hotels", HotelsSchema);
+module.exports = mongoose.model("Hotel", HotelSchema);
