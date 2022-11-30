@@ -22,7 +22,7 @@ function isValidUsername(str, varName) {
   const regEx = /^[A-Za-z0-9._]{4,}$/gm;
   if (str.match(regEx) == null) {
     throw new Error(
-      `Invalid username (Must only contain alphanumeric characters, moust be at least 4 characters long and must not contain spaces)`,
+      `Invalid username (Must only contain alphanumeric characters, moust be at least 4 characters long and must not contain spaces)`
     );
   }
 }
@@ -34,7 +34,7 @@ function isValidPassword(str, varName) {
   const regEx = /^[\S]{6,}$/gm;
   if (str.match(regEx) == null) {
     throw new Error(
-      `Invalid password (Must be atleast 6 characters long and must not contain spaces)`,
+      `Invalid password (Must be atleast 6 characters long and must not contain spaces)`
     );
   }
 }
