@@ -61,13 +61,7 @@ const checkLocationId = (code) => {
   if (!code) {
     throw "Location code is not provided!!";
   }
-  if (typeof code !== "string") {
-    throw "Location code is not a string!!";
-  }
-  if (code.trim().length === 0) {
-    throw "Location code cannot be an empty";
-  }
-  code = code.trim();
+
   if (parseInt(code) < 1) {
     throw "Location code cannot be less than one";
   }
