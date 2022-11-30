@@ -1,11 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
-// const Users = require("./model/Users");
-const Trips = require("./model/Trips");
-const Hotels = require("./model/Hotels");
-const Restaurants = require("./model/Restaurants");
-const Attractions = require("./model/Attractions");
-const Places = require("./model/Places");
+const Users = require("./model/User");
+const Trips = require("./model/Trip");
+const Hotels = require("./model/Hotel");
+const Restaurants = require("./model/Restaurant");
+const Attractions = require("./model/Attraction");
+const Places = require("./model/Place");
 require("dotenv").config();
 
 const app = express();
@@ -24,22 +24,22 @@ connection.once("open", () => {
   console.log("MongoDB database connection established successfully");
 });
 
-// app.post("/users", async (req, res) => {
-//   try {
-//     const User = new Users({
-//       FirstName: req.body.FirstName,
-//       LastName: req.body.LastName,
-//       Email: req.body.Email,
-//       Password: req.body.Password,
-//       DateOfBirth: req.body.DateOfBirth,
-//     });
-//     await Users.create(User);
+app.post("/users", async (req, res) => {
+  try {
+    const User = new Users({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      password: req.body.password,
+      dateOfBirth: req.body.dateOfBirth,
+    });
+    await Users.create(User);
 
-//     res.status(201).send(User);
-//   } catch (e) {
-//     res.status(400).send(e);
-//   }
-// });
+    res.status(201).send(User);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
 // app.post("/trips", async (req, res) => {
 //   try {
@@ -150,6 +150,6 @@ connection.once("open", () => {
 //   }
 // });
 
-// app.listen(port, () => {
-//   console.log(`Server running on port http://localhost:${port}`);
-// });
+app.listen(port, () => {
+  console.log(`Server running on port http://localhost:${port}`);
+});
