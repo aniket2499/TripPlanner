@@ -46,7 +46,7 @@ const updateAttractionById = async (req, res, next) => {
     const updateAttraction = await Attraction.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true }
+      { new: true },
     );
     res.status(200).json(updateAttraction);
   } catch (err) {
