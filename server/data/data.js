@@ -19,6 +19,7 @@ const getAllRestaurant = async (code, pg, rating) => {
   pg = pg ? pg : "1";
   const cachedData = await client.hGet("cachedRestaurants", pg);
   if (cachedData) {
+    console.log("Displaying Data from redis!!");
     return JSON.parse(cachedData);
   } else {
     const limit = 20;

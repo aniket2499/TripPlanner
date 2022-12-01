@@ -6,7 +6,10 @@ const {
   createRestaurant,
   deleteRestaurantById,
   updateRestaurantById,
+  getRestaurantsFromApi,
 } = require("../controllers/restaurant");
+
+router.get("/data/:code/:pg", getRestaurantsFromApi);
 
 router.get("/", getAllRestaurants);
 

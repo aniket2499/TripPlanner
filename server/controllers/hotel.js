@@ -1,8 +1,22 @@
 const Hotel = require("../model/Hotel");
+const data = require("../data/data.js");
 
 const getHotelById = async (req, res, next) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
+    res.status(200).json(hotel);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getHotelsFromApi = async (req, res, next) => {
+  let page = req.params.pg;
+  let latitude = req.params.latitude;
+  let longitude = req.params.longitude;
+
+  try {
+    const hotel = data.getAllHotels(latitude, longitude, page);
     res.status(200).json(hotel);
   } catch (err) {
     next(err);
@@ -24,8 +38,8 @@ const createHotel = async (req, res, next) => {
   try {
     const savedHotel = await newHotel.save();
     res.status(201).json(savedHotel);
-  } catch (error) {
-    next;
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -57,4 +71,5 @@ module.exports = {
   createHotel,
   updateHotelById,
   deleteHotelById,
+  getHotelsFromApi,
 };

@@ -5,8 +5,8 @@ require("dotenv").config({
 });
 
 const amadeus = new Amadeus({
-  clientId: process.env.API_KEY,
-  clientSecret: process.env.API_SECRET,
+  clientId: process.env.API_FLIGHT_KEY,
+  clientSecret: process.env.API_FLIGHT_SECRET,
 });
 
 const getAllFlights = async (req, res, next) => {
