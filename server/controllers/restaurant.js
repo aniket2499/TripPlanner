@@ -1,9 +1,22 @@
 const Restaurant = require("../model/Restaurant");
+const data = require("../data/data.js");
 
 const getRestaurantById = async (req, res, next) => {
   try {
     const restaurant = await Restaurant.findById(req.params.id);
     res.status(200).json(restaurant);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getRestaurantsFromApi = async (req, res, next) => {
+  let page = req.params.pg;
+  let location_code = req.params.code;
+  try {
+    console.log("here");
+    const restaurants = await data.getAllRestaurant(location_code, page);
+    res.status(200).json(restaurants);
   } catch (err) {
     next(err);
   }
@@ -34,7 +47,7 @@ const updateRestaurantById = async (req, res, next) => {
     const updateRestaurant = await Restaurant.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true },
+      { new: true }
     );
     res.status(200).json(updateRestaurant);
   } catch (err) {
@@ -59,4 +72,5 @@ module.exports = {
   createRestaurant,
   updateRestaurantById,
   deleteRestaurantById,
+  getRestaurantsFromApi,
 };
