@@ -5,65 +5,69 @@ require("dotenv").config({
 });
 
 const amadeus = new Amadeus({
-  clientId: process.env.API_KEY,
-  clientSecret: process.env.API_SECRET,
+  clientId: process.env.API_FLIGHT_KEY,
+  clientSecret: process.env.API_FLIGHT_SECRET,
 });
 
 const getAllFlights = async (req, res, next) => {
   try {
-    const arrivalflights = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: req.params.originLocationCode,
-      destinationLocationCode: req.params.destinationLocationCode,
-      departureDate: req.params.departureDate,
-      adults: "1",
+    console.log("entered");
+    console.log(req.params);
+    // console.log(req.query.originLocationCode);
+    const arrivalFlights = await amadeus.shopping.flightOffersSearch.get({
+      originLocationCode: req.params.origin,
+      destinationLocationCode: req.params.dest,
+      departureDate: req.params.date,
+      adults: req.params.adults,
       max: "40",
     });
-    let arrivalflightData = arrivalflights.data;
-    let updatedflightData = [];
-    console.log(arrivalflightData);
-    for (let i = 0; i < arrivalflightData.length; i++) {
-      let flight = arrivalflightData[i];
-      console.log(flight);
-      let flightprice = {};
-      flightprice["flightpriceAmount"] = flight.price.total;
-      flightprice["flightpriceCurrency"] = flight.price.currency;
-      let flightitinerary = flight.itineraries;
-      let flightnumberofbookableseats = flight.numberOfBookableSeats;
+    let arrivalFlightData = arrivalFlights.data;
+    let updatedFlightData = [];
+    // console.log(arrivalFlightData);
+    for (let i = 0; i < arrivalFlightData.length; i++) {
+      let flight = arrivalFlightData[i];
+      // console.log(flight);
+      let flightPrice = {};
+      flightPrice["flightpriceAmount"] = flight.price.total;
+      flightPrice["flightpriceCurrency"] = flight.price.currency;
+      let flightItinerary = flight.itineraries;
+      let flightNumberOfBookableSeats = flight.numberOfBookableSeats;
       let flightDataObj = {
-        flightprice,
-        flightitinerary,
-        flightnumberofbookableseats,
+        flightPrice,
+        flightItinerary,
+        flightNumberOfBookableSeats,
       };
-      updatedflightData.push(flightDataObj);
+      updatedFlightData.push(flightDataObj);
     }
-    const departureflights = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: req.params.originLocationCode,
-      destinationLocationCode: req.params.destinationLocationCode,
-      departureDate: req.params.departureDate,
-      adults: "1",
+
+    const departureFlights = await amadeus.shopping.flightOffersSearch.get({
+      originLocationCode: req.params.origin,
+      destinationLocationCode: req.params.dest,
+      departureDate: req.params.date,
+      adults: req.params.adults,
       max: "40",
     });
-    let departureflightData = departureflights.data;
-    let departureupdatedflightData = [];
-    console.log(departureflightData);
-    for (let i = 0; i < departureflightData.length; i++) {
-      let flight = departureflightData[i];
+    let departureFlightData = departureFlights.data;
+    let departureUpdatedFlightData = [];
+    console.log(departureFlightData);
+    for (let i = 0; i < departureFlightData.length; i++) {
+      let flight = departureFlightData[i];
       console.log(flight);
-      let flightprice = {};
-      flightprice["flightpriceAmount"] = flight.price.total;
-      flightprice["flightpriceCurrency"] = flight.price.currency;
-      let flightitinerary = flight.itineraries;
-      let flightnumberofbookableseats = flight.numberOfBookableSeats;
+      let flightPrice = {};
+      flightPrice["flightPriceAmount"] = flight.price.total;
+      flightPrice["flightPriceCurrency"] = flight.price.currency;
+      let flightItinerary = flight.itineraries;
+      let flightNumberOfBookableSeats = flight.numberOfBookableSeats;
       let flightDataObj = {
-        flightprice,
-        flightitinerary,
-        flightnumberofbookableseats,
+        flightprice: flightPrice,
+        flightitinerary: flightItinerary,
+        flightNumberOfBookableSeats,
       };
-      departureupdatedflightData.push(flightDataObj);
+      departureUpdatedFlightData.push(flightDataObj);
     }
     let obj = {};
-    obj["arrivalflights"] = updatedflightData;
-    obj["departureflights"] = departureupdatedflightData;
+    obj["arrivalFlights"] = updatedFlightData;
+    obj["departureFlights"] = departureUpdatedFlightData;
 
     res.status(200).json(obj);
   } catch (err) {
