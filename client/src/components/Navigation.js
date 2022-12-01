@@ -53,7 +53,7 @@ const NavigationAuth = () => {
               >Home
               </Typography>
             </Button>
-            <Button key='accont' sx={{ color: '#fff' }}>
+            <Button key='account' sx={{ color: '#fff' }}>
               <Typography
                   variant="h6"
                   component="a"
