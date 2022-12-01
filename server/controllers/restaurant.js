@@ -14,7 +14,6 @@ const getRestaurantsFromApi = async (req, res, next) => {
   let page = req.params.pg;
   let location_code = req.params.code;
   try {
-    console.log("here");
     const restaurants = await data.getAllRestaurant(location_code, page);
     res.status(200).json(restaurants);
   } catch (err) {

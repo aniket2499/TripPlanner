@@ -1,9 +1,21 @@
 const Attraction = require("../model/Attraction");
+const data = require("../data/data.js");
 
 const getAttractionById = async (req, res, next) => {
   try {
     const attraction = await Attraction.findById(req.params.id);
     res.status(200).json(attraction);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getAttractionsFromApi = async (req, res, next) => {
+  let page = req.params.pg;
+  let location_code = req.params.code;
+  try {
+    const attractions = await data.getAllAttractions(location_code, page);
+    res.status(200).json(attractions);
   } catch (err) {
     next(err);
   }
@@ -24,7 +36,7 @@ const createAttraction = async (req, res, next) => {
   try {
     const savedAttraction = await newAttraction.save();
     res.status(201).json(savedAttraction);
-  } catch (error) {
+  } catch (err) {
     next(err);
   }
 };
@@ -34,7 +46,7 @@ const updateAttractionById = async (req, res, next) => {
     const updateAttraction = await Attraction.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true },
+      { new: true }
     );
     res.status(200).json(updateAttraction);
   } catch (err) {
@@ -59,4 +71,5 @@ module.exports = {
   createAttraction,
   updateAttractionById,
   deleteAttractionById,
+  getAttractionsFromApi,
 };

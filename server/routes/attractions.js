@@ -6,11 +6,14 @@ const {
   deleteAttractionById,
   updateAttractionById,
   getAttractionById,
+  getAttractionsFromApi,
 } = require("../controllers/attraction");
 
 router.get("/", getAllAttractions);
 
 router.get("/:id", getAttractionById);
+
+router.get("/data/:code/:pg", getAttractionsFromApi);
 
 router.post("/", function (req, res, next) {
   createAttraction(req, res, next);
