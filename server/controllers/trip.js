@@ -18,7 +18,7 @@ const getAllTrips = async (req, res, next) => {
   }
 };
 
-const createTrip = async (req, res) => {
+const createTrip = async (req, res, next) => {
   const newTrip = new Trip(req.body);
 
   try {
@@ -29,7 +29,7 @@ const createTrip = async (req, res) => {
   }
 };
 
-const updateTripById = async (req, res) => {
+const updateTripById = async (req, res, next) => {
   try {
     const updateTrip = await Trip.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updateTripById = async (req, res) => {
   }
 };
 
-const deleteTripById = async (req, res) => {
+const deleteTripById = async (req, res, next) => {
   try {
     await Trip.findByIdAndDelete(req.params.id);
     res.status(200).json(`Trip on ID (${req.params.id}) has been deleted...`);

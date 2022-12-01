@@ -18,18 +18,18 @@ const getAllPlaces = async (req, res, next) => {
   }
 };
 
-const createPlace = async (req, res) => {
+const createPlace = async (req, res, next) => {
   const newPlace = new Place(req.body);
 
   try {
     const savedPlace = await newPlace.save();
     res.status(201).json(savedPlace);
   } catch (error) {
-    next;
+    next(err);
   }
 };
 
-const updatePlacebyId = async (req, res) => {
+const updatePlacebyId = async (req, res, next) => {
   try {
     const updatePlace = await Place.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updatePlacebyId = async (req, res) => {
   }
 };
 
-const deletePlaceById = async (req, res) => {
+const deletePlaceById = async (req, res, next) => {
   try {
     await Place.findByIdAndDelete(req.params.id);
     res.status(200).json(`Place on ID (${req.params.id}) has been deleted...`);
