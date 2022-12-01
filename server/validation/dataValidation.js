@@ -24,6 +24,23 @@ const checkName = (string) => {
   return string;
 };
 
+const checkLocation = (string) => {
+  if (!string) throw "Location Undefined";
+
+  if (typeof string != "string") throw "Location must be of string Data Type";
+
+  string = string.trim();
+  if (string.length === 0) throw "Cannot have an empty Location";
+
+  var letterOnly = /^[a-zA-Z\s]*$/;
+  let result = string.match(letterOnly);
+
+  if (!(result == string && typeof result === "object"))
+    throw "Location should be Only Alphabets";
+
+  return string;
+};
+
 const checkEmail = (email) => {
   if (!email)
     throw { code: 400, message: "Please provide an id. Id is missing" };
@@ -97,4 +114,5 @@ module.exports = {
   checkPassword,
   checkLocationId,
   checkPageNum,
+  checkLocation,
 };
