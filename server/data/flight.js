@@ -9,29 +9,27 @@ const amadeus = new Amadeus({
   clientSecret: process.env.API_FLIGHT_SECRET,
 });
 
-const getAllFlights = async (req, res, next) => {
+const getAllFlights = async (Parameters) => {
   try {
-    console.log("entered");
-    console.log(req.params);
-    // console.log(req.query.originLocationCode);
     const arrivalFlights = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: req.params.origin,
-      destinationLocationCode: req.params.dest,
-      departureDate: req.params.date,
-      adults: req.params.adults,
+      originLocationCode: Parameters.origin,
+      destinationLocationCode: Parameters.dest,
+      departureDate: Parameters.date,
+      adults: Parameters.adults,
       max: "40",
     });
+
     let arrivalFlightData = arrivalFlights.data;
     let updatedFlightData = [];
-    // console.log(arrivalFlightData);
+
     for (let i = 0; i < arrivalFlightData.length; i++) {
       let flight = arrivalFlightData[i];
-      // console.log(flight);
       let flightPrice = {};
       flightPrice["flightpriceAmount"] = flight.price.total;
       flightPrice["flightpriceCurrency"] = flight.price.currency;
       let flightItinerary = flight.itineraries;
       let flightNumberOfBookableSeats = flight.numberOfBookableSeats;
+
       let flightDataObj = {
         flightPrice,
         flightItinerary,
@@ -41,19 +39,20 @@ const getAllFlights = async (req, res, next) => {
     }
 
     const departureFlights = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: req.params.origin,
-      destinationLocationCode: req.params.dest,
-      departureDate: req.params.date,
-      adults: req.params.adults,
+      originLocationCode: Parameters.origin,
+      destinationLocationCode: Parameters.dest,
+      departureDate: Parameters.date,
+      adults: Parameters.adults,
       max: "40",
     });
+
     let departureFlightData = departureFlights.data;
     let departureUpdatedFlightData = [];
-    console.log(departureFlightData);
+
     for (let i = 0; i < departureFlightData.length; i++) {
       let flight = departureFlightData[i];
-      console.log(flight);
       let flightPrice = {};
+
       flightPrice["flightPriceAmount"] = flight.price.total;
       flightPrice["flightPriceCurrency"] = flight.price.currency;
       let flightItinerary = flight.itineraries;
@@ -65,13 +64,14 @@ const getAllFlights = async (req, res, next) => {
       };
       departureUpdatedFlightData.push(flightDataObj);
     }
+
     let obj = {};
     obj["arrivalFlights"] = updatedFlightData;
     obj["departureFlights"] = departureUpdatedFlightData;
 
     res.status(200).json(obj);
   } catch (err) {
-    next(err);
+    throw err;
   }
 };
 
