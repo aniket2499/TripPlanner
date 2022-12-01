@@ -12,14 +12,14 @@ router.get("/", getAllPlaces);
 
 router.get("/:id", getPlaceById);
 
-router.post("/", function (req, res) {
-  createPlace;
+router.post("/", function (req, res, next) {
+  createPlace((req, res, next));
 });
 
 router.delete("/:id", deletePlaceById);
 
-router.patch("/:id", function (req, res) {
-  updatePlaceById;
+router.patch("/:id", function (req, res, next) {
+  updatePlaceById((req, res, next));
 });
 
 module.exports = router;

@@ -19,13 +19,15 @@ const getAllUsers = async (req, res, next) => {
 };
 
 const createUser = async (req, res, next) => {
+  console.log(req.body);
   const newUser = new User(req.body);
 
   try {
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
   } catch (err) {
-    next();
+    console.log(err);
+    return next(err);
   }
 };
 
