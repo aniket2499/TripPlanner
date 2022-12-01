@@ -4,7 +4,7 @@ import {doCreateUserWithEmailAndPassword} from '../firebase/FirebaseFunctions';
 import {AuthContext} from '../firebase/Auth';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-// import SocialSignIn from './SocialSignIn';
+import SocialSignIn from './SocialSignIn';
 import "../App.css";
 
 function SignUp() {
@@ -68,31 +68,10 @@ function SignUp() {
             </button>
           </form>
         </Grid>
+        <SocialSignIn />
       </Grid>
-      {/* {pswdMatch && <h4 className="error">{pswdMatch}</h4>}
-      <form onSubmit={handleSignUp}>
-        <label>
-          Name:
-          <input name='displayName' type='text' placeholder='Name' required/>
-        </label>
-        <label>
-          Email:
-          <input name='email' type='email' placeholder='Email' required/>
-        </label>
-        <label>
-          Password:
-          <input name='pwd1' id="pwd1" type='password' placeholder='Password' autoComplete="off" required/>
-        </label>
-        <label>
-          Confirm Password:
-          <input name='pwd2' id="pwd2" type='password' placeholder='Password' autoComplete="off" required/>
-        </label>
-        <button id='submitButton' name='submitButton' type='submit'>
-          Sign Up
-        </button>
-      </form> */}
       <br />
-      {/* <SocialSignIn /> */}
+      
     </div>
   );
 }
