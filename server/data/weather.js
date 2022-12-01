@@ -48,7 +48,6 @@ const getWeatherForeCastForLocation = async (date) => {
           icon: `http://openweathermap.org/img/wn/${e.weather[0].icon}@2x.png`,
         };
         weatherOnDay.push(forCastForAnyDate);
-        console.log(weatherOnDay);
         return weatherOnDay;
       }
     });
