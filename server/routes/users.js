@@ -13,14 +13,14 @@ router.get("/", getAllUsers);
 
 router.get("/:id", getUserById);
 
-router.post("/", function (req, res) {
-  createUser;
+router.post("/", function (req, res, next) {
+  createUser(req, res, next);
 });
 
 router.delete("/:id", deleteUserById);
 
-router.patch("/:id", function (req, res) {
-  updateUserById;
+router.patch("/:id", function (req, res, next) {
+  updateUserById(req, res, next);
 });
 
 module.exports = router;

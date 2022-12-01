@@ -12,14 +12,14 @@ router.get("/", getAllHotels);
 
 router.get("/:id", getHotelById);
 
-router.post("/", function (req, res) {
-  createHotel;
+router.post("/", function (req, res, next) {
+  createHotel(req, res, next);
 });
 
 router.delete("/:id", deleteHotelById);
 
-router.patch("/:id", function (req, res) {
-  updateHotelById;
+router.patch("/:id", function (req, res, next) {
+  updateHotelById(req, res, next);
 });
 
 module.exports = router;
