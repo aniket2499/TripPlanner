@@ -16,12 +16,10 @@ function App() {
       <Router>
         <Navigation />
         <Routes>
-        <Route path='/' element={<PrivateRoute />}>
           <Route exact path="/" element={<Home/>} />
-        </Route>
-        <Route path='/account' element={<PrivateRoute />}>
-          <Route path="/account" element={<Account/>} />
-        </Route>
+          <Route path='/account' element={<PrivateRoute />}>
+            <Route path="/account" element={<Account/>} />
+          </Route>
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<SignUp/>} />
         </Routes>
