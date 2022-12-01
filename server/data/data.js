@@ -16,6 +16,7 @@ const API_KEY = process.env.API_KEY;
 const getAllRestaurant = async (code, pg, rating) => {
   code = dataValidation.checkLocationId(code);
   pg = dataValidation.checkPageNum(pg);
+  pg = pg ? pg : "1";
   const cachedData = await client.hGet("cachedRestaurants", pg);
   if (cachedData) {
     return JSON.parse(cachedData);
@@ -51,6 +52,7 @@ const getAllRestaurant = async (code, pg, rating) => {
 const getAllAttractions = async (code, pg, rating) => {
   code = dataValidation.checkLocationId(code);
   pg = dataValidation.checkPageNum(pg);
+  pg = pg ? pg : "1";
   const cachedData = await client.hGet("cachedAttractions", pg);
   if (cachedData) {
     return JSON.parse(cachedData);
@@ -86,6 +88,7 @@ const getAllAttractions = async (code, pg, rating) => {
 const getAllHotels = async (code, pg) => {
   code = dataValidation.checkLocationId(code);
   pg = dataValidation.checkPageNum(pg);
+  pg = pg ? pg : "1";
   const cachedData = await client.hGet("cachedHotels", pg);
   if (cachedData) {
     return JSON.parse(cachedData);

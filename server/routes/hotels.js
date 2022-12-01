@@ -6,6 +6,7 @@ const {
   createHotel,
   deleteHotelById,
   updateHotelById,
+  getHotelsFromApi,
 } = require("../controllers/hotel");
 
 router.get("/", getAllHotels);

@@ -34,7 +34,7 @@ const updateHotelById = async (req, res, next) => {
     const updateHotel = await Hotel.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
-      { new: true },
+      { new: true }
     );
     res.status(200).json(updateHotel);
   } catch (err) {
