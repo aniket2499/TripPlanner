@@ -22,7 +22,7 @@ router.post("/", function (req, res, next) {
 router.delete("/:id", deleteAttractionById);
 
 router.patch("/:id", function (req, res, next) {
-  updateAttractionById((req, res, next));
+  updateAttractionById(req, res, next);
 });
 
 module.exports = router;
