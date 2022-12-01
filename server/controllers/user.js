@@ -18,18 +18,18 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
   const newUser = new User(req.body);
 
   try {
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
-  } catch (error) {
-    next;
+  } catch (err) {
+    next();
   }
 };
 
-const updateUserById = async (req, res) => {
+const updateUserById = async (req, res, next) => {
   try {
     const updateUser = await User.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updateUserById = async (req, res) => {
   }
 };
 
-const deleteUserById = async (req, res) => {
+const deleteUserById = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json(`User on ID (${req.params.id}) has been deleted...`);

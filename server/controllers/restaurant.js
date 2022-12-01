@@ -18,18 +18,18 @@ const getAllRestaurants = async (req, res, next) => {
   }
 };
 
-const createRestaurant = async (req, res) => {
+const createRestaurant = async (req, res, next) => {
   const newRestaurant = new Restaurant(req.body);
 
   try {
     const savedRestaurant = await newRestaurant.save();
     res.status(201).json(savedRestaurant);
   } catch (error) {
-    next;
+    next(err);
   }
 };
 
-const updateRestaurantById = async (req, res) => {
+const updateRestaurantById = async (req, res, next) => {
   try {
     const updateRestaurant = await Restaurant.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updateRestaurantById = async (req, res) => {
   }
 };
 
-const deleteRestaurantById = async (req, res) => {
+const deleteRestaurantById = async (req, res, next) => {
   try {
     await Restaurant.findByIdAndDelete(req.params.id);
     res

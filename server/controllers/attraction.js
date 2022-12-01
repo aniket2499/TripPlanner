@@ -18,18 +18,18 @@ const getAllAttractions = async (req, res, next) => {
   }
 };
 
-const createAttraction = async (req, res) => {
+const createAttraction = async (req, res, next) => {
   const newAttraction = new Attraction(req.body);
 
   try {
     const savedAttraction = await newAttraction.save();
     res.status(201).json(savedAttraction);
   } catch (error) {
-    next;
+    next(err);
   }
 };
 
-const updateAttractionById = async (req, res) => {
+const updateAttractionById = async (req, res, next) => {
   try {
     const updateAttraction = await Attraction.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updateAttractionById = async (req, res) => {
   }
 };
 
-const deleteAttractionById = async (req, res) => {
+const deleteAttractionById = async (req, res, next) => {
   try {
     await Attraction.findByIdAndDelete(req.params.id);
     res

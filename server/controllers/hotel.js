@@ -1,6 +1,6 @@
 const Hotel = require("../model/Hotel");
 
-const getHotelById = async (req, res) => {
+const getHotelById = async (req, res, next) => {
   try {
     const hotel = await Hotel.findById(req.params.id);
     res.status(200).json(hotel);
@@ -9,7 +9,7 @@ const getHotelById = async (req, res) => {
   }
 };
 
-const getAllHotels = async (req, res) => {
+const getAllHotels = async (req, res, next) => {
   try {
     const hotels = await Hotel.find();
     res.status(200).json(hotels);
@@ -18,7 +18,7 @@ const getAllHotels = async (req, res) => {
   }
 };
 
-const createHotel = async (req, res) => {
+const createHotel = async (req, res, next) => {
   const newHotel = new Hotel(req.body);
 
   try {
@@ -29,7 +29,7 @@ const createHotel = async (req, res) => {
   }
 };
 
-const updateHotelById = async (req, res) => {
+const updateHotelById = async (req, res, next) => {
   try {
     const updateHotel = await Hotel.findByIdAndUpdate(
       req.params.id,
@@ -42,7 +42,7 @@ const updateHotelById = async (req, res) => {
   }
 };
 
-const deleteHotelById = async (req, res) => {
+const deleteHotelById = async (req, res, next) => {
   try {
     await Hotel.findByIdAndDelete(req.params.id);
     res.status(200).json(`Hotel on ID (${req.params.id}) has been deleted...`);
