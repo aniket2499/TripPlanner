@@ -104,11 +104,67 @@ module.exports = {
   isValidPassword(str, varName) {
     //varName is used to display invalid variable name in error message
     if (!varName) varName = "Password";
-    isValidString(str, varName);
+    this.isValidString(str, varName);
     const regEx = /^[\S]{6,}$/gm;
     if (str.match(regEx) == null) {
       throw {
         message: `Invalid password (Must be atleast 6 characters long and must not contain spaces)`,
+        status: 400,
+      };
+    }
+  },
+
+  checkPassword(password, varName) {
+    // this.checkString(password, varName);
+    let passre =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+
+    if (!password.match(passre)) {
+      throw {
+        message: `Entered ${varName} is Invalid password`,
+        status: 400,
+      };
+    } else {
+      return password;
+    }
+  },
+
+  checkEmail(inputEmail, varName) {
+    this.checkString(inputEmail, varName);
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!inputEmail.toLowerCase().match(re)) {
+      throw {
+        message: `Entered ${varName} is Invalid email`,
+        status: 400,
+      };
+    } else {
+      return inputEmail;
+    }
+  },
+
+  isValidDate(date, varName) {
+    try {
+      if (
+        !/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/.test(date)
+      ) {
+        throw {
+          message: `Enter a valid date in MM/DD/YYYY format for ${varName}`,
+          status: 400,
+        };
+      }
+      const today = new Date();
+      if (Math.abs(today.getFullYear() - parseInt(date.split("/")[2])) < 13) {
+        throw {
+          message: `Error: User must be 13 years old to register`,
+          status: 400,
+        };
+      }
+      return date;
+    } catch (e) {
+      throw {
+        message: e.message,
         status: 400,
       };
     }

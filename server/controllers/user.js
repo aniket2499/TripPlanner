@@ -4,7 +4,7 @@ const validation = require("../validation/routesValidation");
 const getUserById = async (req, res, next) => {
   try {
     id = validation.checkId(req.params.id, "User Id");
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(id);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -32,10 +32,24 @@ const createUser = async (req, res, next) => {
   const newUserInfo = new User(req.body);
 
   try {
-    newUserInfo.firstName = validation.checkString();
-    newUserInfo.lastName = validation.checkString();
-
-    const savedUser = await newUser.save();
+    newUserInfo.firstName = validation.checkString(
+      newUserInfo.firstName,
+      "First Name",
+    );
+    newUserInfo.lastName = validation.checkString(
+      newUserInfo.lastName,
+      "Last Name",
+    );
+    newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
+    newUserInfo.password = validation.checkPassword(
+      newUserInfo.password,
+      "User Password",
+    );
+    newUserInfo.dateOfBirth = validation.isValidDate(
+      newUserInfo.dateOfBirth,
+      "Date of Birth",
+    );
+    const savedUser = await newUserInfo.save();
     res.status(201).json(savedUser);
   } catch (err) {
     next(err);
