@@ -15,13 +15,16 @@ const getLocationsCoordinates = async (location) => {
   try {
     location = dataValidation.checkLocation(location);
     const data = await axios.get(
-      SEARCH_URL + `&query=${location}` + `&limit=1`
+      SEARCH_URL + `&query=${location}` + `&limit=1`,
     );
     if (!data.data.data[0]) {
       throw new Error("Enter a valid Location");
     } else {
-      const { latitude, longitude } = data.data.data[0];
-      return { lat: latitude, lon: longitude };
+      const obj = {
+        lat: data.data.data[0].latitude,
+        lon: data.data.data[0].longitude,
+      };
+      return obj;
     }
   } catch (error) {
     console.log(error);
@@ -36,8 +39,9 @@ const getLocationDetails = async (location) => {
         `?input=${location}` +
         `&key=${process.env.GOOGLE_API_KEY}` +
         `&inputtype=textquery` +
-        `&fields=name,photos`
+        `&fields=name,photos`,
     );
+    // console.log(data);
     if (!data.data.candidates[0]) {
       throw new Error("Enter a valid Location");
     }
@@ -64,7 +68,7 @@ const getPhotos = async (location) => {
           `?photoreference=${photo_reference}` +
           `&key=${process.env.GOOGLE_API_KEY}` +
           `&maxwidth=400` +
-          `&maxheight=400`
+          `&maxheight=400`,
       );
 
       return data.config.url;
@@ -76,7 +80,7 @@ const getPhotos = async (location) => {
   }
 };
 
-getPhotos("Neemuch");
+getLocationDetails("chicago");
 
 module.exports = {
   getLocationsCoordinates,
