@@ -5,9 +5,14 @@ import Home from "./components/Home";
 import Account from "./components/Account";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
+import SignOut from "./components/SignOut";
 import Navigation from "./components/Navigation";
 import { AuthProvider } from "./firebase/Auth";
 import PrivateRoute from "./components/PrivateRoute";
+import Flights from "./components/Flights";
+import Restaurants from "./components/Restaurants";
+import Hotels from "./components/Hotels";
+import Attractions from "./components/Attractions";
 
 import {
   createTheme,
@@ -15,6 +20,7 @@ import {
   CssBaseline,
   responsiveFontSizes,
 } from "@mui/material";
+import ChangePassword from "./components/ChangePassword";
 
 let theme = createTheme({
   palette: {
@@ -161,7 +167,7 @@ let theme = createTheme({
   overrides: {
     MuiAppBar: {
       colorInherit: {
-        backgroundColor: "#fafafa",
+        backgroundColor: "#ffffff",
         color: "#000000",
       },
     },
@@ -197,15 +203,25 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <Router>
-          <Navigation />
-          <Routes>
-            <Route exact path="/" element={<Home />} />
-            <Route path="/account" element={<PrivateRoute />}>
-              <Route path="/account" element={<Account />} />
-            </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-          </Routes>
+          <div className="App-header">
+            <Navigation />
+          </div>
+          <div className="App-body">
+            <Routes>
+              <Route path="/home" element={<Home />} />
+              <Route path="/account" element={<PrivateRoute />}>
+                <Route path="/account" element={<Account />} />
+              </Route>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signout" element={<SignOut />} />
+              <Route path="/change-password" element={<ChangePassword />} />
+              <Route path="/flights" element={<Flights />} />
+              <Route path="/restaurants" element={<Restaurants />} />
+              <Route path="/hotels" element={<Hotels />} />
+              <Route path="/attractions" element={<Attractions />} />
+            </Routes>
+          </div>
         </Router>
       </AuthProvider>
     </ThemeProvider>
