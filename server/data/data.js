@@ -15,8 +15,8 @@ const RESTAURANT_URL =
 const ATTRACTION_URL = "https://travel-advisor.p.rapidapi.com/attractions/list";
 const API_KEY = process.env.API_KEY;
 const amadeus = new Amadeus({
-  clientId: process.env.AMADEUS_HOTEL_KEY,
-  clientSecret: process.env.API_AMADEUS_HOTEL_SECRET,
+  clientId: process.env.API_FLIGHT_KEY,
+  clientSecret: process.env.API_FLIGHT_SECRET,
 });
 const getAllRestaurant = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
