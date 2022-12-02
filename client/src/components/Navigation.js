@@ -1,13 +1,16 @@
-import React, {useContext} from 'react';
-import {AuthContext} from '../firebase/Auth';
-import SignOutBtn from './SignOut';
-import '../App.css';
+import React, { useContext } from "react";
+import { AuthContext } from "../firebase/Auth";
+import SignOutBtn from "./SignOut";
+import "../App.css";
 
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
+import {
+  Container,
+  Button,
+  Typography,
+  Toolbar,
+  AppBar,
+  Link,
+} from "@mui/material";
 
 const Navigation = () => {
   const currentUser = useContext(AuthContext);
@@ -16,143 +19,54 @@ const Navigation = () => {
 
 const NavigationAuth = () => {
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
-      <Toolbar >
-      <Typography
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            TRAVEL ADVISOR
-          </Typography>
-          <Button key='home' sx={{ color: '#fff' }}>
-            <Typography
-                variant="h6"
-                component="a"
-                href="/"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', sm: 'block' },
-                  flexGrow: 1,
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'white',
-                }}
-              >Home
+    <Container>
+      <AppBar position="static" color="inherit">
+        <Container maxWidth="xl">
+          <Toolbar>
+            <Typography variant="h4" noWrap component="a" href="/">
+              TRAVEL ADVISOR
+            </Typography>
+            <Link key="home">
+              <Typography variant="h6" component="a" href="/">
+                Home
               </Typography>
-            </Button>
-            <Button key='account' sx={{ color: '#fff' }}>
-              <Typography
-                  variant="h6"
-                  component="a"
-                  href="/account"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', sm: 'block' },
-                    flexGrow: 1,
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'white',
-                  }}
-                >Account
-                </Typography>
-            </Button>
+            </Link>
+            <Link key="account">
+              <Typography variant="h6" component="a" href="/account">
+                Account
+              </Typography>
+            </Link>
             <SignOutBtn />
-        </Toolbar>
-      </Container>
-    </AppBar>
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </Container>
   );
 };
 
-
-
 const NavigationNonAuth = () => {
-
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="inherit">
       <Container maxWidth="xl">
-      <Toolbar >
-      <Typography
-            variant="h4"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
+        <Toolbar>
+          <Typography variant="h4" noWrap component="a" href="/">
             TRAVEL ADVISOR
           </Typography>
-          <Button key='home' sx={{ color: '#fff' }}>
-            <Typography
-                variant="h6"
-                component="a"
-                href="/"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', sm: 'block' },
-                  flexGrow: 1,
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'white',
-                }}
-              >Home
-              </Typography>
-            </Button>
-            <Button key='signup' sx={{ color: '#fff' }}>
-              <Typography
-                  variant="h6"
-                  component="a"
-                  href="/signup"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', sm: 'block' },
-                    flexGrow: 1,
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'white',
-                  }}
-                >Sign-up
-                </Typography>
-            </Button>
-            <Button key='login' sx={{ color: '#fff' }}>
-              <Typography
-                  variant="h6"
-                  component="a"
-                  href="/login"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', sm: 'block' },
-                    flexGrow: 1,
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'white',
-                  }}
-                >Login
-                </Typography>
-            </Button>
+          <Button key="home" sx={{ color: "#fff" }}>
+            <Typography variant="h6" component="a" href="/">
+              Home
+            </Typography>
+          </Button>
+          <Button key="signup" sx={{ color: "#fff" }}>
+            <Typography variant="h6" component="a" href="/signup">
+              Sign-up
+            </Typography>
+          </Button>
+          <Button key="login" sx={{ color: "#fff" }}>
+            <Typography variant="h6" component="a" href="/login">
+              Login
+            </Typography>
+          </Button>
         </Toolbar>
       </Container>
     </AppBar>
