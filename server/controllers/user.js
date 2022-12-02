@@ -1,8 +1,18 @@
 const User = require("../model/User");
+const validation = require("../validation/routesValidation");
 
 const getUserById = async (req, res, next) => {
   try {
+    id = validation.checkId(req.params.id, "User Id");
     const user = await User.findById(req.params.id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      throw {
+        message: `User not found with ID: ${id}`,
+        status: 404,
+      };
+    }
     res.status(200).json(user);
   } catch (err) {
     next(err);
@@ -11,17 +21,20 @@ const getUserById = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+    const usersList = await User.find();
+    res.status(200).json(usersList);
   } catch (err) {
     next(err);
   }
 };
 
 const createUser = async (req, res, next) => {
-  const newUser = new User(req.body);
+  const newUserInfo = new User(req.body);
 
   try {
+    newUserInfo.firstName = validation.checkString();
+    newUserInfo.lastName = validation.checkString();
+
     const savedUser = await newUser.save();
     res.status(201).json(savedUser);
   } catch (err) {
