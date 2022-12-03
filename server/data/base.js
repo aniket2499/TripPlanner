@@ -25,6 +25,7 @@ const getLocationsCoordinates = async (location) => {
         lon: data.data.data[0].longitude,
       };
       return obj;
+
     }
   } catch (error) {
     console.log(error);
@@ -80,8 +81,11 @@ const getPhotos = async (location) => {
   }
 };
 
-getLocationDetails("chicago");
+
+getLocationsCoordinates("Chicago");
 
 module.exports = {
   getLocationsCoordinates,
+  getLocationDetails,
+  getPhotos,
 };
