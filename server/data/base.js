@@ -20,6 +20,7 @@ const getLocationsCoordinates = async (location) => {
     if (!data.data.data[0]) {
       throw new Error("Enter a valid Location");
     } else {
+      console.log(data.data.data[0]);
       const { latitude, longitude } = data.data.data[0];
       return { lat: latitude, lon: longitude };
     }
@@ -76,8 +77,10 @@ const getPhotos = async (location) => {
   }
 };
 
-getPhotos("Neemuch");
+getLocationsCoordinates("Chicago");
 
 module.exports = {
   getLocationsCoordinates,
+  getLocationDetails,
+  getPhotos,
 };
