@@ -191,6 +191,9 @@ let theme = createTheme({
     MuiTooltip: {
       arrow: true,
     },
+    MuiCard: {
+      boxShadow: "inherit",
+    },
   },
 });
 
