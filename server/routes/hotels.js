@@ -13,7 +13,7 @@ router.get("/", getAllHotels);
 
 router.get("/:id", getHotelById);
 
-router.get("/:latitude/:longitude/:pg", getHotelsFromApi);
+router.get("/data/:location/:pg", getHotelsFromApi);
 
 router.post("/", function (req, res, next) {
   createHotel(req, res, next);

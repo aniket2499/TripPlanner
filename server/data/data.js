@@ -1,5 +1,4 @@
 const Amadeus = require("amadeus");
-
 const dataValidation = require("../validation/dataValidation");
 const cityData = require("./base");
 const redis = require("redis");
@@ -12,7 +11,8 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 client.connect();
 const RESTAURANT_URL =
   "https://travel-advisor.p.rapidapi.com/restaurants/list-by-latlng";
-const ATTRACTION_URL = "https://travel-advisor.p.rapidapi.com/attractions/list";
+const ATTRACTION_URL =
+  "https://travel-advisor.p.rapidapi.com/attractions/list-by-latlng";
 const API_KEY = process.env.API_KEY;
 const amadeus = new Amadeus({
   clientId: process.env.API_FLIGHT_KEY,
@@ -23,16 +23,14 @@ const getAllRestaurant = async (location, pg, rating) => {
   let latitude = baseData.lat;
   let longitude = baseData.lon;
   try {
-    pg = dataValidation.checkPageNum(pg);
-    pg = pg ? pg : "1";
-    const cachedData = await client.hGet("cachedRestaurants", pg);
+    const cachedData = await client.hGet(`${location}cachedRestaurants`, pg);
     if (cachedData) {
-      //console.log("Displaying Data from redis!!");
+      console.log("Displaying Data from redis!!");
       return JSON.parse(cachedData);
     } else {
-      const limit = 20;
+      const limit = 10;
       const offset = (pg - 1) * limit;
-      let minimum_rating = rating ? rating : 3;
+      let minimum_rating = rating ? rating : "3.0";
 
       try {
         const {
@@ -53,7 +51,11 @@ const getAllRestaurant = async (location, pg, rating) => {
             "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
           },
         });
-        await client.hSet("cachedRestaurants", pg, JSON.stringify(data));
+        await client.hSet(
+          `${location}cachedRestaurants`,
+          pg,
+          JSON.stringify(data)
+        );
         return data;
       } catch (error) {
         console.log(error);
@@ -69,15 +71,14 @@ const getAllAttractions = async (location, pg, rating) => {
   let latitude = baseData.lat;
   let longitude = baseData.lon;
   try {
-    pg = dataValidation.checkPageNum(pg);
-    pg = pg ? pg : "1";
-    const cachedData = await client.hGet("cachedAttractions", pg);
+    const cachedData = await client.hGet(`${location}cachedAttractions`, pg);
     if (cachedData) {
+      console.log("Displaying Data from redis!!");
       return JSON.parse(cachedData);
     } else {
-      const limit = 20;
+      const limit = 10;
       const offset = (pg - 1) * limit;
-      let minimum_rating = rating ? rating : 3;
+      let minimum_rating = rating ? rating : "3.0";
       try {
         const {
           data: { data },
@@ -98,7 +99,11 @@ const getAllAttractions = async (location, pg, rating) => {
             "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
           },
         });
-        await client.hSet("cachedAttractions", pg, JSON.stringify(data));
+        await client.hSet(
+          `${location}cachedAttractions`,
+          pg,
+          JSON.stringify(data)
+        );
         return data;
       } catch (error) {
         console.log(error);
@@ -111,31 +116,33 @@ const getAllAttractions = async (location, pg, rating) => {
 
 const getAllHotels = async (location, pg) => {
   try {
-    pg = dataValidation.checkPageNum(pg);
-    location = await cityData.getLocationsCoordinates(location);
-    //console.log(location);
+    const newLocation = await cityData.getLocationsCoordinates(location);
     pg = pg ? pg : "1";
-    let low = (pg - 1) * 5;
-    let high = pg * 5;
-    const cachedData = await client.hGet("cachedHotels", pg);
+    let low = (pg - 1) * 10;
+    let high = pg * 10;
+    const cachedData = await client.hGet(`${location}cachedHotels`, pg);
 
     if (cachedData) {
+      console.log("Displaying Data from redis!!");
       return JSON.parse(cachedData);
     } else {
       try {
         const data = await amadeus.referenceData.locations.hotels.byGeocode.get(
           {
-            latitude: location.lat,
-            longitude: location.lon,
+            latitude: newLocation.lat,
+            longitude: newLocation.lon,
             radius: 50,
             radiusUnit: "MILE",
             hotelSource: "ALL",
-          },
+          }
         );
         const hotelData = data.data;
         const hotelList = hotelData.slice(low, high);
-        await client.hSet("cachedHotels", pg, JSON.stringify(hotelList));
-        //console.log(hotelList);
+        await client.hSet(
+          `${location}cachedHotels`,
+          pg,
+          JSON.stringify(hotelList)
+        );
         return hotelList;
       } catch (error) {
         console.log(error);
@@ -147,7 +154,7 @@ const getAllHotels = async (location, pg) => {
 };
 
 // getAllRestaurant("chicago", "1");
-getAllHotels("chicago", "1");
+// getAllHotels("chicago", "1");
 module.exports = {
   getAllRestaurant,
   getAllAttractions,
