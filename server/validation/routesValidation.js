@@ -25,8 +25,63 @@ module.exports = {
     return id;
   },
 
+  checkPageNumber(pageNumber) {
+    if (!pageNumber || pageNumber == undefined)
+      throw {
+        message: `Error: You must provide a page number`,
+        status: 400,
+      };
+    if (typeof pageNumber !== "string")
+      throw { message: `Error: Page number must be a string`, status: 400 };
+    pageNumber = pageNumber.trim();
+    if (pageNumber.length === 0)
+      throw {
+        message: `Error: Page number cannot be an empty string or just spaces`,
+        status: 400,
+      };
+    if (isNaN(pageNumber))
+      throw {
+        message: `Error: Page number must be a number`,
+        status: 400,
+      };
+    pageNumber = parseInt(pageNumber);
+    if (pageNumber < 1)
+      throw {
+        message: `Error: Page number must be greater than 0`,
+        status: 400,
+      };
+    return pageNumber;
+  },
+
+  checkLocationCode(locationCode) {
+    if (!locationCode || locationCode == undefined)
+      throw {
+        message: `Error: You must provide a location code`,
+        status: 400,
+      };
+    if (typeof locationCode !== "string")
+      throw { message: `Error: Location code must be a string`, status: 400 };
+    locationCode = locationCode.trim();
+    if (locationCode.length === 0)
+      throw {
+        message: `Error: Location code cannot be an empty string or just spaces`,
+        status: 400,
+      };
+    if (isNaN(locationCode))
+      throw {
+        message: `Error: Location code must be a number`,
+        status: 400,
+      };
+    locationCode = parseInt(locationCode);
+    if (locationCode < 1)
+      throw {
+        message: `Error: Location code must be greater than 0`,
+        status: 400,
+      };
+    return locationCode;
+  },
+
   checkString(strVal, varName) {
-    if (!varName) varName = "String";
     if (!strVal)
       throw { message: `Error: You must supply a ${varName}!`, status: 400 };
     if (typeof strVal !== "string")
@@ -42,6 +97,25 @@ module.exports = {
         message: `Error: ${strVal} is not a valid value for ${varName} as it only contains digits`,
         status: 400,
       };
+    return strVal;
+  },
+  checkStringForNumber(strVal, varName) {
+    if (!strVal)
+      throw { message: `Error: You must supply a ${varName}!`, status: 400 };
+    if (typeof strVal !== "string")
+      throw { message: `Error: ${varName} must be a string!`, status: 400 };
+    strVal = strVal.trim();
+    if (strVal.length === 0)
+      throw {
+        message: `Error: ${varName} cannot be an empty string or string with just spaces`,
+        status: 400,
+      };
+    if (isNaN(strVal))
+      throw {
+        message: `Error: ${strVal} is not a valid value for ${varName} as it doesn't contains digits`,
+        status: 400,
+      };
+
     return strVal;
   },
 
@@ -66,7 +140,7 @@ module.exports = {
     return arr;
   },
 
-  isNonNull() {
+  checkNonNull() {
     //get all arguments passed in isNonNull function and throw if anyone of them is null or undefined
     for (let i = 0; i < arguments.length; i++) {
       const val = arguments[i];
@@ -167,6 +241,60 @@ module.exports = {
         message: e.message,
         status: 400,
       };
+    }
+  },
+
+  checkURL(url, varName) {
+    this.checkString(url, varName);
+    if (!url.startsWith("http://") && !url.startsWith("https://"))
+      throw {
+        message: `Error: ${varName} must start with http:// or https://`,
+        status: 400,
+      };
+    return url;
+  },
+
+  checkPriceLevel(priceLevel, varName) {
+    if (!priceLevel)
+      throw { message: `You must provide a ${varName}`, status: 400 };
+    if (
+      priceLevel == "$" ||
+      priceLevel == "$$" ||
+      priceLevel == "$$$" ||
+      priceLevel == "$$$$"
+    ) {
+      return priceLevel;
+    } else {
+      throw {
+        message: `You must provide a valid ${varName} (i.e. $, $$, $$$, $$$$)`,
+        status: 400,
+      };
+    }
+  },
+  checkPhoneNumber(phone, varName) {
+    this.checkStringForNumber(phone, varName);
+    const re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/gm;
+    if (!phone.match(re)) {
+      throw {
+        message: `Error: ${varName} must be a 10 digit number`,
+        status: 400,
+      };
+    }
+    return phone;
+  },
+  checkPriceRange(priceRange, varName) {
+    if (!priceRange)
+      throw { message: `You must provide a ${varName}`, status: 400 };
+    const re = /^(\$|\€\£|\₪|)(?!0\.00)\d{1,3}(,\d{3})*(\.\d\d)?/;
+
+    if (priceRange.includes("-")) {
+      priceRange.split("-").forEach((price) => {
+        if (!price.trim().match(re))
+          throw { message: `You must provide a valid ${varName}`, status: 400 };
+      });
+      return priceRange;
+    } else {
+      throw { message: `You must provide a valid ${varName}`, status: 400 };
     }
   },
 };
