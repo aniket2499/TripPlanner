@@ -1,9 +1,19 @@
 const Trip = require("../model/Trip");
+const validation = require("../validation/routesValidation");
 
 const getTripById = async (req, res, next) => {
   try {
+    validation.checkId(req.params.id);
     const trip = await Trip.findById(req.params.id);
-    res.status(200).json(trip);
+    if (trip) {
+      res.status(200).json(trip);
+    } else {
+      throw {
+        message: `Trip not found with ID: ${trip}`,
+        status: 404,
+      };
+    }
+    res.status(200).json(restaurant);
   } catch (err) {
     next(err);
   }
@@ -12,7 +22,14 @@ const getTripById = async (req, res, next) => {
 const getAllTrips = async (req, res, next) => {
   try {
     const trips = await Trip.find();
-    res.status(200).json(trips);
+    if (trips.length > 0) {
+      res.status(200).json(trips);
+    } else {
+      throw {
+        message: `No trips found`,
+        status: 404,
+      };
+    }
   } catch (err) {
     next(err);
   }

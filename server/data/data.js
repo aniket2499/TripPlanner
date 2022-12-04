@@ -27,7 +27,7 @@ const getAllRestaurant = async (location, pg, rating) => {
     pg = pg ? pg : "1";
     const cachedData = await client.hGet("cachedRestaurants", pg);
     if (cachedData) {
-      console.log("Displaying Data from redis!!");
+      //console.log("Displaying Data from redis!!");
       return JSON.parse(cachedData);
     } else {
       const limit = 20;
@@ -113,7 +113,7 @@ const getAllHotels = async (location, pg) => {
   try {
     pg = dataValidation.checkPageNum(pg);
     location = await cityData.getLocationsCoordinates(location);
-    console.log(location);
+    //console.log(location);
     pg = pg ? pg : "1";
     let low = (pg - 1) * 5;
     let high = pg * 5;
@@ -135,7 +135,7 @@ const getAllHotels = async (location, pg) => {
         const hotelData = data.data;
         const hotelList = hotelData.slice(low, high);
         await client.hSet("cachedHotels", pg, JSON.stringify(hotelList));
-        console.log(hotelList);
+        //console.log(hotelList);
         return hotelList;
       } catch (error) {
         console.log(error);

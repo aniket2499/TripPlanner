@@ -10,7 +10,7 @@ const getWeatherForCity = async (city) => {
       latitude: data.coord.lat,
       longitude: data.coord.lon,
     };
-    console.log(weatherDataForCity);
+    // console.log(weatherDataForCity);
     return weatherDataForCity;
   } catch (e) {
     console.error(e);
@@ -31,31 +31,41 @@ const getWeatherForeCastForLocation = async (date) => {
         (year = d.getFullYear());
       if (month.length < 2) month = "0" + month;
       if (day.length < 2) day = "0" + day;
-      return [year, month, day].join("-");
+      const dateFromAPI = [month, day, year].join("/");
+      //console.log(dateFromAPI);
+      return dateFromAPI;
     }
     function convertingDateFromDatabase(date) {
-      var e = new Date(date);
-      var ss = e.toISOString().split("T")[0];
-      return ss;
+      //console.log(date);
+      return date;
     }
+
     data.list.map((e) => {
       if (convertingDateFromAPI(e.dt) == convertingDateFromDatabase(date)) {
         const forCastForAnyDate = {
-          date: e.dt,
+          date: date,
           main: e.weather[0].main,
           temperature: parseInt((e.temp.day - 273.15) * 9) / 5 + 32,
           description: e.weather[0].description,
           icon: `http://openweathermap.org/img/wn/${e.weather[0].icon}@2x.png`,
         };
         weatherOnDay.push(forCastForAnyDate);
-        return weatherOnDay;
+        //console.log(weatherOnDay);
       }
     });
+    if (weatherOnDay.length > 0) {
+      return weatherOnDay;
+    } else {
+      throw {
+        message: "No data found for this date",
+        status: 404,
+      };
+    }
   } catch (e) {
-    console.error(e);
+    console.log(e);
   }
 };
-getWeatherForeCastForLocation("2022-12-11T00:00:00.000Z");
+getWeatherForeCastForLocation("12/03/2022");
 module.exports = {
   getWeatherForCity,
   getWeatherForeCastForLocation,
