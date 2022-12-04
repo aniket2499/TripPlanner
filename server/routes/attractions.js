@@ -13,7 +13,7 @@ router.get("/", getAllAttractions);
 
 router.get("/:id", getAttractionById);
 
-router.get("/data/:code/:pg", getAttractionsFromApi);
+router.get("/data/:location/:pg/:rating", getAttractionsFromApi);
 
 router.post("/", function (req, res, next) {
   createAttraction(req, res, next);

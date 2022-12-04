@@ -1,18 +1,18 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
-import Account from "./components/Account";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
-import SignOut from "./components/SignOut";
-import Navigation from "./components/Navigation";
+import Home from "./Components/Home";
+import Account from "./Components/Account";
+import Login from "./Components/Login";
+import SignUp from "./Components/SignUp";
+import SignOut from "./Components/SignOut";
+import Navigation from "./Components/Navigation";
 import { AuthProvider } from "./firebase/Auth";
-import PrivateRoute from "./components/PrivateRoute";
-import Flights from "./components/Flights";
-import Restaurants from "./components/Restaurants";
-import Hotels from "./components/Hotels";
-import Attractions from "./components/Attractions";
+import PrivateRoute from "./Components/PrivateRoute";
+import Flights from "./Components/Flights";
+import Restaurants from "./Components/Restaurants";
+import Hotels from "./Components/Hotels";
+import Attractions from "./Components/Attractions";
 
 import {
   createTheme,
@@ -20,7 +20,7 @@ import {
   CssBaseline,
   responsiveFontSizes,
 } from "@mui/material";
-import ChangePassword from "./components/ChangePassword";
+import ChangePassword from "./Components/ChangePassword";
 
 let theme = createTheme({
   palette: {

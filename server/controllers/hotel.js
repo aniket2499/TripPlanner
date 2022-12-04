@@ -1,6 +1,7 @@
 const Hotel = require("../model/Hotel");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
+const newValidation = require("../validation/dataValidation.js");
 
 const getHotelById = async (req, res, next) => {
   try {
@@ -21,12 +22,11 @@ const getHotelById = async (req, res, next) => {
 };
 
 const getHotelsFromApi = async (req, res, next) => {
-  let page = req.params.pg;
-  let latitude = req.params.latitude;
-  let longitude = req.params.longitude;
-
   try {
-    const hotel = data.getAllHotels(latitude, longitude, page);
+    let page = validation.checkPageNumber(req.params.pg);
+    let location = newValidation.checkLocation(req.params.location);
+    page = page ? page : "1";
+    const hotel = await data.getAllHotels(location, page);
     res.status(200).json(hotel);
   } catch (err) {
     next(err);
@@ -54,42 +54,42 @@ const createHotel = async (req, res, next) => {
   try {
     newHotel.location_id = validation.checkStringForNumber(
       newHotel.location_id,
-      "Hotel Id",
+      "Hotel Id"
     );
     newHotel.name = validation.checkString(newHotel.name, "Hotel Name");
     newHotel.latitude = validation.checkStringForNumber(
       newHotel.latitude,
-      "Hotel Latitude",
+      "Hotel Latitude"
     );
     newHotel.longitude = validation.checkStringForNumber(
       newHotel.longitude,
-      "Hotel Longitude",
+      "Hotel Longitude"
     );
     newHotel.num_reviews = validation.checkStringForNumber(
       newHotel.num_reviews,
-      "Hotel Number of Reviews",
+      "Hotel Number of Reviews"
     );
     newHotel.category = validation.checkString(
       newHotel.category,
-      "Hotel Category",
+      "Hotel Category"
     );
     newHotel.image = validation.checkURL(newHotel.image, "Hotel Image");
     newHotel.address = validation.checkString(
       newHotel.address,
-      "Hotel Address",
+      "Hotel Address"
     );
     newHotel.web_url = validation.checkURL(newHotel.web_url, "Hotel Web URL");
     newHotel.rating = validation.checkStringForNumber(
       newHotel.rating,
-      "Hotel Rating",
+      "Hotel Rating"
     );
     newHotel.price_level = validation.checkPriceLevel(
       newHotel.price_level,
-      "Hotel Price Level",
+      "Hotel Price Level"
     );
     newHotel.amenities = validation.checkStringArray(
       newHotel.amenities,
-      "Hotel Amenities",
+      "Hotel Amenities"
     );
 
     newHotel.phone = validation.checkPhoneNumber(newHotel.phone, "Hotel Phone");
@@ -110,86 +110,86 @@ const updateHotelById = async (req, res, next) => {
     if (newHotelInfo.location_id) {
       newHotelInfo.location_id = validation.checkStringForNumber(
         newHotelInfo.location_id,
-        "Hotel Id",
+        "Hotel Id"
       );
     }
     if (newHotelInfo.name) {
       newHotelInfo.name = validation.checkString(
         newHotelInfo.name,
-        "Hotel Name",
+        "Hotel Name"
       );
     }
     if (newHotelInfo.latitude) {
       newHotelInfo.latitude = validation.checkStringForNumber(
         newHotelInfo.latitude,
 
-        "Hotel Latitude",
+        "Hotel Latitude"
       );
     }
     if (newHotelInfo.longitude) {
       newHotelInfo.longitude = validation.checkStringForNumber(
         newHotelInfo.longitude,
-        "Hotel Longitude",
+        "Hotel Longitude"
       );
     }
     if (newHotelInfo.num_reviews) {
       newHotelInfo.num_reviews = validation.checkStringForNumber(
         newHotelInfo.num_reviews,
-        "Hotel Number of Reviews",
+        "Hotel Number of Reviews"
       );
     }
     if (newHotelInfo.category) {
       newHotelInfo.category = validation.checkString(
         newHotelInfo.category,
-        "Hotel Category",
+        "Hotel Category"
       );
     }
     if (newHotelInfo.image) {
       newHotelInfo.image = validation.checkURL(
         newHotelInfo.image,
-        "Hotel Image",
+        "Hotel Image"
       );
     }
     if (newHotelInfo.address) {
       newHotelInfo.address = validation.checkString(
         newHotelInfo.address,
-        "Hotel Address",
+        "Hotel Address"
       );
     }
     if (newHotelInfo.web_url) {
       newHotelInfo.web_url = validation.checkURL(
         newHotelInfo.web_url,
-        "Hotel Web URL",
+        "Hotel Web URL"
       );
     }
     if (newHotelInfo.rating) {
       newHotelInfo.rating = validation.checkStringForNumber(
         newHotelInfo.rating,
-        "Hotel Rating",
+        "Hotel Rating"
       );
     }
     if (newHotelInfo.price_level) {
       newHotelInfo.price_level = validation.checkPriceLevel(
         newHotelInfo.price_level,
-        "Hotel Price Level",
+        "Hotel Price Level"
       );
     }
     if (newHotelInfo.phone) {
       newHotelInfo.phone = validation.checkPhoneNumber(
         newHotelInfo.phone,
-        "Hotel Phone",
+        "Hotel Phone"
       );
     }
     if (newHotelInfo.price) {
       newHotelInfo.price = validation.checkPriceRange(
         newHotelInfo.price,
-        "Hotel Price",
+        "Hotel Price"
       );
     }
     if (newHotelInfo.amenities) {
       newHotelInfo.amenities = validation.checkStringArray(
         newHotelInfo.amenities,
-        "Hotel Amenities",
+        "Hotel Amenities"
       );
     }
 
@@ -263,7 +263,7 @@ const updateHotelById = async (req, res, next) => {
       updatedHotel = await Hotel.findByIdAndUpdate(
         req.params.id,
         updatedHotel,
-        { new: true },
+        { new: true }
       );
       if (updatedHotel) {
         res.status(200).json(updatedHotel);

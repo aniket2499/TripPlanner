@@ -50,9 +50,38 @@ module.exports = {
         message: `Error: Page number must be greater than 0`,
         status: 400,
       };
+    pageNumber = String(pageNumber);
     return pageNumber;
   },
 
+  checkReview(review) {
+    if (!review || review == undefined)
+      throw {
+        message: `Error: You must provide a page number`,
+        status: 400,
+      };
+    if (typeof review !== "string")
+      throw { message: `Error: Review must be a string`, status: 400 };
+    review = review.trim();
+    if (review.length === 0)
+      throw {
+        message: `Error: Review cannot be an empty string or just spaces`,
+        status: 400,
+      };
+    if (isNaN(review))
+      throw {
+        message: `Error: Review must be a number`,
+        status: 400,
+      };
+    review = parseFloat(review);
+    if (review < 3.0)
+      throw {
+        message: `Error: Review must be greater than 3`,
+        status: 400,
+      };
+    review = String(review);
+    return review;
+  },
   checkLocationCode(locationCode) {
     if (!locationCode || locationCode == undefined)
       throw {

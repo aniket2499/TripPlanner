@@ -1,6 +1,7 @@
 const Restaurant = require("../model/Restaurant");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
+const newValidation = require("../validation/dataValidation.js");
 
 const getRestaurantById = async (req, res, next) => {
   try {
@@ -21,10 +22,13 @@ const getRestaurantById = async (req, res, next) => {
 };
 
 const getRestaurantsFromApi = async (req, res, next) => {
-  let page = req.params.pg;
-  let location_code = req.params.code;
   try {
-    const restaurants = await data.getAllRestaurant(location_code, page);
+    let page = validation.checkPageNumber(req.params.pg);
+    let location = newValidation.checkLocation(req.params.location);
+    let rating = validation.checkReview(req.params.rating);
+    page = page ? page : "1";
+    rating = req.params.rating ? req.params.rating : "3.0";
+    const restaurants = await data.getAllRestaurant(location, page, rating);
     res.status(200).json(restaurants);
   } catch (err) {
     next(err);
@@ -53,68 +57,68 @@ const createRestaurant = async (req, res, next) => {
   try {
     newRestaurant.location_id = validation.checkStringForNumber(
       newRestaurant.location_id,
-      "Restaurant Id",
+      "Restaurant Id"
     );
     newRestaurant.name = validation.checkString(
       newRestaurant.name,
-      "Restaurant Name",
+      "Restaurant Name"
     );
     newRestaurant.latitude = validation.checkStringForNumber(
       newRestaurant.latitude,
-      "Restaurant Latitude",
+      "Restaurant Latitude"
     );
     newRestaurant.longitude = validation.checkStringForNumber(
       newRestaurant.longitude,
-      "Restaurant Longitude",
+      "Restaurant Longitude"
     );
     newRestaurant.num_reviews = validation.checkStringForNumber(
       newRestaurant.num_reviews,
-      "Restaurant Number of Reviews",
+      "Restaurant Number of Reviews"
     );
     newRestaurant.address = validation.checkString(
       newRestaurant.address,
-      "Restaurant Address",
+      "Restaurant Address"
     );
     newRestaurant.category = validation.checkString(
       newRestaurant.category,
-      "Restaurant Category",
+      "Restaurant Category"
     );
 
     newRestaurant.image = validation.checkURL(
       newRestaurant.image,
-      "Restaurant Image Url",
+      "Restaurant Image Url"
     );
     newRestaurant.web_url = validation.checkURL(
       newRestaurant.web_url,
-      "Restaurant Web Url",
+      "Restaurant Web Url"
     );
     newRestaurant.cuisine = validation.checkStringArray(
       newRestaurant.cuisine,
-      "Restaurant Cuisine",
+      "Restaurant Cuisine"
     );
     newRestaurant.rating = validation.checkStringForNumber(
       newRestaurant.rating,
-      "Restaurant Rating",
+      "Restaurant Rating"
     );
     newRestaurant.price_level = validation.checkPriceLevel(
       newRestaurant.price_level,
-      "Restaurant Price Level",
+      "Restaurant Price Level"
     );
     newRestaurant.description = validation.checkString(
       newRestaurant.description,
-      "Restaurant Description",
+      "Restaurant Description"
     );
     newRestaurant.phone = validation.checkPhoneNumber(
       newRestaurant.phone,
-      "Restaurant Phone",
+      "Restaurant Phone"
     );
     newRestaurant.price = validation.checkPriceRange(
       newRestaurant.price,
-      "Restaurant Price",
+      "Restaurant Price"
     );
     newRestaurant.website = validation.checkURL(
       newRestaurant.website,
-      "Restaurant Website",
+      "Restaurant Website"
     );
 
     const savedRestaurant = await newRestaurant.save();
@@ -132,98 +136,98 @@ const updateRestaurantById = async (req, res, next) => {
     if (newRestaurantInfo.location_id) {
       newRestaurantInfo.location_id = validation.checkStringForNumber(
         newRestaurantInfo.location_id,
-        "Restaurant Id",
+        "Restaurant Id"
       );
     }
     if (newRestaurantInfo.name) {
       newRestaurantInfo.name = validation.checkString(
         newRestaurantInfo.name,
-        "Restaurant Name",
+        "Restaurant Name"
       );
     }
     if (newRestaurantInfo.latitude) {
       newRestaurantInfo.latitude = validation.checkStringForNumber(
         newRestaurantInfo.latitude,
-        "Restaurant Latitude",
+        "Restaurant Latitude"
       );
     }
     if (newRestaurantInfo.longitude) {
       newRestaurantInfo.longitude = validation.checkStringForNumber(
         newRestaurantInfo.longitude,
-        "Restaurant Longitude",
+        "Restaurant Longitude"
       );
     }
     if (newRestaurantInfo.num_reviews) {
       newRestaurantInfo.num_reviews = validation.checkStringForNumber(
         newRestaurantInfo.num_reviews,
-        "Restaurant Number of Reviews",
+        "Restaurant Number of Reviews"
       );
     }
     if (newRestaurantInfo.address) {
       newRestaurantInfo.address = validation.checkString(
         newRestaurantInfo.address,
-        "Restaurant Address",
+        "Restaurant Address"
       );
     }
 
     if (newRestaurantInfo.category) {
       newRestaurantInfo.category = validation.checkString(
         newRestaurantInfo.category,
-        "Restaurant Category",
+        "Restaurant Category"
       );
     }
     if (newRestaurantInfo.image) {
       newRestaurantInfo.image = validation.checkURL(
         newRestaurantInfo.image,
-        "Restaurant Image Url",
+        "Restaurant Image Url"
       );
     }
     if (newRestaurantInfo.web_url) {
       newRestaurantInfo.web_url = validation.checkURL(
         newRestaurantInfo.web_url,
-        "Restaurant Web Url",
+        "Restaurant Web Url"
       );
     }
     if (newRestaurantInfo.cuisine) {
       newRestaurantInfo.cuisine = validation.checkStringArray(
         newRestaurantInfo.cuisine,
-        "Restaurant Cuisine",
+        "Restaurant Cuisine"
       );
     }
     if (newRestaurantInfo.rating) {
       newRestaurantInfo.rating = validation.checkStringForNumber(
         newRestaurantInfo.rating,
-        "Restaurant Rating",
+        "Restaurant Rating"
       );
     }
     if (newRestaurantInfo.price_level) {
       newRestaurantInfo.price_level = validation.checkStringForNumber(
         newRestaurantInfo.price_level,
-        "Restaurant Price Level",
+        "Restaurant Price Level"
       );
     }
     if (newRestaurantInfo.description) {
       newRestaurantInfo.description = validation.checkString(
         newRestaurantInfo.description,
-        "Restaurant Description",
+        "Restaurant Description"
       );
     }
     if (newRestaurantInfo.phone) {
       newRestaurantInfo.phone = validation.checkString(
         newRestaurantInfo.phone,
-        "Restaurant Phone",
+        "Restaurant Phone"
       );
     }
     if (newRestaurantInfo.price) {
       newRestaurantInfo.price = validation.checkString(
         newRestaurantInfo.price,
-        "Restaurant Price",
+        "Restaurant Price"
       );
     }
     if (newRestaurantInfo.website) {
       newRestaurantInfo.website = validation.checkURL(
         newRestaurantInfo.website,
-        "Restaurant Website",
+        "Restaurant Website"
       );
     }
     const oldRestaurant = await Restaurant.findById(req.params.id);
@@ -336,7 +340,7 @@ const updateRestaurantById = async (req, res, next) => {
       updatedRestaurant = await Restaurant.findByIdAndUpdate(
         req.params.id,
         updatedRestaurant,
-        { new: true },
+        { new: true }
       );
       if (updatedRestaurant) {
         res.status(200).json(updatedRestaurant);

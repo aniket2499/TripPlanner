@@ -9,7 +9,7 @@ const {
   getRestaurantsFromApi,
 } = require("../controllers/restaurant");
 
-router.get("/data/:code/:pg", getRestaurantsFromApi);
+router.get("/data/:location/:pg/:rating", getRestaurantsFromApi);
 
 router.get("/", getAllRestaurants);
 

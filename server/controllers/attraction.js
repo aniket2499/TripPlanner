@@ -1,6 +1,7 @@
 const Attraction = require("../model/Attraction");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
+const newValidation = require("../validation/dataValidation.js");
 
 const getAttractionById = async (req, res, next) => {
   try {
@@ -22,24 +23,20 @@ const getAttractionById = async (req, res, next) => {
 
 const getAttractionsFromApi = async (req, res, next) => {
   try {
-    page = validation.checkPageNumber(req.params.pg, "Page Number");
-    location_code = validation.checkLocationCode(
-      req.params.code,
-      "Location Code",
-    );
-    const attractions = await data.getAllAttractions(
-      req.params.code,
-      req.params.pg,
-    );
+    let page = validation.checkPageNumber(req.params.pg);
+    let location = newValidation.checkLocation(req.params.location);
+    let rating = validation.checkReview(req.params.rating);
+    page = page ? page : "1";
+    rating = req.params.rating ? req.params.rating : "3.0";
+    const attractions = await data.getAllAttractions(location, page, rating);
     if (attractions) {
       res.status(200).json(attractions);
     } else {
       throw {
-        message: `Attractions not found with Location Code: ${location_code} and Page Number: ${page}`,
+        message: `Attractions not found with Location ${location} and Page Number: ${page}`,
         status: 404,
       };
     }
-    res.status(200).json(attractions);
   } catch (err) {
     next(err);
   }
@@ -67,56 +64,56 @@ const createAttraction = async (req, res, next) => {
   try {
     newAttraction.location_id = validation.checkStringForNumber(
       newAttraction.location_id,
-      "Location Id",
+      "Location Id"
     );
 
     newAttraction.name = validation.checkString(
       newAttraction.name,
-      "Attraction Name",
+      "Attraction Name"
     );
 
     newAttraction.latitude = validation.checkStringForNumber(
       newAttraction.latitude,
-      "Latitude",
+      "Latitude"
     );
     newAttraction.longitude = validation.checkStringForNumber(
       newAttraction.longitude,
-      "Longitude",
+      "Longitude"
     );
     newAttraction.description = validation.checkString(
       newAttraction.description,
-      "Description",
+      "Description"
     );
 
     newAttraction.image = validation.checkURL(newAttraction.image, "Image");
     newAttraction.category = validation.checkString(
       newAttraction.category,
-      "Category",
+      "Category"
     );
     newAttraction.rating = validation.checkStringForNumber(
       newAttraction.rating,
-      "Rating",
+      "Rating"
     );
 
     newAttraction.website = validation.checkURL(
       newAttraction.website,
-      "Website",
+      "Website"
     );
     newAttraction.phone = validation.checkPhoneNumber(
       newAttraction.phone,
-      "Phone",
+      "Phone"
     );
     newAttraction.address = validation.checkString(
       newAttraction.address,
-      "Address",
+      "Address"
     );
     newAttraction.web_url = validation.checkURL(
       newAttraction.web_url,
-      "Web Url",
+      "Web Url"
     );
     newAttraction.num_reviews = validation.checkStringForNumber(
       newAttraction.num_reviews,
-      "Number of Reviews",
+      "Number of Reviews"
     );
     const attraction = await newAttraction.save();
     res.status(201).json(attraction);
@@ -134,85 +131,85 @@ const updateAttractionById = async (req, res, next) => {
     if (newAttractionInfo.location_id) {
       newAttractionInfo.location_id = validation.checkStringForNumber(
         newAttractionInfo.location_id,
-        "Location Id",
+        "Location Id"
       );
     }
     if (newAttractionInfo.name) {
       newAttractionInfo.name = validation.checkString(
         newAttractionInfo.name,
-        "Attraction Name",
+        "Attraction Name"
       );
     }
     if (newAttractionInfo.latitude) {
       newAttractionInfo.latitude = validation.checkStringForNumber(
         newAttractionInfo.latitude,
-        "Latitude",
+        "Latitude"
       );
     }
     if (newAttractionInfo.longitude) {
       newAttractionInfo.longitude = validation.checkStringForNumber(
         newAttractionInfo.longitude,
-        "Longitude",
+        "Longitude"
       );
     }
     if (newAttractionInfo.description) {
       newAttractionInfo.description = validation.checkString(
         newAttractionInfo.description,
-        "Description",
+        "Description"
       );
     }
     if (newAttractionInfo.image) {
       newAttractionInfo.image = validation.checkURL(
         newAttractionInfo.image,
-        "Image",
+        "Image"
       );
     }
     if (newAttractionInfo.category) {
       newAttractionInfo.category = validation.checkString(
         newAttractionInfo.category,
-        "Category",
+        "Category"
       );
     }
     if (newAttractionInfo.rating) {
       newAttractionInfo.rating = validation.checkStringForNumber(
         newAttractionInfo.rating,
-        "Rating",
+        "Rating"
       );
     }
     if (newAttractionInfo.price) {
       newAttractionInfo.price = validation.checkStringForNumber(
         newAttractionInfo.price,
-        "Price",
+        "Price"
       );
     }
     if (newAttractionInfo.website) {
       newAttractionInfo.website = validation.checkURL(
         newAttractionInfo.website,
-        "Website",
+        "Website"
       );
     }
     if (newAttractionInfo.phone) {
       newAttractionInfo.phone = validation.checkPhoneNumber(
         newAttractionInfo.phone,
-        "Phone",
+        "Phone"
       );
     }
     if (newAttractionInfo.address) {
       newAttractionInfo.address = validation.checkString(
         newAttractionInfo.address,
-        "Address",
+        "Address"
       );
     }
     if (newAttractionInfo.web_url) {
       newAttractionInfo.web_url = validation.checkURL(
         newAttractionInfo.web_url,
-        "Web Url",
+        "Web Url"
       );
     }
     if (newAttractionInfo.num_reviews) {
       newAttractionInfo.num_reviews = validation.checkStringForNumber(
         newAttractionInfo.num_reviews,
-        "Number of Reviews",
+        "Number of Reviews"
       );
     }
     const oldAttractionInfo = await Attraction.findById(id);
@@ -308,7 +305,7 @@ const updateAttractionById = async (req, res, next) => {
       const updatedAttraction = await Attraction.findByIdAndUpdate(
         req.params.id,
         { $set: req.body },
-        { new: true },
+        { new: true }
       );
       if (updatedAttraction) {
         res.status(200).json(updatedAttraction);
