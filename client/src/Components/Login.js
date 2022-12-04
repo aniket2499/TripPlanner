@@ -29,14 +29,10 @@ function Login() {
 
   const handlePasswordReset = async (e) => {
     e.preventDefault();
+    const email = document.getElementById("email").value;
     try {
-      const email = document.getElementById("email").value;
-      if(email){
-        await doPasswordReset(email);
-        alert("Password reset email sent to " + email);
-      }else{
-        alert("Please enter your email address before clicling reset password");
-      }
+      await doPasswordReset(email.value);
+      alert("Password reset email sent to " + email.value);
     } catch (error) {
       alert(error);
     }
@@ -62,7 +58,7 @@ function Login() {
           <form onSubmit={handleLogin}>
             <label>
               Email:
-              <input name="email" id="email" type="email" placeholder="Email" required />
+              <input name="email" type="email" placeholder="Email" required />
             </label>
             <br />
             <label>

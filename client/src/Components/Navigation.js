@@ -28,7 +28,6 @@ const NavigationAuth = () => {
   const linksArray = ["home", "flights"];
   const navigate = useNavigate();
   const [value, setValue] = useState();
-
   return (
     <div>
       <AppBar color="inherit" position="relative">
@@ -61,6 +60,9 @@ const NavigationAuth = () => {
             </Grid>
             <Grid item xs={2}>
               <Box>
+                {/* <Button>
+                  <AccountCircleIcon color="primary" fontSize="large" />
+                </Button> */}
                 <TextField
                   id="outlined-basic"
                   label="Outlined"
@@ -71,7 +73,7 @@ const NavigationAuth = () => {
             </Grid>
             <Grid item xs={2}>
               <Box>
-                <Button onClick={()=>navigate('/account')}>
+                <Button>
                   <AccountCircleIcon color="primary" fontSize="large" />
                 </Button>
               </Box>
