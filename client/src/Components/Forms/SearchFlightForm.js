@@ -22,31 +22,6 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import SearchIcon from "@mui/icons-material/Search";
 
 function SearchFlightForm() {
-  const [origin, setOrigin] = useState("");
-  const [dest, setDest] = useState("");
-  const [date, setDate] = useState(new Date());
-
-  const handleOriginChange = (event) => {
-    setOrigin(event.target.value);
-    //make api call to get list of airports
-    console.log(origin);
-  };
-
-  const handleDestChange = (event) => {
-    setDest(event.target.value);
-  };
-
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("origin: ", origin);
-    console.log("dest: ", dest);
-    console.log("date: ", date);
-  };
-
   return (
     <div>
       <Paper
@@ -61,13 +36,7 @@ function SearchFlightForm() {
             id="combo-box-demo"
             options={["hello", "world"]}
             sx={{ width: 400, mr: 6, mb: 3 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="From"
-                onChange={handleOriginChange}
-              />
-            )}
+            renderInput={(params) => <TextField {...params} label="From" />}
           />
           <Autocomplete
             disablePortal
