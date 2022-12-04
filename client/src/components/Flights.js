@@ -7,6 +7,7 @@ import {
   CardContent,
   Button,
   CardMedia,
+  Avatar,
   Box,
   Divider,
   Icon,
@@ -23,10 +24,6 @@ import AirlineSeatLegroomNormalTwoToneIcon from "@mui/icons-material/AirlineSeat
 import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 import FlightTakeoffTwoToneIcon from "@mui/icons-material/FlightTakeoffTwoTone";
 import FlightLandTwoToneIcon from "@mui/icons-material/FlightLandTwoTone";
-import SearchFlightForm from "./Forms/SearchFlightForm";
-import CircularProgress, {
-  circularProgressClasses,
-} from "@mui/material/CircularProgress";
 import "../App.css";
 import { Container } from "@mui/system";
 
@@ -239,25 +236,14 @@ function Flights(props) {
     <div>
       <br />
       <Container>
-        <SearchFlightForm></SearchFlightForm>
-        <br />
-
-        {loading ? (
-          <CircularProgress varient="indeterminate" value={100} />
-        ) : (
-          <div>
-            {flights.map((flight) => (
-              <Paper
-                elevation={3}
-                style={{ padding: "10px", margin: "10px" }}
-                className="flightsDetailsCard"
-                display="flex"
-                justifyContent="center"
-              >
+        <Grid container>
+          {flights.map((flight) => (
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <Paper elevation={3} style={{ padding: "10px", margin: "10px" }}>
                 <Card variant="outlined">
                   <CardContent>
                     <Grid container>
-                      <Grid item xs={12} sm={12} md={8} lg={8}>
+                      <Grid item xs={12} sm={12} md={12} lg={8}>
                         <List>
                           {flight.itineraries[0].segments.map(
                             (segment, index) => (
@@ -269,21 +255,11 @@ function Flights(props) {
                                         container
                                         justifyContent="center"
                                         alignItems="center"
-                                        sx={{
-                                          mt: 7,
-                                          mb: 3.5,
-                                          mr: 3,
-                                          maxHeight: 100,
-                                        }}
                                       >
                                         <img
                                           className="FlightLogos"
                                           alt="Remy Sharp"
                                           src={`imgs/logos/${segment.carrierCode}.png`}
-                                          style={{
-                                            width: "70%",
-                                            maxWidth: "70px",
-                                          }}
                                         />
                                       </Grid>
                                     </Grid>
@@ -305,12 +281,7 @@ function Flights(props) {
                                       </Typography>
                                       <Stack direction="row">
                                         <FlightTakeoffTwoToneIcon
-                                          sx={{
-                                            mt: 1,
-                                            mb: 0,
-                                            mr: 1,
-                                            ml: 0,
-                                          }}
+                                          sx={{ mt: 1, mb: 0, mr: 1, ml: 0 }}
                                         >
                                           {" "}
                                         </FlightTakeoffTwoToneIcon>
@@ -323,12 +294,7 @@ function Flights(props) {
                                           {segment.departure.at.split("T")[0]}{" "}
                                         </Typography>
                                         <FlightLandTwoToneIcon
-                                          sx={{
-                                            mt: 1,
-                                            mb: 0,
-                                            mr: 1,
-                                            ml: 14.5,
-                                          }}
+                                          sx={{ mt: 1, mb: 0, mr: 1, ml: 14.5 }}
                                         ></FlightLandTwoToneIcon>
                                         <Typography
                                           variant="subtitle1"
@@ -481,9 +447,9 @@ function Flights(props) {
                   </CardContent>
                 </Card>
               </Paper>
-            ))}
-          </div>
-        )}
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </div>
   );
