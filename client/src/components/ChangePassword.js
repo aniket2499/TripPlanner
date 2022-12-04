@@ -10,6 +10,7 @@ function ChangePassword() {
   console.log("currUser");
   console.log(currUser._delegate.providerData[0].providerId);
 
+
   function temp() {
     console.log("here");
   }
