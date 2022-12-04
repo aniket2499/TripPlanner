@@ -75,6 +75,22 @@ const getAllFlights = async (Parameters) => {
   }
 };
 
+const getAllCities = async (city) => {
+  try {
+    console.log(process.env.API_FLIGHT_KEY);
+
+    // const cities = await amadeus.referenceData.locations.get({
+    //   keyword: city,
+    //   subType: ["CITY"],
+    // });
+    console.log(cities);
+    res.status(200).json(cities.data);
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   getAllFlights,
+  getAllCities,
 };
