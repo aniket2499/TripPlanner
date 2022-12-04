@@ -4,11 +4,17 @@ import { doChangePassword } from "../firebase/FirebaseFunctions";
 import "../App.css";
 
 function ChangePassword() {
-
+  // new function
   const currUser = useContext(AuthContext);
   const [passwordMatch, setPasswordMatch] = useState('');
   console.log("currUser");
   console.log(currUser._delegate.providerData[0].providerId);
+
+   function temp(){
+    console.log("here");
+  }
+
+  temp();
 
   const submitForm = async (e) => {
     e.preventDefault();
