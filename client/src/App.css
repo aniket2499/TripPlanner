@@ -7,6 +7,11 @@
   pointer-events: none;
 }
 
+.flightsDetailsCard{
+  margin: auto;
+  border-radius: 5px !important;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
