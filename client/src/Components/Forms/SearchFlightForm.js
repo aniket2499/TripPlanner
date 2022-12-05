@@ -12,6 +12,8 @@ import {
   Stack,
   ListItem,
   List,
+  InputLabel,
+  FormHelperText,
   Autocomplete,
   TextField,
 } from "@mui/material";
@@ -27,17 +29,29 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
-function SearchFlightForm() {
+function SearchFlightForm({ handleSearch }) {
   const [originDropdown, setOriginOriginDropdown] = useState(["Austin(AUS)"]);
   const [destinationDropdown, setDestinationDropdown] = useState(["NYC"]);
   const [departureDate, setDepartureDate] = useState(dayjs(new Date()));
   const [returnDate, setReturnDate] = useState(dayjs(new Date()));
   const [showReturnDate, setShowReturnDate] = useState(true);
+
+  const [FromError, setFromError] = useState(false);
+  const [FromErrorMessage, setFromErrorMessage] = useState("");
+  const [ToError, setToError] = useState(false);
+  const [ToErrorMessage, setToErrorMessage] = useState("");
+  const [DepartureDateError, setDepartureDateError] = useState(false);
+  const [DepartureDateErrorMessage, setDepartureDateErrorMessage] =
+    useState("");
+  const [ReturnDateError, setReturnDateError] = useState(false);
+  const [ReturnDateErrorMessage, setReturnDateErrorMessage] = useState("");
+
   let origin = "";
   let destination = "";
 
   const handleOriginChange = async (event) => {
     event.preventDefault();
+    setFromError(false);
     origin = event.target.value;
     let { data } = await axios.get(
       `http://localhost:3001/api/flights/city/${origin}`,
@@ -51,6 +65,7 @@ function SearchFlightForm() {
 
   const handleDestinationChange = async (event) => {
     event.preventDefault();
+    setToError(false);
     destination = event.target.value;
     let { data } = await axios.get(
       `http://localhost:3001/api/flights/city/${destination}`,
@@ -60,6 +75,60 @@ function SearchFlightForm() {
       airports.push(x.address.cityName + " (" + x.iataCode + ")");
     }
     setDestinationDropdown(airports);
+  };
+
+  const submitForm = (event) => {
+    event.preventDefault();
+    let searchObject = {};
+    let localfromerror = false;
+    let localtoerror = false;
+    let localDepartureDateerror = false;
+    let localReturnDateerror = false;
+    if (document.getElementById("originTextField").value.length === 0) {
+      localfromerror = true;
+      setFromError(true);
+      setFromErrorMessage("Please select an origin");
+    } else {
+      searchObject["originCity"] = document
+        .getElementById("originTextField")
+        .value.split("(")[0];
+    }
+    if (document.getElementById("destinationTextField").value.length === 0) {
+      localtoerror = true;
+      setToError(true);
+      setToErrorMessage("Please select an destination");
+    } else {
+      searchObject["destinationCity"] = document
+        .getElementById("destinationTextField")
+        .value.split("(")[0];
+    }
+
+    if (dayjs(returnDate).isBefore(dayjs(departureDate)) && showReturnDate) {
+      localReturnDateerror = true;
+      setDepartureDateError(true);
+      setDepartureDateErrorMessage(
+        "Return date cannot be before departure date",
+      );
+      setReturnDateError(true);
+      setReturnDateErrorMessage("Return date cannot be before departure date");
+    } else {
+      searchObject["departureDate"] = departureDate;
+      searchObject["returnDate"] = returnDate;
+    }
+    searchObject["departureDateFormatted"] = departureDate.format("YYYY-MM-DD");
+    searchObject["returnDateFormatted"] = returnDate.format("YYYY-MM-DD");
+    if (
+      !localfromerror &&
+      !localtoerror &&
+      !localDepartureDateerror &&
+      !localReturnDateerror
+    ) {
+      console.log(FromError);
+      console.log(ToError);
+      console.log(DepartureDateError);
+      console.log(ReturnDateError);
+      handleSearch(searchObject);
+    }
   };
 
   return (
@@ -80,12 +149,14 @@ function SearchFlightForm() {
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
+                defaultValue="RoundTrip"
                 onChange={(event) => {
                   event.preventDefault();
                   if (event.target.value === "RoundTrip") {
-                    console.log("roundtrip");
                     setShowReturnDate(true);
                   } else {
+                    setReturnDateError(false);
+                    setReturnDateErrorMessage("");
                     setShowReturnDate(false);
                   }
                 }}
@@ -108,11 +179,19 @@ function SearchFlightForm() {
           <Autocomplete
             loading
             disablePortal
-            id="combo-box-demo"
+            onSelect={(event) => {
+              event.preventDefault();
+              setFromError(false);
+              setFromErrorMessage("");
+              console.log(event.target.value);
+            }}
+            id="originTextField"
             options={originDropdown}
             sx={{ width: 400, mr: 6, mb: 3 }}
             renderInput={(params) => (
               <TextField
+                error={FromError}
+                helperText={FromErrorMessage}
                 {...params}
                 label="From"
                 onChange={handleOriginChange}
@@ -123,11 +202,19 @@ function SearchFlightForm() {
           <Autocomplete
             loading
             disablePortal
-            id="combo-box-demo"
+            onSelect={(event) => {
+              event.preventDefault();
+              setToError(false);
+              setToErrorMessage("");
+              console.log(event.target.value);
+            }}
+            id="destinationTextField"
             options={destinationDropdown}
             sx={{ width: 400, ml: 6, mb: 3 }}
             renderInput={(params) => (
               <TextField
+                error={ToError}
+                helperText={ToErrorMessage}
                 {...params}
                 label="To"
                 onChange={handleDestinationChange}
@@ -139,60 +226,88 @@ function SearchFlightForm() {
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
               label="Departure Date"
+              disablePast
               inputFormat="MM/DD/YYYY"
               value={departureDate}
-              onChange={(newValue) => {
-                setDepartureDate(newValue);
+              onSelect={(event) => {
+                event.preventDefault();
+                DepartureDateError(false);
+                setDepartureDateError("");
+                console.log(event.target.value);
               }}
+              onChange={(newValue) => {
+                if (
+                  dayjs(returnDate).isBefore(dayjs(newValue)) &&
+                  showReturnDate
+                ) {
+                  setDepartureDateError(true);
+                  setDepartureDateErrorMessage(
+                    "Return date cannot be before departure date",
+                  );
+                  setReturnDateError(true);
+                  setReturnDateErrorMessage(
+                    "Return date cannot be before departure date",
+                  );
+                } else {
+                  setDepartureDateError(false);
+                  setDepartureDateErrorMessage("");
+                  setReturnDateError(false);
+                  setReturnDateErrorMessage("");
+                  setDepartureDate(newValue);
+                }
+              }}
+              id="departureDate"
               renderInput={(params) => (
-                <TextField sx={{ width: 400, mr: 6, mt: 3 }} {...params} />
+                <TextField
+                  sx={{ width: 400, mr: 6, mt: 3 }}
+                  {...params}
+                  error={DepartureDateError}
+                  helperText={DepartureDateErrorMessage}
+                />
               )}
             />
             <DesktopDatePicker
               disabled={!showReturnDate}
+              disablePast
               label="Return Date"
               inputFormat="MM/DD/YYYY"
               sx={{ width: 400, mr: 6 }}
               value={returnDate}
               onChange={(newValue) => {
-                setReturnDate(newValue);
+                if (
+                  dayjs(newValue).isBefore(dayjs(departureDate)) &&
+                  showReturnDate
+                ) {
+                  setDepartureDateError(true);
+                  setDepartureDateErrorMessage(
+                    "Return date cannot be before departure date",
+                  );
+                  setReturnDateError(true);
+                  setReturnDateErrorMessage(
+                    "Return date cannot be before departure date",
+                  );
+                } else {
+                  setReturnDateError(false);
+                  setReturnDateErrorMessage("");
+                  setDepartureDateError(false);
+                  setDepartureDateErrorMessage("");
+                  setReturnDate(newValue);
+                }
               }}
+              id="returnDate"
               renderInput={(params) => (
-                <TextField sx={{ width: 400, ml: 6, mt: 3 }} {...params} />
+                <TextField
+                  sx={{ width: 400, ml: 6, mt: 3 }}
+                  {...params}
+                  error={ReturnDateError}
+                  helperText={ReturnDateErrorMessage}
+                />
               )}
             />
-            {/* {showReturnDate ? (
-              <DesktopDatePicker
-                label="Return Date"
-                inputFormat="MM/DD/YYYY"
-                sx={{ width: 400, mr: 6 }}
-                value={returnDate}
-                onChange={(newValue) => {
-                  setReturnDate(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField sx={{ width: 400, ml: 6, mt: 3 }} {...params} />
-                )}
-              />
-            ) : (
-              <DesktopDatePicker
-                disabled
-                label="Return Date"
-                inputFormat="MM/DD/YYYY"
-                sx={{ width: 400, mr: 6 }}
-                value={returnDate}
-                onChange={(newValue) => {
-                  setReturnDate(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField sx={{ width: 400, ml: 6, mt: 3 }} {...params} />
-                )}
-              />
-            )} */}
           </LocalizationProvider>
         </Stack>
         <Stack direction="row" justifyContent="center" sx={{ mt: 6, mb: 10 }}>
-          <Button color="primary" variant="contained">
+          <Button color="primary" variant="contained" onClick={submitForm}>
             <SearchIcon sx={{ mr: 1 }} />
             Search
           </Button>
