@@ -6,7 +6,32 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const configRoutes = require("./routes");
 const configMiddlewares = require("./routes/middlewares");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
+
+// let mailTransporter = nodemailer.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: "wanderlog8@gmail.com",
+//     pass: "dkmmmoresqbxfjyx",
+//   },
+// });
+
+// let details = {
+//   from: "wanderlog8@gmail.com",
+//   to: "neeltejani125@gmail.com",
+//   subject: "Wanderlog",
+//   html: "<h1>Wanderlog</h1><p>YOU ARE INVITED TO TRIP</p><link>http://localhost:3000/trips</link>",
+// };
+
+// mailTransporter.sendMail(details, function (err, data) {
+//   if (err) {
+//     console.log(err);
+//     console.log("Error Occurs");
+//   } else {
+//     console.log("Email sent successfully");
+//   }
+// });
 
 const app = express();
 dotenv.config();
