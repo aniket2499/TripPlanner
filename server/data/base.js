@@ -3,6 +3,9 @@ const axios = require("axios");
 const dotenv = require("dotenv");
 const path = require("path");
 const { response } = require("express");
+const aws = require("aws-sdk");
+const { resolve } = require("path");
+
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 const SEARCH_URL = `http://api.positionstack.com/v1/forward?access_key=${process.env.POSITION_STACK_API_KEY}`;
@@ -10,6 +13,12 @@ const GOOGLE_URL =
   "https://maps.googleapis.com/maps/api/place/findplacefromtext/json";
 
 const GOOGLE_PHOTO_URL = "https://maps.googleapis.com/maps/api/place/photo";
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_ACCESS_SECRET,
+  region: process.env.REGION,
+});
 
 const getLocationsCoordinates = async (location) => {
   try {
@@ -76,6 +85,24 @@ const getPhotos = async (location) => {
     } catch (error) {
       console.log(error);
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getHotelPhotos = async (imageID) => {
+  const params = {
+    Bucket: process.env.BUCKET,
+    Key: `HotelImages/${imageID}.jpg`,
+  };
+  try {
+    s3.getObject(params, (err, data) => {
+      if (err) {
+        console.error(err);
+      } else {
+        return data;
+      }
+    });
   } catch (error) {
     console.log(error);
   }
