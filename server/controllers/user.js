@@ -1,19 +1,22 @@
 const User = require("../model/User");
 const validation = require("../validation/routesValidation");
+const { ObjectId } = require("mongodb");
 
 const getUserById = async (req, res, next) => {
   try {
-    id = validation.checkId(req.params.id, "User Id");
-    const user = await User.findById(id);
-    if (user) {
-      res.status(200).json(user);
+    console.log(req.params.id);
+    // id = validation.checkId(req.params.id, "User Id");
+    const user = await User.findById(ObjectId(req.params.id));
+    if (user._doc) {
+      console.log(user._doc);
+      res.status(200).json(user._doc);
+      return user._doc;
     } else {
       throw {
         message: `User not found with ID: ${id}`,
         status: 404,
       };
     }
-    res.status(200).json(user);
   } catch (err) {
     next(err);
   }
@@ -101,7 +104,7 @@ const updateUserById = async (req, res, next) => {
     //   );
     // }
     if (newUserInfo.dateOfBirth) {
-      newUserInfo.dateOfBirth = validation.checkDate(
+      newUserInfo.dateOfBirth = validation.isValidDate(
         newUserInfo.dateOfBirth,
         "Date of Birth",
       );
@@ -130,6 +133,10 @@ const updateUserById = async (req, res, next) => {
       updatedUser.dateOfBirth = newUserInfo.dateOfBirth;
     }
 
+    if (newUserInfo.trips) {
+      updatedUser.trips = newUserInfo.trips;
+    }
+
     if (Object.keys(updatedUser).length !== 0) {
       const updateUser = await User.findByIdAndUpdate(
         req.params.id,
@@ -137,7 +144,7 @@ const updateUserById = async (req, res, next) => {
         { new: true },
       );
       if (updateUser) {
-        res.status(200).json(updateUser);
+        res.status(200).json(updateUser._doc);
       } else {
         throw {
           message: `User not found with ID: ${id}`,
