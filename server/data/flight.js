@@ -79,12 +79,12 @@ const getAllCities = async (city) => {
   try {
     console.log(process.env.API_FLIGHT_KEY);
 
-    // const cities = await amadeus.referenceData.locations.get({
-    //   keyword: city,
-    //   subType: ["CITY"],
-    // });
-    console.log(cities);
-    res.status(200).json(cities.data);
+    const cities = await amadeus.referenceData.locations.get({
+      keyword: city,
+      subType: "AIRPORT,CITY",
+    });
+    console.log(cities.data);
+    return cities.data;
   } catch (err) {
     throw err;
   }
