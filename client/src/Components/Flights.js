@@ -32,6 +32,7 @@ import { Container } from "@mui/system";
 
 function Flights(props) {
   const [flights, setFlights] = useState([]);
+  const [formParms, setFormParms] = useState({});
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -235,11 +236,16 @@ function Flights(props) {
     fetchFlights();
   }, []);
 
+  const handleSearch = (formParms) => {
+    setFormParms(formParms);
+    setIndex(0);
+  };
+
   return (
     <div>
       <br />
       <Container>
-        <SearchFlightForm></SearchFlightForm>
+        <SearchFlightForm handleSearch={handleSearch}></SearchFlightForm>
         <br />
 
         {loading ? (
