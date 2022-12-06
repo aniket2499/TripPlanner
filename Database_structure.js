@@ -114,5 +114,3 @@ const places_collection = {
   id: "id",
   Name: "name",
 };
-
-//neel
