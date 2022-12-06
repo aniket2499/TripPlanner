@@ -120,6 +120,8 @@ const getAllHotels = async (location, pg) => {
     pg = pg ? pg : "1";
     let low = (pg - 1) * 10;
     let high = pg * 10;
+    let min = 1;
+    let max = 300;
     const cachedData = await client.hGet(`${location}cachedHotels`, pg);
 
     if (cachedData) {
@@ -134,10 +136,22 @@ const getAllHotels = async (location, pg) => {
             radius: 50,
             radiusUnit: "MILE",
             hotelSource: "ALL",
-          },
+            amenities:
+              "SWIMMING_POOL,SPA,FITNESS_CENTER,RESTAURANT,PARKING,AIR_CONDITIONING,PETS_ALLOWED,AIRPORT_SHUTTLE,BUSINESS_CENTER,DISABLED_FACILITIES,WIFI,MEETING_ROOMS,NO_KID_ALLOWED,TENNIS,GOLF,KITCHEN,ANIMAL_WATCHING,BABY-SITTING,BEACH,CASINO,JACUZZI,SAUNA,SOLARIUM,MASSAGE,VALET_PARKING,BAR or LOUNGE,KID_WELCOME,NO_PORN_FILMS,MINIBAR,TELEVISION,WI-FI_IN_ROOM,ROOM_SERVICE,GUARDED_PARKG,SERV_SPEC_MENU",
+            ratings: "2,3,4,5",
+          }
         );
         const hotelData = data.data;
-        const hotelList = hotelData.slice(low, high);
+        // console.log(data.data);
+        let hotelList = hotelData.slice(low, high);
+        for (let i = 0; i < hotelList.length; i++) {
+          let imageID = Math.floor(Math.random() * (max - min) + min);
+          let getImage = await cityData.getHotelPhotos(imageID);
+          hotelList[i] = {
+            ...hotelList[i],
+            ...getImage,
+          };
+        }
         await client.hSet(
           `${location}cachedHotels`,
           pg,
@@ -153,8 +167,6 @@ const getAllHotels = async (location, pg) => {
   }
 };
 
-// getAllRestaurant("chicago", "1");
-// getAllHotels("chicago", "1");
 module.exports = {
   getAllRestaurant,
   getAllAttractions,

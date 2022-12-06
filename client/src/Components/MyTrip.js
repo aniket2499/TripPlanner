@@ -18,6 +18,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  TextField,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
@@ -54,14 +55,18 @@ const MyTrip = () => {
       height: 300,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      backgroundImage: `url(https://media.istockphoto.com/id/1320815200/photo/wall-black-background-for-design-stone-black-texture-background.jpg?b=1&s=170667a&w=0&k=20&c=Q6PzuL91wGD5u6p_-g7McRPMXvlWHedM7Dmi4LWOjVE=)`,
+      margin: -24,
+      padding: 24,
+      backgroundImage: `url(${"https://i.pinimg.com/736x/d6/2c/6f/d62c6fab8756a07ce13d30059120cc32.jpg"})`,
+
     },
   };
 
   return (
     <div>
       <Grid container>
-        <Grid item xs={1.5} style={{ backgroundColor: "white" }}>
+
+        <Grid item xs={12} sm={12} md={4} lg={2}>
           <div className="navbar">
             <div className="navbar__links">
               <navbar>
@@ -137,62 +142,60 @@ const MyTrip = () => {
               </navbar>
             </div>
           </div>
+
         </Grid>
-        <Grid item xs={6} style={{ backgroundColor: "red" }}>
+        <Grid item xs={12} sm={12} md={6} lg={6}>
           <Stack direction="column">
-            <Box>
+            <Box sx={{ width: "90%", mt: 10, borderRadius: 0, p: 5, m: 5 }}>
               <Paper
                 sx={{
+                  m: 5,
+                  p: 2,
+
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
                 }}
                 style={styles.paperContainer}
               >
-                {/* <Card sx={{ maxWidth: "auto" }}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="https://marriottnews.brightspotcdn.com/dims4/default/dd5096c/2147483647/strip/true/crop/1920x960+0+0/resize/1920x960!/quality/100/?url=https%3A%2F%2Fmarriottnews.brightspotcdn.com%2F79%2Fc4%2F10650734b958dbc4f1691cacdb53%2Fbonvoy-endcard-15-30-60-4k-0-00-04-0534.png"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Trip To Marriott
-                    </Typography>
-                  </CardContent>
-                </Card> */}
-              </Paper>
-            </Box>
-          </Stack>
-          <Stack direction="column">
-            <Box>
-              <Paper
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                }}
-                style={styles.paperContainer}
-              >
-                {/* <Card sx={{ maxWidth: "auto" }}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="https://marriottnews.brightspotcdn.com/dims4/default/dd5096c/2147483647/strip/true/crop/1920x960+0+0/resize/1920x960!/quality/100/?url=https%3A%2F%2Fmarriottnews.brightspotcdn.com%2F79%2Fc4%2F10650734b958dbc4f1691cacdb53%2Fbonvoy-endcard-15-30-60-4k-0-00-04-0534.png"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Trip To Marriott
-                    </Typography>
-                  </CardContent>
-                </Card> */}
+                <Grid container spacing={2} justifyContent="center">
+                  <Grid item xs={12} sm={12} md={8} lg={8}>
+                    <Card>
+                      <CardContent>
+                        <Stack direction="column" justifyContent="Center">
+                          <Stack direction="row" justifyContent="Center">
+                            <TextField
+                              label="name"
+                              variant="outlined"
+                              backgroundColor="primary.secondary"
+                              sx={{ width: "70%" }}
+                              placeholder="name"
+                            />
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            justifyContent="Center"
+                          >
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              sx={{ width: "30%", mt: 5 }}
+                            >
+                              Edit
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
               </Paper>
             </Box>
           </Stack>
         </Grid>
-        <Grid item xs={4.5} style={{ backgroundColor: "blue" }}>
+
+        <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" align="center" gutterBottom>
             Map
           </Typography>
@@ -203,3 +206,4 @@ const MyTrip = () => {
 };
 
 export default MyTrip;
+
