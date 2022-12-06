@@ -219,10 +219,18 @@ function App() {
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signout" element={<SignOut />} />
               <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/flights" element={<Flights />} />
-              <Route path="/restaurants" element={<Restaurants />} />
-              <Route path="/hotels" element={<Hotels />} />
-              <Route path="/attractions" element={<Attractions />} />
+              <Route path="/flights" element={<PrivateRoute />}>
+                <Route path="/flights" element={<Flights />} />
+              </Route>
+              <Route path="/restaurants" element={<PrivateRoute />}>
+                <Route path="/restaurants" element={<Restaurants />} />
+              </Route>
+              <Route path="/hotels" element={<PrivateRoute />}>
+                <Route path="/hotels" element={<Hotels />} />
+              </Route>
+              <Route path="/attractions" element={<PrivateRoute />}>
+                <Route path="/attractions" element={<Attractions />} />
+              </Route>
             </Routes>
           </div>
         </Router>

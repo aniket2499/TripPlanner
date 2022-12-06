@@ -5,7 +5,7 @@ const UserSchema = new Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true, dropDups: true },
   password: { type: String, required: true },
-  dateOfBirth: { type: String, required: true },
+  dateOfBirth: { type: String, required: false },
   trips: [{ type: Schema.Types.ObjectId, ref: "Trips" }],
 });
 
