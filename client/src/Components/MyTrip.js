@@ -13,6 +13,7 @@ import {
   Stack,
   ListItem,
   List,
+  TextField,
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -38,23 +39,24 @@ const MyTrip = () => {
       backgroundPosition: "center",
       margin: -24,
       padding: 24,
-      backgroundImage: `url(${"https://marriottnews.brightspotcdn.com/dims4/default/dd5096c/2147483647/strip/true/crop/1920x960+0+0/resize/1920x960!/quality/100/?url=https%3A%2F%2Fmarriottnews.brightspotcdn.com%2F79%2Fc4%2F10650734b958dbc4f1691cacdb53%2Fbonvoy-endcard-15-30-60-4k-0-00-04-0534.png"})`,
+      backgroundImage: `url(${"https://i.pinimg.com/736x/d6/2c/6f/d62c6fab8756a07ce13d30059120cc32.jpg"})`,
     },
   };
 
   return (
     <div>
       <Grid container>
-        <Grid item xs={12} sm={4} md={4} lg={2}>
+        <Grid item xs={12} sm={12} md={4} lg={2}>
           <Typography variant="h4" align="center" gutterBottom>
             OverView
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={6}>
+        <Grid item xs={612} sm={12} md={6} lg={6}>
           <Stack direction="column">
-            <Box sx={{ width: "100%", mt: 10, borderRadius: 0 }}>
+            <Box sx={{ width: "90%", mt: 10, borderRadius: 0, p: 5, m: 5 }}>
               <Paper
                 sx={{
+                  m: 5,
                   p: 2,
                   display: "flex",
                   flexDirection: "column",
@@ -63,24 +65,43 @@ const MyTrip = () => {
                 }}
                 style={styles.paperContainer}
               >
-                {/* <Card sx={{ maxWidth: "auto" }}>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="https://marriottnews.brightspotcdn.com/dims4/default/dd5096c/2147483647/strip/true/crop/1920x960+0+0/resize/1920x960!/quality/100/?url=https%3A%2F%2Fmarriottnews.brightspotcdn.com%2F79%2Fc4%2F10650734b958dbc4f1691cacdb53%2Fbonvoy-endcard-15-30-60-4k-0-00-04-0534.png"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                      Trip To Marriott
-                    </Typography>
-                  </CardContent>
-                </Card> */}
+                <Grid container spacing={2} justifyContent="center">
+                  <Grid item xs={12} sm={12} md={8} lg={8}>
+                    <Card>
+                      <CardContent>
+                        <Stack direction="column" justifyContent="Center">
+                          <Stack direction="row" justifyContent="Center">
+                            <TextField
+                              label="name"
+                              variant="outlined"
+                              backgroundColor="primary.secondary"
+                              sx={{ width: "70%" }}
+                              placeholder="name"
+                            />
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            spacing={2}
+                            justifyContent="Center"
+                          >
+                            <Button
+                              color="primary"
+                              variant="contained"
+                              sx={{ width: "30%", mt: 5 }}
+                            >
+                              Edit
+                            </Button>
+                          </Stack>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
               </Paper>
             </Box>
           </Stack>
         </Grid>
-        <Grid item xs={12} sm={4} md={4} lg={4}>
+        <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" align="center" gutterBottom>
             Map
           </Typography>
