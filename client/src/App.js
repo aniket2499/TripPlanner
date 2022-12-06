@@ -13,7 +13,7 @@ import Flights from "./Components/Flights";
 import Restaurants from "./Components/Restaurants";
 import Hotels from "./Components/Hotels";
 import Attractions from "./Components/Attractions";
-
+import MyTrips from "./Components/MyTrip";
 import {
   createTheme,
   ThemeProvider,
@@ -231,6 +231,7 @@ function App() {
               <Route path="/attractions" element={<PrivateRoute />}>
                 <Route path="/attractions" element={<Attractions />} />
               </Route>
+              <Route path="/my-trips" element={<MyTrips />} />
             </Routes>
           </div>
         </Router>

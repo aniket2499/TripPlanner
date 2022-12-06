@@ -8,6 +8,8 @@ const TripSchema = new Schema({
     startDate: { type: Date },
     endDate: { type: Date },
   },
+  users: [{ type: String, ref: "User" }],
+
   invites: [
     {
       email: { type: String },
@@ -39,7 +41,6 @@ const TripSchema = new Schema({
   hotels: [{ type: Schema.Types.ObjectId, ref: "Hotels" }],
   restaurants: [{ type: Schema.Types.ObjectId, ref: "Restaurants" }],
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
-  users: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 module.exports = mongoose.model("Trip", TripSchema);
