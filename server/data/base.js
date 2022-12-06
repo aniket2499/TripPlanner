@@ -96,22 +96,34 @@ const getHotelPhotos = async (imageID) => {
     Key: `HotelImages/${imageID}.jpg`,
   };
   try {
-    s3.getObject(params, (err, data) => {
-      if (err) {
-        console.error(err);
-      } else {
-        return data;
-      }
-    });
+    const image = `https://tripplannercs554.s3.amazonaws.com/HotelImages/${imageID}.jpg`;
+    let newObj = {
+      image: image,
+    };
+    return newObj;
   } catch (error) {
     console.log(error);
   }
+  // try {
+  //   s3.getObject(params, (err, data) => {
+  //     if (err) {
+  //       console.error(err);
+  //     } else {
+  //       console.log(data);
+  //       return data;
+  //     }
+  //   });
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
+// getHotelPhotos("1");
 
-getLocationsCoordinates("Chicago");
+// getLocationsCoordinates("Chicago");
 
 module.exports = {
   getLocationsCoordinates,
   getLocationDetails,
   getPhotos,
+  getHotelPhotos,
 };
