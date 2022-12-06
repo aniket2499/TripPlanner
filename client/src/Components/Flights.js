@@ -236,6 +236,7 @@ function Flights(props) {
     fetchFlights();
   }, []);
 
+  // calling route to get flights from server
   const handleSearch = (formParms) => {
     setFormParms(formParms);
     setIndex(0);
