@@ -17,6 +17,7 @@ const restReducer = (state = initialState, action) =>{
 
     switch(type){
         case 'ADD_RESTAURANT':
+            console.log("add rest action")
             return [...state, {location_id:payload.location_id, name: payload.name, rating: payload.rating, web_url: payload.web_url, address: payload.address, price_level: payload.price_level, latitude: payload.latitude, longitude: payload.longitude, image: payload.image}];
         
         case 'DELETE_RESTAURANT':

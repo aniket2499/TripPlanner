@@ -24,4 +24,7 @@ const getAttractionsData = (location, page, rating) => {
       return response.data;
     });
 };
-export default { getHotelData, getRestaurantData, getAttractionsData };
+
+let exports = { getHotelData, getRestaurantData, getAttractionsData }
+
+export default exports;
