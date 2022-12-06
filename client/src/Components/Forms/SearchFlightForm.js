@@ -31,7 +31,7 @@ import FormLabel from "@mui/material/FormLabel";
 
 function SearchFlightForm({ handleSearch }) {
   const [originDropdown, setOriginOriginDropdown] = useState(["Austin(AUS)"]);
-  const [destinationDropdown, setDestinationDropdown] = useState(["NYC"]);
+  const [destinationDropdown, setDestinationDropdown] = useState(["NYC(JFK)"]);
   const [departureDate, setDepartureDate] = useState(dayjs(new Date()));
   const [returnDate, setReturnDate] = useState(dayjs(new Date()));
   const [showReturnDate, setShowReturnDate] = useState(true);
@@ -91,7 +91,8 @@ function SearchFlightForm({ handleSearch }) {
     } else {
       searchObject["originCity"] = document
         .getElementById("originTextField")
-        .value.split("(")[0];
+        .value.split("(")[1]
+        .split(")")[0];
     }
     if (document.getElementById("destinationTextField").value.length === 0) {
       localtoerror = true;
@@ -100,7 +101,8 @@ function SearchFlightForm({ handleSearch }) {
     } else {
       searchObject["destinationCity"] = document
         .getElementById("destinationTextField")
-        .value.split("(")[0];
+        .value.split("(")[1]
+        .split(")")[0];
     }
 
     if (dayjs(returnDate).isBefore(dayjs(departureDate)) && showReturnDate) {

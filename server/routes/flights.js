@@ -14,14 +14,9 @@ router.get("/city/:city", async function (req, res, next) {
   }
 });
 
-router.get("/:origin/:dest/:date/:adults", async function (req, res, next) {
+router.get("/:From/:To/:FromDate/:EndDate", async function (req, res, next) {
   try {
-    const Parameters = await getAllFlights.getAllFlights(
-      req.params.origin,
-      req.params.dest,
-      req.params.date,
-      req.params.adults,
-    );
+    const Parameters = await getAllFlights.getAllFlights(req.params);
     res.send(Parameters);
   } catch (err) {
     next(err);

@@ -15,7 +15,7 @@ const getTripById = async (req, res, next) => {
         status: 404,
       };
     }
-    res.status(200).json(restaurant);
+    res.status(200).json(trip);
   } catch (err) {
     next(err);
   }

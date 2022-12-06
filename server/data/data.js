@@ -54,7 +54,7 @@ const getAllRestaurant = async (location, pg, rating) => {
         await client.hSet(
           `${location}cachedRestaurants`,
           pg,
-          JSON.stringify(data)
+          JSON.stringify(data),
         );
         return data;
       } catch (error) {
@@ -102,7 +102,7 @@ const getAllAttractions = async (location, pg, rating) => {
         await client.hSet(
           `${location}cachedAttractions`,
           pg,
-          JSON.stringify(data)
+          JSON.stringify(data),
         );
         return data;
       } catch (error) {
@@ -155,7 +155,7 @@ const getAllHotels = async (location, pg) => {
         await client.hSet(
           `${location}cachedHotels`,
           pg,
-          JSON.stringify(hotelList)
+          JSON.stringify(hotelList),
         );
         return hotelList;
       } catch (error) {

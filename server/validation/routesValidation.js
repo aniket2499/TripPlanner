@@ -2,6 +2,21 @@ const e = require("express");
 const { ObjectId } = require("mongodb");
 
 module.exports = {
+  toObjectId(id, varName) {
+    this.checkString(id, varName);
+
+    try {
+      parsedId = ObjectId(id);
+    } catch (e) {
+      throw {
+        message: `provided ${varName} is not a valid ObjectId , it must be a single String of 12 bytes or a string of 24 hex characters`,
+        status: 400,
+      };
+    }
+
+    return parsedId;
+  },
+
   checkId(id, varName) {
     if (!varName) varName = "ID";
     if (!id || id == undefined)

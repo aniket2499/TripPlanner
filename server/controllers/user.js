@@ -2,83 +2,79 @@ const User = require("../model/User");
 const validation = require("../validation/routesValidation");
 const { ObjectId } = require("mongodb");
 
-const getUserById = async (req, res, next) => {
-  try {
-    console.log(req.params.id);
-    // id = validation.checkId(req.params.id, "User Id");
-    const user = await User.findById(ObjectId(req.params.id));
-    if (user._doc) {
-      console.log(user._doc);
-      res.status(200).json(user._doc);
-      return user._doc;
-    } else {
-      throw {
-        message: `User not found with ID: ${id}`,
-        status: 404,
-      };
-    }
-  } catch (err) {
-    next(err);
+const getUserById = async (id) => {
+  let parsedId = validation.toObjectId(id, "UserId");
+  const user = await User.findById(parsedId);
+  if (user) {
+    user._id = user._id.toString();
+    return user;
+  } else {
+    throw {
+      message: `User not found with ID: ${id}`,
+      status: 404,
+    };
   }
 };
 
-const getAllUsers = async (req, res, next) => {
-  try {
-    const usersList = await User.find();
-    if (usersList.length > 0) {
-      res.status(200).json(usersList);
-    } else {
-      throw {
-        message: `No users found`,
-        status: 404,
-      };
+const getAllUsers = async () => {
+  const usersList = await User.find();
+  if (usersList.length > 0) {
+    for (let i = 0; i < usersList.length; i++) {
+      usersList[i]._id = usersList[i]._id.toString();
     }
-  } catch (err) {
-    next(err);
+    return usersList;
+  } else {
+    throw {
+      message: `No users found`,
+      status: 404,
+    };
   }
 };
 
-const createUser = async (req, res, next) => {
-  const newUserInfo = new User(req.body);
+const createUser = async (userBody) => {
+  const newUserInfo = new User(userBody);
 
-  try {
-    newUserInfo.firstName = validation.checkString(
-      newUserInfo.firstName,
-      "First Name",
-    );
-    newUserInfo.lastName = validation.checkString(
-      newUserInfo.lastName,
-      "Last Name",
-    );
-    newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
-    newUserInfo.password = validation.checkPassword(
-      newUserInfo.password,
-      "User Password",
-    );
-    newUserInfo.dateOfBirth = validation.isValidDate(
-      newUserInfo.dateOfBirth,
-      "Date of Birth",
-    );
-    const savedUser = await newUserInfo.save();
-    if (savedUser) {
-      res.status(201).json(savedUser);
-    } else {
-      throw {
-        message: `User not created`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
+  newUserInfo.firstName = validation.checkString(
+    newUserInfo.firstName,
+    "First Name",
+  );
+  newUserInfo.lastName = validation.checkString(
+    newUserInfo.lastName,
+    "Last Name",
+  );
+  newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
+  newUserInfo.password = validation.checkPassword(
+    newUserInfo.password,
+    "User Password",
+  );
+  newUserInfo.dateOfBirth = validation.isValidDate(
+    newUserInfo.dateOfBirth,
+    "Date of Birth",
+  );
+  const savedUser = await newUserInfo.save();
+  if (savedUser) {
+    return savedUser;
+  } else {
+    throw {
+      message: `User not created`,
+      status: 400,
+    };
   }
 };
 
-const updateUserById = async (req, res, next) => {
-  const newUserInfo = req.body;
-  let updatedUser = {};
+const updateUserById = async (id, updateUserBody) => {
+  let parsedId = validation.toObjectId(id, "UserId");
+  const user = await User.findById(parsedId);
+  if (!user) {
+    throw {
+      message: `User not found with ID: ${id}`,
+      status: 404,
+    };
+  } else {
+    const newUserInfo = updateUserBody;
+    let updatedUser = {};
 
-  try {
-    id = validation.checkId(req.params.id, "User Id");
+    id = validation.checkId(id, "User Id");
     if (newUserInfo.firstName) {
       newUserInfo.firstName = validation.checkString(
         newUserInfo.firstName,
@@ -139,15 +135,15 @@ const updateUserById = async (req, res, next) => {
 
     if (Object.keys(updatedUser).length !== 0) {
       const updateUser = await User.findByIdAndUpdate(
-        req.params.id,
-        { $set: req.body },
+        id,
+        { $set: updateUserBody },
         { new: true },
       );
       if (updateUser) {
-        res.status(200).json(updateUser._doc);
+        return updateUser;
       } else {
         throw {
-          message: `User not found with ID: ${id}`,
+          message: `User with ID: ${id} was not updated`,
           status: 400,
         };
       }
@@ -157,31 +153,31 @@ const updateUserById = async (req, res, next) => {
         status: 400,
       };
     }
-  } catch (e) {
-    next(e);
   }
-
-  // try {
-  //
-  // } catch (err) {
-  //   next(err);
-  // }
 };
 
-const deleteUserById = async (req, res, next) => {
-  try {
-    id = validation.checkId(req.params.id, "User Id");
-    userToDelete = await User.findByIdAndDelete(req.params.id);
+const deleteUserById = async (id) => {
+  let parsedId = validation.toObjectId(id, "UserId");
+  console.log(parsedId);
+  const user = await User.findById(parsedId);
+  if (user) {
+    const userToDelete = await User.findByIdAndDelete(parsedId);
     if (userToDelete) {
-      res.status(200).json(userToDelete);
+      return {
+        message: `User with ID: ${id} was deleted`,
+        deleted: true,
+      };
     } else {
-      throw {
-        message: `User not found with ID: ${id}`,
-        status: 400,
+      return {
+        message: `User with ID: ${id} was not deleted`,
+        deleted: false,
       };
     }
-  } catch (err) {
-    next(err);
+  } else {
+    throw {
+      message: `User not found with ID: ${id}`,
+      status: 400,
+    };
   }
 };
 
