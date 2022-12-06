@@ -7,6 +7,10 @@ const PrivateRoute = () => {
   console.log('Private Route Comp current user', currentUser);
   // If authorized, return an outlet that will render child elements
   // If not, return element that will navigate to login page
+  if(!currentUser){
+    alert('You must be logged in to view this page');
+  }
+
   return currentUser ? <Outlet /> : <Navigate to='/login' />;
 };
 
