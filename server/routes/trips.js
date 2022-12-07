@@ -54,11 +54,11 @@ router.patch("/:id/restaurants/remove", function (req, res, next) {
   removeRestaurantFromTrip(req, res, next);
 });
 
-router.patch("/:id/invite", function (req, res, next) {
+router.post("/:id/invite", function (req, res, next) {
   inviteUserToTrip(req, res, next);
 });
 
-router.patch("/:id/accept", function (req, res, next) {
+router.post("/:id/accept", function (req, res, next) {
   acceptTripInvite(req, res, next);
 });
 

@@ -25,6 +25,11 @@ const getAttractionsData = (location, page, rating) => {
     });
 };
 
-let exports = { getHotelData, getRestaurantData, getAttractionsData }
+
+const exports = {
+  getHotelData,
+  getRestaurantData,
+  getAttractionsData,
+};
 
 export default exports;
