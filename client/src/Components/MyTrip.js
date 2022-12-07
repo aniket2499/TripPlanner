@@ -69,7 +69,7 @@ const MyTrip = () => {
   return (
     <div>
       <Grid container>
-        <Grid item xs={12} sm={12} md={4} lg={1.5}>
+        <Grid item xs={12} sm={12} md={1.5} lg={1.5}>
           <div className="navbar">
             <div className="navbar__links">
               <navbar>
@@ -143,9 +143,9 @@ const MyTrip = () => {
             </div>
           </div>
         </Grid>
-        <Grid item xs={12} sm={12} md={6} lg={6.5}>
+        <Grid item xs={12} sm={12} md={6.5} lg={6.5}>
           <Stack direction="column">
-            <Box sx={{ width: "90%", mt: 10, borderRadius: 0, p: 5, m: 5 }}>
+            <Box sx={{ width: "100%", mt: 10, borderRadius: 0, p: 5, m: 5 }}>
               <Paper
                 sx={{
                   m: 5,
