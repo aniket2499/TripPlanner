@@ -25,9 +25,11 @@ const getAttractionsData = (location, page, rating) => {
     });
 };
 
+
 const exports = {
   getHotelData,
   getRestaurantData,
   getAttractionsData,
 };
+
 export default exports;
