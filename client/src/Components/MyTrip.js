@@ -21,6 +21,7 @@ import {
   TextField,
   AppBar,
 } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -42,6 +43,7 @@ import CircularProgress, {
 import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
+
 const MyTrip = () => {
   const startDate = moment("2022-07-01");
   const endDate = moment("2022-07-05");
@@ -193,6 +195,39 @@ const MyTrip = () => {
               >
                 <Typography fontWeight="fontWeightBold">Hotels</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid containter>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Card
+                        sx={{ mt: 2 }}
+                        backgroundColor="primary.main"
+                        style={{ backgroundColor: "" }}
+                      >
+                        <CardContent>
+                          <Stack direction="column" justifyContent="Center">
+                            <Typography
+                              variant="h5"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                            >
+                              Hotel Name
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                              color="text.hint"
+                            >
+                              Hotel Address
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary
@@ -203,6 +238,39 @@ const MyTrip = () => {
               >
                 <Typography fontWeight="fontWeightBold">Restaurants</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid containter>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Card
+                        sx={{ mt: 2 }}
+                        backgroundColor="primary.main"
+                        style={{ backgroundColor: "" }}
+                      >
+                        <CardContent>
+                          <Stack direction="column" justifyContent="Center">
+                            <Typography
+                              variant="h5"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                            >
+                              Hotel Name
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                              color="text.hint"
+                            >
+                              Hotel Address
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary
@@ -213,6 +281,39 @@ const MyTrip = () => {
               >
                 <Typography fontWeight="fontWeightBold">Attractions</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid containter>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Card
+                        sx={{ mt: 2 }}
+                        backgroundColor="primary.main"
+                        style={{ backgroundColor: "" }}
+                      >
+                        <CardContent>
+                          <Stack direction="column" justifyContent="Center">
+                            <Typography
+                              variant="h5"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                            >
+                              Hotel Name
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                              color="text.hint"
+                            >
+                              Hotel Address
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary
@@ -223,6 +324,39 @@ const MyTrip = () => {
               >
                 <Typography fontWeight="fontWeightBold">Itinerary</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid containter>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Card
+                        sx={{ mt: 2 }}
+                        backgroundColor="primary.main"
+                        style={{ backgroundColor: "" }}
+                      >
+                        <CardContent>
+                          <Stack direction="column" justifyContent="Center">
+                            <Typography
+                              variant="h5"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                            >
+                              Hotel Name
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                              color="text.hint"
+                            >
+                              Hotel Address
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
             </Accordion>
             <Accordion>
               <AccordionSummary
@@ -233,6 +367,39 @@ const MyTrip = () => {
               >
                 <Typography fontWeight="fontWeightBold">Notes</Typography>
               </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid containter>
+                    <Grid item xs={12} sm={12} md={6} lg={6}>
+                      <Card
+                        sx={{ mt: 2 }}
+                        backgroundColor="primary.main"
+                        style={{ backgroundColor: "" }}
+                      >
+                        <CardContent>
+                          <Stack direction="column" justifyContent="Center">
+                            <Typography
+                              variant="h5"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                            >
+                              Hotel Name
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              fontWeight="fontWeightBold"
+                              sx={{ mt: 2, ml: 2 }}
+                              color="text.hint"
+                            >
+                              Hotel Address
+                            </Typography>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
             </Accordion>
           </Stack>
         </Grid>

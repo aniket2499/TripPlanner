@@ -181,6 +181,8 @@ let theme = createTheme({
     MuiCard: {
       root: {
         boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+        backgroundColor: "#ffffff",
+        color: "#000000",
       },
     },
   },
@@ -193,6 +195,8 @@ let theme = createTheme({
     },
     MuiCard: {
       boxShadow: "inherit",
+      backgroundColor: "#ffffff",
+      color: "#000000",
     },
   },
 });
