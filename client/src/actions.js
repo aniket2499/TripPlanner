@@ -38,8 +38,9 @@ const deleteHotel = (location_id) =>({
     }
 })
 
-const addRest = (location_id,name,latitude,longitude,rating,web_url,address,price_level,image) => ({
-    type: 'ADD_ATTRACTION',
+const addRest = (location_id,name,latitude,longitude,rating,web_url,address,price_level,image) => (
+    {
+    type: 'ADD_RESTAURANT',
     payload: {
         location_id: location_id,
         name: name,
