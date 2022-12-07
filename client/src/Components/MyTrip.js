@@ -87,19 +87,19 @@ const MyTrip = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Button>
-                        <HotelIcon />
+                        <HotelIcon sx={{ mr: 2 }} />
                         <Typography variant="body2">Hotels</Typography>
                       </Button>
                       <Button>
-                        <RestaurantIcon />
+                        <RestaurantIcon sx={{ mr: 2 }} />
                         <Typography variant="body2">Restaurants</Typography>
                       </Button>
                       <Button>
-                        <FlightIcon />
+                        <FlightIcon sx={{ mr: 2 }} />
                         <Typography variant="body2">Flights</Typography>
                       </Button>
                       <Button>
-                        <NotesIcon />
+                        <NotesIcon sx={{ mr: 2 }} />
                         <Typography variant="body2">Notes</Typography>
                       </Button>
                     </AccordionDetails>
@@ -150,6 +150,7 @@ const MyTrip = () => {
                 sx={{
                   m: 5,
                   p: 2,
+
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -190,7 +191,6 @@ const MyTrip = () => {
                 </Grid>
               </Paper>
             </Box>
-
             <Accordion>
               <AccordionSummary
                 style={{ flexDirection: "row-reverse" }}
@@ -208,7 +208,27 @@ const MyTrip = () => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography fontWeight="fontWeightBold">Restorants</Typography>
+                <Typography fontWeight="fontWeightBold">Restaurants</Typography>
+              </AccordionSummary>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Attractions</Typography>
+              </AccordionSummary>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Itinerary</Typography>
               </AccordionSummary>
             </Accordion>
             <Accordion>
