@@ -81,13 +81,8 @@ const deleteTripById = async (req, res, next) => {
 const inviteUserToTrip = async (req, res, next) => {
   try {
     const trip = await Trip.findById(req.params.id);
-    const user = await User.getUserById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (!trip.invitedUsers.includes(user._id)) {
-      trip.invitedUsers.push(user._id);
+    if (!trip.invites.includes(req.body.email)) {
+      trip.invites.push(req.body.email);
       await Trip.updateTripById(
         { params: { id: req.params.id }, body: trip },
         res,
@@ -105,54 +100,38 @@ const inviteUserToTrip = async (req, res, next) => {
   }
 };
 
-const acceptTripInvite = async (req, res, next) => {
+// user accepts invite to trip and is added to trip
+
+const acceptInviteToTrip = async (req, res, next) => {
   try {
     const trip = await Trip.findById(req.params.id);
+    //checking if user is currently logged in or not
     const user = await User.getUserById(
       { params: { id: req.body.id } },
       res,
       next,
     );
-    if (trip.invitedUsers.includes(user._id)) {
-      trip.invitedUsers.pull(user._id);
-      trip.users.push(user._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
+
+    if (user) {
+      if (trip.invites.includes(user.email)) {
+        trip.invites.pull(user.email);
+        trip.users.push(user.email);
+
+        await Trip.updateTripById(
+          { params: { id: req.params.id }, body: trip },
+          res,
+          next,
+        );
+        res.status(200).json(trip);
+      } else {
+        throw {
+          message: `User not invited to trip`,
+          status: 400,
+        };
+      }
     } else {
       throw {
-        message: `User not invited to trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-const removeUserFromTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const user = await User.getUserById(
-      { params: { id: req.body.id } },
-      res,
-
-      next,
-    );
-    if (trip.users.includes(user._id)) {
-      trip.users.pull(user._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `User not in trip`,
+        message: `User not logged in`,
         status: 400,
       };
     }
@@ -335,7 +314,6 @@ module.exports = {
   removeHotelFromTrip,
   addAttractionToTrip,
   removeAttractionFromTrip,
-  removeUserFromTrip,
   inviteUserToTrip,
-  acceptTripInvite,
+  acceptInviteToTrip,
 };

@@ -19,9 +19,13 @@ import {
   AccordionSummary,
   AccordionDetails,
   TextField,
+  AppBar,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-
+import HotelIcon from "@mui/icons-material/Hotel";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import FlightIcon from "@mui/icons-material/Flight";
+import NotesIcon from "@mui/icons-material/Notes";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyTwoToneIcon from "@mui/icons-material/AttachMoneyTwoTone";
@@ -39,16 +43,17 @@ import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
 const MyTrip = () => {
-  const startDate = moment("2022-23-22");
-  const endDate = moment("2020-29-22");
-  let currentDate = moment(startDate);
-  const dateArray = [];
+  const startDate = moment("2022-07-01");
+  const endDate = moment("2022-07-05");
 
-  while (currentDate <= endDate) {
-    dateArray.push(currentDate.format("MM-DD-YYYY"));
-    currentDate = moment(currentDate).add(1, "days");
+  const days = [];
+  let day = startDate;
+
+  while (day <= endDate) {
+    days.push(day.format("YYYY-MM-DD"));
+    day = day.clone().add(1, "d");
   }
-  console.log(dateArray);
+
   const navigate = useNavigate();
   const styles = {
     paperContainer: {
@@ -57,22 +62,21 @@ const MyTrip = () => {
       backgroundPosition: "center",
       margin: -24,
       padding: 24,
-      backgroundImage: `url(${"https://i.pinimg.com/736x/d6/2c/6f/d62c6fab8756a07ce13d30059120cc32.jpg"})`,
-
+      backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
 
   return (
     <div>
       <Grid container>
-
-        <Grid item xs={12} sm={12} md={4} lg={2}>
+        <Grid item xs={12} sm={12} md={4} lg={1.5}>
           <div className="navbar">
             <div className="navbar__links">
               <navbar>
                 <List>
                   <Accordion>
                     <AccordionSummary
+                      style={{ flexDirection: "row-reverse" }}
                       expandIcon={<ExpandMoreIcon />}
                       aria-controls="panel1a-content"
                       id="panel1a-header"
@@ -83,30 +87,28 @@ const MyTrip = () => {
                     </AccordionSummary>
                     <AccordionDetails>
                       <Button>
-                        <Typography fontWeight="fontWeightBold">
-                          Hotels
-                        </Typography>
+                        <HotelIcon />
+                        <Typography variant="body2">Hotels</Typography>
                       </Button>
                       <Button>
-                        <Typography fontWeight="fontWeightBold">
-                          Restaurants
-                        </Typography>
+                        <RestaurantIcon />
+                        <Typography variant="body2">Restaurants</Typography>
                       </Button>
                       <Button>
-                        <Typography fontWeight="fontWeightBold">
-                          Flights
-                        </Typography>
+                        <FlightIcon />
+                        <Typography variant="body2">Flights</Typography>
                       </Button>
                       <Button>
-                        <Typography fontWeight="fontWeightBold">
-                          Notes
-                        </Typography>
+                        <NotesIcon />
+                        <Typography variant="body2">Notes</Typography>
                       </Button>
                     </AccordionDetails>
                   </Accordion>
                   <Accordion>
                     <AccordionSummary
+                      style={{ flexDirection: "row-reverse" }}
                       expandIcon={<ExpandMoreIcon />}
+                      IconButtonProps={{ edge: "start" }}
                       aria-controls="panel2a-content"
                       id="panel2a-header"
                     >
@@ -115,10 +117,8 @@ const MyTrip = () => {
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      {dateArray.map((date) => (
-                        <Typography fontWeight="fontWeightBold">
-                          {date}
-                        </Typography>
+                      {days.map((date) => (
+                        <Button fontWeight="fontWeightBold">{date}</Button>
                       ))}
                     </AccordionDetails>
                   </Accordion>
@@ -142,9 +142,8 @@ const MyTrip = () => {
               </navbar>
             </div>
           </div>
-
         </Grid>
-        <Grid item xs={12} sm={12} md={6} lg={6}>
+        <Grid item xs={12} sm={12} md={6} lg={6.5}>
           <Stack direction="column">
             <Box sx={{ width: "90%", mt: 10, borderRadius: 0, p: 5, m: 5 }}>
               <Paper
@@ -194,7 +193,6 @@ const MyTrip = () => {
             </Box>
           </Stack>
         </Grid>
-
         <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" align="center" gutterBottom>
             Map
@@ -206,4 +204,3 @@ const MyTrip = () => {
 };
 
 export default MyTrip;
-
