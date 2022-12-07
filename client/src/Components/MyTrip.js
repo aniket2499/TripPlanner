@@ -57,12 +57,8 @@ const MyTrip = () => {
   const navigate = useNavigate();
   const styles = {
     paperContainer: {
-      height: 350,
-      width: 775,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      margin: -24,
-      padding: 24,
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
@@ -146,15 +142,13 @@ const MyTrip = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={6.5} lg={6.5}>
           <Stack direction="column">
-            <Box sx={{ width: "90%", borderRadius: 0, p: 5 }}>
+            <Box sx={{ width: "100%", height: "20rem", borderRadius: 0, p: 0 }}>
               <Paper
                 sx={{
-                  m: 5,
-                  p: 2,
-
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
+                  height: "70%",
                 }}
                 style={styles.paperContainer}
               >
@@ -165,31 +159,24 @@ const MyTrip = () => {
                   style={{ paddingBottom: 0 }}
                 >
                   <Grid item xs={12} sm={12} md={8} lg={8}>
-                    <Card>
+                    <Card sx={{ mt: 40 }}>
                       <CardContent>
                         <Stack direction="column" justifyContent="Center">
-                          <Stack direction="row" justifyContent="Center">
-                            <TextField
-                              label="name"
-                              variant="outlined"
-                              backgroundColor="primary.secondary"
-                              sx={{ width: "70%" }}
-                              placeholder="name"
-                            />
-                          </Stack>
-                          <Stack
-                            direction="row"
-                            spacing={2}
-                            justifyContent="Center"
+                          <Typography
+                            variant="h5"
+                            fontWeight="fontWeightBold"
+                            sx={{ mt: 2, ml: 2 }}
                           >
-                            <Button
-                              color="primary"
-                              variant="contained"
-                              sx={{ width: "30%", mt: 5 }}
-                            >
-                              Edit
-                            </Button>
-                          </Stack>
+                            My Trip
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            fontWeight="fontWeightBold"
+                            sx={{ mt: 2, ml: 2 }}
+                            color="text.hint"
+                          >
+                            start date - end date
+                          </Typography>
                         </Stack>
                       </CardContent>
                     </Card>
