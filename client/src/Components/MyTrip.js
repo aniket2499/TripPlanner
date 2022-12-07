@@ -150,7 +150,6 @@ const MyTrip = () => {
                 sx={{
                   m: 5,
                   p: 2,
-
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "center",
@@ -191,6 +190,37 @@ const MyTrip = () => {
                 </Grid>
               </Paper>
             </Box>
+
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Hotels</Typography>
+              </AccordionSummary>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Restorants</Typography>
+              </AccordionSummary>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Notes</Typography>
+              </AccordionSummary>
+            </Accordion>
           </Stack>
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>

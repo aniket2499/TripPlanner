@@ -162,7 +162,7 @@ let theme = createTheme({
   },
   spacing: 5,
   shape: {
-    borderRadius: 25,
+    borderRadius: 8,
   },
   overrides: {
     MuiAppBar: {
