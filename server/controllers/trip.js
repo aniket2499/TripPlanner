@@ -382,7 +382,7 @@ const acceptInviteToTrip = async (req, res) => {
     if (user) {
       if (trip.invites.includes(user.email)) {
         trip.invites.pull(user.email);
-        trip.users.push(user.email);
+        trip.users.push(user._id);
 
         await Trip.updateTripById(
           { params: { id: req.params.id }, body: trip },
