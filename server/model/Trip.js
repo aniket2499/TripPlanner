@@ -5,8 +5,8 @@ const TripSchema = new Schema({
   cur_location: { type: String, required: true },
   destination: { type: String, required: true },
   tripDate: {
-    startDate: { type: Date },
-    endDate: { type: Date },
+    startDate: { type: String, required: true },
+    endDate: { type: String, required: true },
   },
   invites: [
     {
@@ -26,7 +26,7 @@ const TripSchema = new Schema({
   placesToVisit: [{ type: Schema.Types.ObjectId, ref: "Places" }],
   itinerary: [
     {
-      date: { type: Date, required: true },
+      date: { type: String },
       weatherDetails: {
         temperature: { type: String },
         description: { type: String },

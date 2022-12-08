@@ -1,82 +1,94 @@
+const { parse } = require("dotenv");
 const Place = require("../model/Place");
 const validation = require("../validation/routesValidation");
-const getPlaceById = async (req, res, next) => {
-  try {
-    validation.checkId(req.params.id, "Place Id");
-    const place = await Place.findById(req.params.id);
-    if (place) {
-      res.status(200).json(place);
-    } else {
-      throw {
-        message: `Place not found with ID: ${place}`,
-        status: 404,
-      };
-    }
-  } catch (err) {
-    next(err);
+
+const getPlaceById = async (id) => {
+  let parsedId = validation.toObjectId(id, "PlaceId");
+  const place = await Place.findById(parsedId);
+  if (place) {
+    return place;
+  } else {
+    throw {
+      message: `Place not found with ID: ${place}`,
+      status: 404,
+    };
   }
 };
 
-const getAllPlaces = async (req, res, next) => {
-  try {
-    const places = await Place.find();
-    if (places.length > 0) {
-      res.status(200).json(places);
-    } else {
-      throw {
-        message: `No places found`,
-        status: 404,
-      };
-    }
-  } catch (err) {
-    next(err);
+const getAllPlaces = async () => {
+  const placesList = await Place.find();
+  if (placesList.length > 0) {
+    res.status(200).json(placesList);
+  } else {
+    throw {
+      message: `No places found`,
+      status: 404,
+    };
   }
 };
 
-const createPlace = async (req, res, next) => {
-  const newPlace = new Place(req.body);
-  try {
-    newPlace.name = validation.checkString(newPlace.name, "Place Name");
-    newPlace.latitude = validation.checkStringForNumber(
-      newPlace.latitude,
-      "Place Latitude",
-    );
-    newPlace.longitude = validation.checkStringForNumber(
-      newPlace.longitude,
-      "Place Longitude",
-    );
+const createPlace = async (placeBody) => {
+  const newPlaceInfo = new Place(placeBody);
 
-    newPlace.address = validation.checkString(
-      newPlace.address,
-      "Place Address",
-    );
+  newPlaceInfo.name = validation.checkString(newPlaceInfo.name, "Place Name");
+  newPlaceInfo.latitude = validation.checkStringForNumber(
+    newPlaceInfo.latitude,
+    "Place Latitude",
+  );
+  newPlaceInfo.longitude = validation.checkStringForNumber(
+    newPlaceInfo.longitude,
+    "Place Longitude",
+  );
 
-    newPlace.image = validation.checkURL(newPlace.image, "Place Image Url");
+  newPlaceInfo.address = validation.checkString(
+    newPlaceInfo.address,
+    "Place Address",
+  );
 
-    newPlace.description = validation.checkString(
-      newPlace.description,
-      "Place Description",
-    );
+  newPlaceInfo.image = validation.checkURL(
+    newPlaceInfo.image,
+    "Place Image Url",
+  );
 
-    newPlace.rating = validation.checkStringForNumber(
-      newPlace.rating,
-      "Place Rating",
-    );
+  newPlaceInfo.description = validation.checkString(
+    newPlaceInfo.description,
+    "Place Description",
+  );
 
-    newPlace.website = validation.checkURL(newPlace.website, "Place Website");
+  newPlaceInfo.rating = validation.checkStringForNumber(
+    newPlaceInfo.rating,
+    "Place Rating",
+  );
 
-    const savedPlace = await newPlace.save();
-    res.status(201).json(savedPlace);
-  } catch (error) {
-    next(error);
+  newPlaceInfo.website = validation.checkURL(
+    newPlaceInfo.website,
+    "Place Website",
+  );
+
+  const savedPlace = await newPlaceInfo.save();
+  if (savedPlace) {
+    return savedPlace;
+  } else {
+    throw {
+      message: `Place not created`,
+      status: 400,
+    };
   }
 };
 
-const updatePlacebyId = async (req, res, next) => {
-  const newPlaceInfo = req.body;
-  let updatedPlace = {};
-  try {
-    validation.checkId(req.params.id, "Place Id");
+const updatePlacebyId = async (id, updatePlaceBody) => {
+  let parsedId = validation.toObjectId(id, "PlaceId");
+  const place = await Place.findById(parsedId);
+  if (!place) {
+    throw {
+      message: `Place not found with ID: ${id}`,
+      status: 404,
+    };
+  } else {
+    const newPlaceInfo = updatePlaceBody;
+    let updatedPlace = {};
+
+    id = validation.checkId(id, "Place Id");
     if (newPlaceInfo.name) {
       newPlaceInfo.name = validation.checkString(
         newPlaceInfo.name,
@@ -131,7 +143,7 @@ const updatePlacebyId = async (req, res, next) => {
         "Place Website",
       );
     }
-    const oldPlaceInfo = await Place.findById(req.params.id);
+    const oldPlaceInfo = await Place.findById(id);
     if (newPlaceInfo.name && newPlaceInfo.name !== oldPlaceInfo.name) {
       updatedPlace.name = newPlaceInfo.name;
     }
@@ -173,46 +185,59 @@ const updatePlacebyId = async (req, res, next) => {
     }
     if (Object.keys(updatedPlace).length != 0) {
       const updatedPlace = await Place.findByIdAndUpdate(
-        req.params.id,
-        updatedPlace,
+        id,
+        { $set: updatePlaceBody },
         { new: true },
       );
 
       if (updatedPlace) {
-        res.status(200).json(updatedPlace);
+        return updatedPlace;
       } else {
         throw {
-          message: `Place not found with ID: ${req.params.id}`,
-          status: 404,
+          message: `Place with ID: ${id} was not updated`,
+          status: 400,
         };
       }
     } else {
       throw {
-        message: `No fields to update`,
+        message: `No changes were made to the place with ID: ${id}`,
         status: 400,
       };
     }
-  } catch (err) {
-    next(err);
   }
 };
 
-const deletePlaceById = async (req, res, next) => {
-  try {
-    validation.checkId(req.params.id, "Place Id");
-    const place = await Place.findByIdAndDelete(req.params.id);
-    if (place) {
-      res
-        .status(200)
-        .json(`Place on ID (${req.params.id}) has been deleted...`);
+const deletePlaceById = async (id) => {
+  let parsedId = validation.toObjectId(id, "PlaceId");
+  const place = await Place.findById(parsedId);
+  if (place) {
+    const placeToDelete = await Place.findByIdAndDelete(parsedId);
+    if (placeToDelete) {
+      return {
+        message: `Place with ID: ${id} was deleted`,
+        deleted: true,
+      };
     } else {
       throw {
-        message: `Place not found with ID: ${req.params.id}`,
-        status: 404,
+        message: `Place with ID: ${id} was not deleted`,
+        status: 400,
       };
     }
-  } catch (err) {
-    next(err);
+  } else {
+    throw {
+      message: `Place not found with ID: ${id}`,
+      status: 404,
+    };
+  }
+
+  // const place = await Place.findByIdAndDelete(req.params.id);
+  if (place) {
+    res.status(200).json(`Place on ID (${req.params.id}) has been deleted...`);
+  } else {
+    throw {
+      message: `Place not found with ID: ${req.params.id}`,
+      status: 404,
+    };
   }
 };
 

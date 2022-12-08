@@ -1,12 +1,10 @@
 const User = require("../model/User");
 const validation = require("../validation/routesValidation");
-const { ObjectId } = require("mongodb");
 
 const getUserById = async (id) => {
   let parsedId = validation.toObjectId(id, "UserId");
   const user = await User.findById(parsedId);
   if (user) {
-    user._id = user._id.toString();
     return user;
   } else {
     throw {
@@ -19,9 +17,6 @@ const getUserById = async (id) => {
 const getAllUsers = async () => {
   const usersList = await User.find();
   if (usersList.length > 0) {
-    for (let i = 0; i < usersList.length; i++) {
-      usersList[i]._id = usersList[i]._id.toString();
-    }
     return usersList;
   } else {
     throw {
@@ -158,7 +153,6 @@ const updateUserById = async (id, updateUserBody) => {
 
 const deleteUserById = async (id) => {
   let parsedId = validation.toObjectId(id, "UserId");
-  console.log(parsedId);
   const user = await User.findById(parsedId);
   if (user) {
     const userToDelete = await User.findByIdAndDelete(parsedId);
@@ -170,13 +164,13 @@ const deleteUserById = async (id) => {
     } else {
       return {
         message: `User with ID: ${id} was not deleted`,
-        deleted: false,
+        status: 400,
       };
     }
   } else {
     throw {
       message: `User not found with ID: ${id}`,
-      status: 400,
+      status: 404,
     };
   }
 };

@@ -3,21 +3,16 @@ const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
 
-const getAttractionById = async (req, res, next) => {
-  try {
-    id = validation.checkId(req.params.id, "Attraction Id");
-    const attraction = await Attraction.findById(req.params.id);
-    if (attraction) {
-      res.status(200).json(attraction);
-    } else {
-      throw {
-        message: `Attraction not found with ID: ${attraction}`,
-        status: 404,
-      };
-    }
-    res.status(200).json(attraction);
-  } catch (err) {
-    next(err);
+const getAttractionById = async (id) => {
+  let parsedId = validation.toObjectId(req.params.id, "AttractionId");
+  const attraction = await Attraction.findById(parsedId);
+  if (attraction) {
+    return attraction;
+  } else {
+    throw {
+      message: `Attraction not found with ID: ${id}`,
+      status: 404,
+    };
   }
 };
 
@@ -42,174 +37,183 @@ const getAttractionsFromApi = async (req, res, next) => {
   }
 };
 
-const getAllAttractions = async (req, res, next) => {
-  try {
-    const attractions = await Attraction.find();
-    if (attractions.length > 0) {
-      res.status(200).json(attractions);
-    } else {
-      throw {
-        message: `No attractions found`,
-        status: 404,
-      };
-    }
-  } catch (err) {
-    next(err);
+const getAllAttractions = async () => {
+  const attractionsList = await Attraction.find();
+  if (attractionsList.length > 0) {
+    return attractionsList;
+  } else {
+    throw {
+      message: `No attractions found`,
+      status: 404,
+    };
   }
 };
 
-const createAttraction = async (req, res, next) => {
-  const newAttraction = new Attraction(req.body);
+const createAttraction = async (attractionBody) => {
+  const newAttractionInfo = new Attraction(attractionBody);
 
-  try {
-    newAttraction.location_id = validation.checkStringForNumber(
-      newAttraction.location_id,
-      "Location Id"
-    );
+  newAttractionInfo.location_id = validation.checkStringForNumber(
+    newAttractionInfo.location_id,
+    "Location Id",
+  );
 
-    newAttraction.name = validation.checkString(
-      newAttraction.name,
-      "Attraction Name"
-    );
+  newAttractionInfo.name = validation.checkString(
+    newAttractionInfo.name,
+    "Attraction Name",
+  );
 
-    newAttraction.latitude = validation.checkStringForNumber(
-      newAttraction.latitude,
-      "Latitude"
-    );
-    newAttraction.longitude = validation.checkStringForNumber(
-      newAttraction.longitude,
-      "Longitude"
-    );
-    newAttraction.description = validation.checkString(
-      newAttraction.description,
-      "Description"
-    );
+  newAttractionInfo.latitude = validation.checkStringForNumber(
+    newAttractionInfo.latitude,
+    "Latitude",
+  );
+  newAttractionInfo.longitude = validation.checkStringForNumber(
+    newAttractionInfo.longitude,
+    "Longitude",
+  );
+  newAttractionInfo.description = validation.checkString(
+    newAttractionInfo.description,
+    "Description",
+  );
 
-    newAttraction.image = validation.checkURL(newAttraction.image, "Image");
-    newAttraction.category = validation.checkString(
-      newAttraction.category,
-      "Category"
-    );
-    newAttraction.rating = validation.checkStringForNumber(
-      newAttraction.rating,
-      "Rating"
-    );
+  newAttractionInfo.image = validation.checkURL(
+    newAttractionInfo.image,
+    "Image",
+  );
+  newAttractionInfo.category = validation.checkString(
+    newAttractionInfo.category,
+    "Category",
+  );
+  newAttractionInfo.rating = validation.checkStringForNumber(
+    newAttractionInfo.rating,
+    "Rating",
+  );
 
-    newAttraction.website = validation.checkURL(
-      newAttraction.website,
-      "Website"
-    );
-    newAttraction.phone = validation.checkPhoneNumber(
-      newAttraction.phone,
-      "Phone"
-    );
-    newAttraction.address = validation.checkString(
-      newAttraction.address,
-      "Address"
-    );
-    newAttraction.web_url = validation.checkURL(
-      newAttraction.web_url,
-      "Web Url"
-    );
-    newAttraction.num_reviews = validation.checkStringForNumber(
-      newAttraction.num_reviews,
-      "Number of Reviews"
-    );
-    const attraction = await newAttraction.save();
-    res.status(201).json(attraction);
-  } catch (err) {
-    next(err);
+  newAttractionInfo.website = validation.checkURL(
+    newAttractionInfo.website,
+    "Website",
+  );
+  newAttractionInfo.phone = validation.checkPhoneNumber(
+    newAttractionInfo.phone,
+    "Phone",
+  );
+  newAttractionInfo.address = validation.checkString(
+    newAttractionInfo.address,
+    "Address",
+  );
+  newAttractionInfo.web_url = validation.checkURL(
+    newAttractionInfo.web_url,
+    "Web Url",
+  );
+  newAttractionInfo.num_reviews = validation.checkStringForNumber(
+    newAttractionInfo.num_reviews,
+    "Number of Reviews",
+  );
+  const attraction = await newAttractionInfo.save();
+  if (attraction) {
+    return attraction;
+  } else {
+    throw {
+      message: `Attraction not created`,
+      status: 404,
+    };
   }
 };
 
-const updateAttractionById = async (req, res, next) => {
-  const newAttractionInfo = req.body;
-  let updatedAttraction = {};
+const updateAttractionById = async (id, updateAttractionBody) => {
+  let parsedId = validation.toObjectId(id, "AttractionId");
+  const attraction = await Attraction.findById(parsedId);
+  if (attraction) {
+    throw {
+      message: `Attraction not found with ID: ${id}`,
+      status: 404,
+    };
+  } else {
+    const newAttractionInfo = updateAttractionBody;
+    let updatedAttraction = {};
 
-  try {
-    id = validation.checkId(req.params.id, "Attraction Id");
+    id = validation.checkId(id, "Attraction Id");
     if (newAttractionInfo.location_id) {
       newAttractionInfo.location_id = validation.checkStringForNumber(
         newAttractionInfo.location_id,
-        "Location Id"
+        "Location Id",
       );
     }
     if (newAttractionInfo.name) {
       newAttractionInfo.name = validation.checkString(
         newAttractionInfo.name,
-        "Attraction Name"
+        "Attraction Name",
       );
     }
     if (newAttractionInfo.latitude) {
       newAttractionInfo.latitude = validation.checkStringForNumber(
         newAttractionInfo.latitude,
-        "Latitude"
+        "Latitude",
       );
     }
     if (newAttractionInfo.longitude) {
       newAttractionInfo.longitude = validation.checkStringForNumber(
         newAttractionInfo.longitude,
-        "Longitude"
+        "Longitude",
       );
     }
     if (newAttractionInfo.description) {
       newAttractionInfo.description = validation.checkString(
         newAttractionInfo.description,
-        "Description"
+        "Description",
       );
     }
     if (newAttractionInfo.image) {
       newAttractionInfo.image = validation.checkURL(
         newAttractionInfo.image,
-        "Image"
+        "Image",
       );
     }
     if (newAttractionInfo.category) {
       newAttractionInfo.category = validation.checkString(
         newAttractionInfo.category,
-        "Category"
+        "Category",
       );
     }
     if (newAttractionInfo.rating) {
       newAttractionInfo.rating = validation.checkStringForNumber(
         newAttractionInfo.rating,
-        "Rating"
+        "Rating",
       );
     }
     if (newAttractionInfo.price) {
       newAttractionInfo.price = validation.checkStringForNumber(
         newAttractionInfo.price,
-        "Price"
+        "Price",
       );
     }
     if (newAttractionInfo.website) {
       newAttractionInfo.website = validation.checkURL(
         newAttractionInfo.website,
-        "Website"
+        "Website",
       );
     }
     if (newAttractionInfo.phone) {
       newAttractionInfo.phone = validation.checkPhoneNumber(
         newAttractionInfo.phone,
-        "Phone"
+        "Phone",
       );
     }
     if (newAttractionInfo.address) {
       newAttractionInfo.address = validation.checkString(
         newAttractionInfo.address,
-        "Address"
+        "Address",
       );
     }
     if (newAttractionInfo.web_url) {
       newAttractionInfo.web_url = validation.checkURL(
         newAttractionInfo.web_url,
-        "Web Url"
+        "Web Url",
       );
     }
     if (newAttractionInfo.num_reviews) {
       newAttractionInfo.num_reviews = validation.checkStringForNumber(
         newAttractionInfo.num_reviews,
-        "Number of Reviews"
+        "Number of Reviews",
       );
     }
     const oldAttractionInfo = await Attraction.findById(id);
@@ -303,41 +307,48 @@ const updateAttractionById = async (req, res, next) => {
 
     if (Object.keys(updatedAttraction).length != 0) {
       const updatedAttraction = await Attraction.findByIdAndUpdate(
-        req.params.id,
-        { $set: req.body },
-        { new: true }
+        id,
+        { $set: updatedAttraction },
+        { new: true },
       );
       if (updatedAttraction) {
         res.status(200).json(updatedAttraction);
       } else {
-        res.status(404).json({
+        throw {
           message: "The attraction with the specified ID does not exist.",
-        });
+          status: 400,
+        };
       }
     } else {
-      res.status(400).json({ message: "No changes detected" });
+      throw {
+        message: `No changes were made to the attraction with ID: ${id}`,
+        status: 400,
+      };
     }
-  } catch (err) {
-    next(err);
   }
 };
 
-const deleteAttractionById = async (req, res, next) => {
-  try {
-    id = validation.checkId(req.params.id, "Attraction Id");
-    const attraction = await Attraction.findByIdAndDelete(req.params.id);
-    if (attraction) {
-      res
-        .status(200)
-        .json(`Attraction on ID (${req.params.id}) has been deleted...`);
+const deleteAttractionById = async (id) => {
+  let parsedId = validation.toObjectId(id, "Attraction ID");
+  const attraction = await Attraction.findById(parsedId);
+  if (attraction) {
+    const attractionToDelete = await Attraction.findByIdAndDelete(parsedId);
+    if (attractionToDelete) {
+      return {
+        message: `Attraction on ID (${req.params.id}) has been deleted...`,
+        deleted: true,
+      };
     } else {
       throw {
-        message: `Attraction not found with ID: ${attraction}`,
-        status: 404,
+        message: `Attraction with ID: ${id} was not deleted`,
+        status: 400,
       };
     }
-  } catch (err) {
-    next(err);
+  } else {
+    throw {
+      message: `Attraction not found with ID: ${id}`,
+      status: 404,
+    };
   }
 };
 
