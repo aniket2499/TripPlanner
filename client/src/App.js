@@ -163,7 +163,7 @@ let theme = createTheme({
   },
   spacing: 5,
   shape: {
-    borderRadius: 8,
+    borderRadius: 15,
   },
   overrides: {
     MuiAppBar: {
@@ -216,6 +216,7 @@ function App() {
           </div>
           <div className="App-body">
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/account" element={<PrivateRoute />}>
                 <Route path="/account" element={<Account />} />
