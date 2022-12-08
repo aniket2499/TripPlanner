@@ -10,7 +10,7 @@ const getWeatherForCity = async (city) => {
       latitude: data.coord.lat,
       longitude: data.coord.lon,
     };
-    // console.log(weatherDataForCity);
+
     return weatherDataForCity;
   } catch (e) {
     console.error(e);
@@ -32,11 +32,9 @@ const getWeatherForeCastForLocation = async (date) => {
       if (month.length < 2) month = "0" + month;
       if (day.length < 2) day = "0" + day;
       const dateFromAPI = [month, day, year].join("/");
-      //console.log(dateFromAPI);
       return dateFromAPI;
     }
     function convertingDateFromDatabase(date) {
-      //console.log(date);
       return date;
     }
 
@@ -50,7 +48,6 @@ const getWeatherForeCastForLocation = async (date) => {
           icon: `http://openweathermap.org/img/wn/${e.weather[0].icon}@2x.png`,
         };
         weatherOnDay.push(forCastForAnyDate);
-        //console.log(weatherOnDay);
       }
     });
     if (weatherOnDay.length > 0) {
@@ -62,7 +59,7 @@ const getWeatherForeCastForLocation = async (date) => {
       };
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 getWeatherForeCastForLocation("12/03/2022");

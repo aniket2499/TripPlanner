@@ -1,5 +1,8 @@
 const Trip = require("../model/Trip");
 const User = require("../model/User");
+const Hotel = require("../model/Hotel");
+const Restaurant = require("../model/Restaurant");
+const Attraction = require("../model/Attraction");
 const validation = require("../validation/routesValidation");
 
 const getTripById = async (id) => {
@@ -43,10 +46,12 @@ const createTrip = async (userId, tripBody) => {
   }
 
   if (savedTrip) {
-    let user = await User.findByIdAndUpdate(parsedId, {
-      $push: { trips: savedTrip._id },
-    });
-    if (!user) {
+    let user = await User.findById(userId);
+    if (user) {
+      await User.findByIdAndUpdate(parsedId, {
+        $push: { trips: savedTrip._id },
+      });
+    } else {
       throw {
         message: `User not found with ID: ${userId}`,
         status: 404,
@@ -215,31 +220,156 @@ const deleteTripById = async (id) => {
   }
 };
 
-const inviteUserToTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    if (!trip.invites.includes(req.body.email)) {
-      trip.invites.push(req.body.email);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
+// user accepts invite to trip and is added to trip
+
+const addAttractionToTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    const attraction = await Attraction.findById(req.params.attractionid);
+    if (!attraction) {
+      throw {
+        message: `Attraction not found`,
+        status: 404,
+      };
+    }
+    if (!trip.attractions.includes(attraction._id)) {
+      trip.attractions.push(attraction._id);
+      await trip.save();
+      return trip;
     } else {
       throw {
-        message: `User already invited to trip`,
+        message: `Attraction already added to trip`,
         status: 400,
       };
     }
-  } catch (err) {
-    next(err);
   }
 };
 
-// user accepts invite to trip and is added to trip
+const removeAttractionFromTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    if (trip.attractions.includes(req.params.attractionid)) {
+      trip.attractions.pull(req.params.attractionid);
+      await trip.save();
+      return trip;
+    } else {
+      throw {
+        message: `Attraction not in trip`,
+        status: 400,
+      };
+    }
+  }
+};
 
-const acceptInviteToTrip = async (req, res, next) => {
+const addHotelToTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    const hotel = await Hotel.findById(req.params.hotelid);
+    if (!attraction) {
+      throw {
+        message: `Hotel not found`,
+        status: 404,
+      };
+    }
+    if (!trip.hotels.includes(hotel._id)) {
+      trip.hotels.push(hotel._id);
+      await trip.save();
+      return trip;
+    } else {
+      throw {
+        message: `Hotel already added to trip`,
+        status: 400,
+      };
+    }
+  }
+};
+
+const removeHotelFromTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    if (trip.hotels.includes(req.params.hotelid)) {
+      trip.hotels.pull(req.params.hotelid);
+      await trip.save();
+      return trip;
+    } else {
+      throw {
+        message: `Hotel not in trip`,
+        status: 400,
+      };
+    }
+  }
+};
+
+const addRestaurantToTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    const restaurant = await Restaurant.findById(req.params.restaurantid);
+    if (!attraction) {
+      throw {
+        message: `Restaurant not found`,
+        status: 404,
+      };
+    }
+    if (!trip.restaurants.includes(restaurant._id)) {
+      trip.restaurants.push(restaurant._id);
+      await trip.save();
+      return trip;
+    } else {
+      throw {
+        message: `Restaurant already added to trip`,
+        status: 400,
+      };
+    }
+  }
+};
+
+const removeRestaurantFromTrip = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    if (trip.restaurants.includes(req.params.restaurantid)) {
+      trip.restaurants.pull(req.params.restaurantid);
+      await trip.save();
+      return trip;
+    } else {
+      throw {
+        message: `Restaurant not in trip`,
+        status: 404,
+      };
+    }
+  }
+};
+
+const acceptInviteToTrip = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
     //checking if user is currently logged in or not
@@ -277,16 +407,11 @@ const acceptInviteToTrip = async (req, res, next) => {
   }
 };
 
-const addRestaurantToTrip = async (req, res, next) => {
+const inviteUserToTrip = async (req, res) => {
   try {
     const trip = await Trip.findById(req.params.id);
-    const restaurant = await Restaurant.getRestaurantById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (!trip.restaurants.includes(restaurant._id)) {
-      trip.restaurants.push(restaurant._id);
+    if (!trip.invites.includes(req.body.email)) {
+      trip.invites.push(req.body.email);
       await Trip.updateTripById(
         { params: { id: req.params.id }, body: trip },
         res,
@@ -295,142 +420,7 @@ const addRestaurantToTrip = async (req, res, next) => {
       res.status(200).json(trip);
     } else {
       throw {
-        message: `Restaurant already added to trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-const removeRestaurantFromTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const restaurant = await Restaurant.getRestaurantById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (trip.restaurants.includes(restaurant._id)) {
-      trip.restaurants.pull(restaurant._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `Restaurant not in trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-const addHotelToTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const hotel = await Hotel.getHotelById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (!trip.hotels.includes(hotel._id)) {
-      trip.hotels.push(hotel._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `Hotel already added to trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-const removeHotelFromTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const hotel = await Hotel.getHotelById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-
-    if (trip.hotels.includes(hotel._id)) {
-      trip.hotels.pull(hotel._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `Hotel not in trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-
-const addAttractionToTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const attraction = await Attraction.getAttractionById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (!trip.attractions.includes(attraction._id)) {
-      trip.attractions.push(attraction._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `Attraction already added to trip`,
-        status: 400,
-      };
-    }
-  } catch (err) {
-    next(err);
-  }
-};
-const removeAttractionFromTrip = async (req, res, next) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    const attraction = await Attraction.getAttractionById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-    if (trip.attractions.includes(attraction._id)) {
-      trip.attractions.pull(attraction._id);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
-    } else {
-      throw {
-        message: `Attraction not in trip`,
+        message: `User already invited to trip`,
         status: 400,
       };
     }

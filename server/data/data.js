@@ -58,11 +58,17 @@ const getAllRestaurant = async (location, pg, rating) => {
         );
         return data;
       } catch (error) {
-        console.log(error);
+        throw {
+          message: error.message,
+          status: error.status,
+        };
       }
     }
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
 };
 
@@ -106,11 +112,17 @@ const getAllAttractions = async (location, pg, rating) => {
         );
         return data;
       } catch (error) {
-        console.log(error);
+        throw {
+          message: error.message,
+          status: error.status,
+        };
       }
     }
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
 };
 
@@ -139,10 +151,9 @@ const getAllHotels = async (location, pg) => {
             amenities:
               "SWIMMING_POOL,SPA,FITNESS_CENTER,RESTAURANT,PARKING,AIR_CONDITIONING,PETS_ALLOWED,AIRPORT_SHUTTLE,BUSINESS_CENTER,DISABLED_FACILITIES,WIFI,MEETING_ROOMS,NO_KID_ALLOWED,TENNIS,GOLF,KITCHEN,ANIMAL_WATCHING,BABY-SITTING,BEACH,CASINO,JACUZZI,SAUNA,SOLARIUM,MASSAGE,VALET_PARKING,BAR or LOUNGE,KID_WELCOME,NO_PORN_FILMS,MINIBAR,TELEVISION,WI-FI_IN_ROOM,ROOM_SERVICE,GUARDED_PARKG,SERV_SPEC_MENU",
             ratings: "2,3,4,5",
-          }
+          },
         );
         const hotelData = data.data;
-        // console.log(data.data);
         let hotelList = hotelData.slice(low, high);
         for (let i = 0; i < hotelList.length; i++) {
           let imageID = Math.floor(Math.random() * (max - min) + min);
@@ -159,11 +170,17 @@ const getAllHotels = async (location, pg) => {
         );
         return hotelList;
       } catch (error) {
-        console.log(error);
+        throw {
+          message: error.message,
+          status: error.status,
+        };
       }
     }
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
 };
 

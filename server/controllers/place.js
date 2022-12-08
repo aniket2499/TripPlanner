@@ -229,16 +229,6 @@ const deletePlaceById = async (id) => {
       status: 404,
     };
   }
-
-  // const place = await Place.findByIdAndDelete(req.params.id);
-  if (place) {
-    res.status(200).json(`Place on ID (${req.params.id}) has been deleted...`);
-  } else {
-    throw {
-      message: `Place not found with ID: ${req.params.id}`,
-      status: 404,
-    };
-  }
 };
 
 module.exports = {
