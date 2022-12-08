@@ -36,7 +36,7 @@ const Hotels = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        let data = await hotelsData.getHotelData("chicago", 1);
+        let data = await hotelsData.getHotelData("mumbai", 1);
         if (data.length === 0) {
           return;
         }
