@@ -2,7 +2,7 @@ const User = require("../model/User");
 const validation = require("../validation/routesValidation");
 
 const getUserById = async (id) => {
-  let parsedId = validation.toObjectId(id, "UserId");
+  let parsedId = validation.checkString(id, "UserId");
   const user = await User.findById(parsedId);
   if (user) {
     return user;
@@ -27,12 +27,24 @@ const getAllUsers = async () => {
 };
 
 const createUser = async (userBody) => {
-  const newUserInfo = new User(userBody.body);                         
-  console.log("heresekjfn,sdslkjgnlkdfjngskdfngl");
+  const newUserInfo = new User(userBody.body);
   console.log(newUserInfo);
-  newUserInfo.displayName = validation.checkString(newUserInfo.displayName,"Display Name");
-  newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
-  newUserInfo.password = validation.isValidPassword(newUserInfo.password,"User Password");
+  if (newUserInfo.displayName) {
+    newUserInfo.displayName = validation.checkString(
+      newUserInfo.displayName,
+      "Display Name",
+    );
+  }
+  if (newUserInfo.email) {
+    newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
+  }
+  if (newUserInfo.password) {
+    newUserInfo.password = validation.checkString(
+      newUserInfo.password,
+      "Password",
+    );
+  }
+
   const savedUser = await newUserInfo.save();
   if (savedUser) {
     return savedUser;
@@ -45,7 +57,7 @@ const createUser = async (userBody) => {
 };
 
 const updateUserById = async (id, updateUserBody) => {
-  let parsedId = validation.toObjectId(id, "UserId");
+  let parsedId = validation.checkString(id, "UserId");
   const user = await User.findById(parsedId);
   if (!user) {
     throw {
@@ -53,10 +65,10 @@ const updateUserById = async (id, updateUserBody) => {
       status: 404,
     };
   } else {
-    const newUserInfo = updateUserBody;
+    const newUserInfo = updateUserBody.body;
     let updatedUser = {};
 
-    id = validation.checkId(id, "User Id");
+    id = validation.checkString(id, "User Id");
     if (newUserInfo.displayName) {
       newUserInfo.displayName = validation.checkString(
         newUserInfo.displayName,
@@ -89,7 +101,10 @@ const updateUserById = async (id, updateUserBody) => {
     }
 
     const oldUserInfo = await User.findById(id);
-    if (newUserInfo.displayName &&newUserInfo.displayName !== oldUserInfo.displayName) {
+    if (
+      newUserInfo.displayName &&
+      newUserInfo.displayName !== oldUserInfo.displayName
+    ) {
       updatedUser.displayName = newUserInfo.displayName;
     }
     if (newUserInfo.email && newUserInfo.email !== oldUserInfo.email) {
@@ -133,7 +148,7 @@ const updateUserById = async (id, updateUserBody) => {
 };
 
 const deleteUserById = async (id) => {
-  let parsedId = validation.toObjectId(id, "UserId");
+  let parsedId = validation.checkString(id, "UserId");
   const user = await User.findById(parsedId);
   if (user) {
     const userToDelete = await User.findByIdAndDelete(parsedId);

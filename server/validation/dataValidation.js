@@ -1,5 +1,4 @@
 const emailvalidator = require("email-validator");
-const { ObjectId } = require("mongodb");
 
 const checkName = (string) => {
   if (!string) throw "String Undefined";

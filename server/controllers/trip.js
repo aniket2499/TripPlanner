@@ -31,7 +31,7 @@ const getAllTrips = async () => {
 };
 
 const createTrip = async (userId, tripBody) => {
-  let parsedId = validation.toObjectId(userId, "UserId");
+  let parsedId = validation.checkString(userId, "UserId");
   let startDate = new Date(tripBody.tripDate.startDate);
   let endDate = new Date(tripBody.tripDate.endDate);
   let loop = new Date(startDate);

@@ -7,6 +7,5 @@ const UserSchema = new Schema({
   password: { type: String, required: true },
   trips: [{ type: Schema.Types.ObjectId, ref: "Trips" }],
 });
-console.log("UserSchema");
-console.log(UserSchema);
+
 module.exports = mongoose.model("User", UserSchema);
