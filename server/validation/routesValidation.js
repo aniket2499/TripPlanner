@@ -2,9 +2,36 @@ const e = require("express");
 const { ObjectId } = require("mongodb");
 
 module.exports = {
-  toObjectId(id, varName) {
-    this.checkString(id, varName);
+  isAppropriateString(string, name) {
+    if (!string) {
+      throw new Error(`${name} not provided`);
+    }
+    if (typeof string !== "string") {
+      throw new Error(`Provided ${name} is not a string`);
+    }
+    if (string.trim().length === 0) {
+      throw new Error(`Provided ${name} cannot be an empty string`);
+    }
+  },
 
+  checkArray(array, varName) {
+    if (!varName) varName = "array";
+    if (!array || array == undefined)
+      throw {
+        message: `Error: You must provide a ${varName}`,
+        status: 400,
+      };
+    if (!Array.isArray(array))
+      throw { message: `Error:${varName} must be an array`, status: 400 };
+    if (array.length === 0)
+      throw {
+        message: `Error: ${varName} cannot be an empty array`,
+        status: 400,
+      };
+  },
+
+  toObjectId(id, varName) {
+    this.isAppropriateString(id, varName);
     try {
       parsedId = ObjectId(id);
     } catch (e) {
@@ -279,6 +306,27 @@ module.exports = {
           status: 400,
         };
       }
+      return date;
+    } catch (e) {
+      throw {
+        message: e.message,
+        status: 400,
+      };
+    }
+  },
+
+  checkDate(date, varName) {
+    try {
+      if (
+        !/^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/.test(date)
+      ) {
+        throw {
+          message: `Enter a valid date in MM/DD/YYYY format for ${varName}`,
+          status: 400,
+        };
+      }
+      const today = new Date();
+
       return date;
     } catch (e) {
       throw {

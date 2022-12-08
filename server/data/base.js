@@ -24,7 +24,7 @@ const getLocationsCoordinates = async (location) => {
   try {
     location = dataValidation.checkLocation(location);
     const data = await axios.get(
-      SEARCH_URL + `&query=${location}` + `&limit=1`
+      SEARCH_URL + `&query=${location}` + `&limit=1`,
     );
     if (!data.data.data[0]) {
       throw new Error("Enter a valid Location");
@@ -36,7 +36,7 @@ const getLocationsCoordinates = async (location) => {
       return obj;
     }
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -48,9 +48,8 @@ const getLocationDetails = async (location) => {
         `?input=${location}` +
         `&key=${process.env.GOOGLE_API_KEY}` +
         `&inputtype=textquery` +
-        `&fields=name,photos`
+        `&fields=name,photos`,
     );
-    // console.log(data);
     if (!data.data.candidates[0]) {
       throw new Error("Enter a valid Location");
     }
@@ -59,7 +58,10 @@ const getLocationDetails = async (location) => {
       photo_reference: data.data.candidates[0].photos[0].photo_reference,
     };
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
 };
 
@@ -78,15 +80,21 @@ const getPhotos = async (location) => {
           `?photoreference=${photo_reference}` +
           `&key=${process.env.GOOGLE_API_KEY}` +
           `&maxwidth=400` +
-          `&maxheight=400`
+          `&maxheight=400`,
       );
 
       return data.config.url;
     } catch (error) {
-      console.log(error);
+      throw {
+        message: error.message,
+        status: error.status,
+      };
     }
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
 };
 
@@ -102,7 +110,10 @@ const getHotelPhotos = async (imageID) => {
     };
     return newObj;
   } catch (error) {
-    console.log(error);
+    throw {
+      message: error.message,
+      status: error.status,
+    };
   }
   // try {
   //   s3.getObject(params, (err, data) => {

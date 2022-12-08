@@ -16,6 +16,7 @@ import Attractions from "./Components/Attractions";
 import MyTrips from "./Components/MyTrip";
 import {createTheme,ThemeProvider,CssBaseline,responsiveFontSizes} from "@mui/material";
 import ChangePassword from "./Components/ChangePassword";
+import CreateTrip from "./Components/CreateTrip";
 
 let theme = createTheme({
   palette: {
@@ -157,7 +158,7 @@ let theme = createTheme({
   },
   spacing: 5,
   shape: {
-    borderRadius: 8,
+    borderRadius: 15,
   },
   overrides: {
     MuiAppBar: {
@@ -210,6 +211,7 @@ function App() {
           </div>
           <div className="App-body">
             <Routes>
+              <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
               <Route path="/account" element={<PrivateRoute />}>
                 <Route path="/account" element={<Account />} />
@@ -230,6 +232,9 @@ function App() {
               <Route path="/attractions" element={<PrivateRoute />}>
                 <Route path="/attractions" element={<Attractions />} />
               </Route>
+              {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
+              <Route path="/createtrip" element={<CreateTrip />} />
+              {/* </Route> */}
               <Route path="/my-trips" element={<MyTrips />} />
             </Routes>
           </div>

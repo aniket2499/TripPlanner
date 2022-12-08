@@ -1,9 +1,22 @@
 import React from "react";
-import {doSignOut} from '../firebase/FirebaseFunctions';
+import { useNavigate } from "react-router-dom";
+import { doSignOut } from "../firebase/FirebaseFunctions";
 import "../App.css";
+import { Button } from "@mui/material";
 
 const SignOutBtn = () => {
-  return <button type="button" onClick={doSignOut}> Sign Out </button>
-}
+  const navigate = useNavigate();
+  return (
+    <Button
+      type="button"
+      onClick={() => {
+        doSignOut();
+        navigate("/");
+      }}
+    >
+      Sign Out
+    </Button>
+  );
+};
 
 export default SignOutBtn;

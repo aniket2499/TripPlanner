@@ -144,6 +144,7 @@ const MyTrip = () => {
                         <Stack direction="column" justifyContent="Center">
                           <Typography
                             variant="h5"
+                            component="h1"
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
@@ -186,6 +187,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -229,6 +231,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -272,6 +275,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -315,6 +319,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -358,6 +363,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >

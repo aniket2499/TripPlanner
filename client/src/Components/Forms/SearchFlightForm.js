@@ -37,7 +37,7 @@ function SearchFlightForm({ handleSearch }) {
     setFromError(false);
     origin = event.target.value;
     let { data } = await axios.get(
-      `http://localhost:3001/api/flights/city/${origin}`,
+      `http://localhost:3001/api/flights/city/${origin}`
     );
     let airports = [];
     for (let x of data) {
@@ -51,7 +51,7 @@ function SearchFlightForm({ handleSearch }) {
     setToError(false);
     destination = event.target.value;
     let { data } = await axios.get(
-      `http://localhost:3001/api/flights/city/${destination}`,
+      `http://localhost:3001/api/flights/city/${destination}`
     );
     let airports = [];
     for (let x of data) {
@@ -92,7 +92,7 @@ function SearchFlightForm({ handleSearch }) {
       localReturnDateerror = true;
       setDepartureDateError(true);
       setDepartureDateErrorMessage(
-        "Return date cannot be before departure date",
+        "Return date cannot be before departure date"
       );
       setReturnDateError(true);
       setReturnDateErrorMessage("Return date cannot be before departure date");
@@ -227,11 +227,11 @@ function SearchFlightForm({ handleSearch }) {
                 ) {
                   setDepartureDateError(true);
                   setDepartureDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                 } else {
                   setDepartureDateError(false);
@@ -265,11 +265,11 @@ function SearchFlightForm({ handleSearch }) {
                 ) {
                   setDepartureDateError(true);
                   setDepartureDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                 } else {
                   setReturnDateError(false);

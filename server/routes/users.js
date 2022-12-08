@@ -13,8 +13,8 @@ router.get("/", async (req, res) => {
   try {
     const usersList = await getAllUsers();
     res.status(200).json(usersList);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
   }
 });
 
@@ -22,37 +22,37 @@ router.get("/:id", async (req, res) => {
   try {
     const user = await getUserById(req.params.id);
     res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/create", async (req, res) => {
   try {
     console.log("here: req body");
     console.log(req.body);
     const newUser = await createUser(req.body);
     res.status(200).json(newUser);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
     const deletedUser = await deleteUserById(req.params.id);
     res.status(200).json(deletedUser);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
   }
 });
 
-router.patch("/:id", async (req, res) => {
+router.patch("/update/:id", async (req, res) => {
   try {
     const updatedUser = await updateUserById(req.params.id, req.body);
     res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
   }
 });
 
