@@ -13,6 +13,7 @@ const getUserById = (id) => {
 };
 
 const createUser = (body) => {
+  console.log("body", body);
   return axios.post(DATA_URL + "/users", { body: body }).then((response) => {
     return response.data;
   });

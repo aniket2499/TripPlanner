@@ -1,27 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import moment from "moment";
-
-import {
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  CardMedia,
-  Box,
-  Divider,
-  Icon,
-  Stack,
-  ListItem,
-  List,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  AppBar,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {Grid,Paper,Card,CardContent,Button,CardMedia,Box,Divider,Icon,Stack,ListItem,List,Accordion,AccordionSummary,AccordionDetails,TextField,AppBar} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -37,9 +17,7 @@ import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 import FlightTakeoffTwoToneIcon from "@mui/icons-material/FlightTakeoffTwoTone";
 import FlightLandTwoToneIcon from "@mui/icons-material/FlightLandTwoTone";
 import SearchFlightForm from "./Forms/SearchFlightForm";
-import CircularProgress, {
-  circularProgressClasses,
-} from "@mui/material/CircularProgress";
+import CircularProgress, {circularProgressClasses} from "@mui/material/CircularProgress";
 import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
