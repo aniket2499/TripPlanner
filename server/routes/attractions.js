@@ -9,20 +9,51 @@ const {
   getAttractionsFromApi,
 } = require("../controllers/attraction");
 
-router.get("/", getAllAttractions);
+router.get("/", async (req, res) => {
+  try {
+    const attractionsList = await getAllAttractions();
+    res.status(200).json(attractionsList);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
 
-router.get("/:id", getAttractionById);
+router.get("/:id", async (req, res) => {
+  try {
+    const attraction = await getAttractionById(req.params.id);
+    res.status(200).json(attraction);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
 
 router.get("/data/:location/:pg/:rating", getAttractionsFromApi);
 
-router.post("/", function (req, res, next) {
-  createAttraction(req, res, next);
+router.post("/create", async (req, res) => {
+  try {
+    const newAttraction = await createAttraction(req.body);
+    res.status(200).json(newAttraction);
+  } catch (e) {
+    res.status(500).json(e);
+  }
 });
 
-router.delete("/:id", deleteAttractionById);
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const deletedAttraction = await deleteUserById(req.params.id);
+    res.status(200).json(deletedAttraction);
+  } catch (e) {
+    res.status(500).json(e);
+  }
+});
 
-router.patch("/:id", function (req, res, next) {
-  updateAttractionById(req, res, next);
+router.patch("/update/:id", async (req, res) => {
+  try {
+    const updatedAttraction = await updateUserById(req.params.id, req.body);
+    res.status(200).json(updatedAttraction);
+  } catch (e) {
+    res.status(500).json(e);
+  }
 });
 
 module.exports = router;

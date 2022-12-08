@@ -21,7 +21,6 @@ import {
   TextField,
   AppBar,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -166,6 +165,7 @@ const MyTrip = () => {
                         <Stack direction="column" justifyContent="Center">
                           <Typography
                             variant="h5"
+                            component="h1"
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
@@ -210,6 +210,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -253,6 +254,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -296,6 +298,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -339,6 +342,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
@@ -382,6 +386,7 @@ const MyTrip = () => {
                           <Stack direction="column" justifyContent="Center">
                             <Typography
                               variant="h5"
+                              component="h2"
                               fontWeight="fontWeightBold"
                               sx={{ mt: 2, ml: 2 }}
                             >
