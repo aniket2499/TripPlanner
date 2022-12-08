@@ -327,6 +327,7 @@ function Flights(props) {
                                   >
                                     <Typography
                                       variant="h4"
+                                      component="h1"
                                       sx={{ m: 0.5 }}
                                       color="primary.main"
                                     >
@@ -468,6 +469,7 @@ function Flights(props) {
                           ></AttachMoneyTwoToneIcon>
                           <Typography
                             variant="h3"
+                            component="h2"
                             sx={{ mt: 2, mb: 2, mr: 0, ml: 0 }}
                             color="primary.main"
                           >
