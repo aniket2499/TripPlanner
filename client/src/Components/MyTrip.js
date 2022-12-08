@@ -193,7 +193,9 @@ const MyTrip = () => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography fontWeight="fontWeightBold">Hotels</Typography>
+                <Stack direction="row" justifyContent="end">
+                  <Typography fontWeight="fontWeightBold">Hotels</Typography>
+                </Stack>
               </AccordionSummary>
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
