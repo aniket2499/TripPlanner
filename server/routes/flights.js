@@ -5,7 +5,6 @@ const getAllFlights = require("../data").flight;
 
 router.get("/city/:city", async function (req, res, next) {
   try {
-    console.log("req.params.city", req.params.city);
     const cities = await getAllFlights.getAllCities(req.params.city);
     console;
     res.status(200).json(cities);

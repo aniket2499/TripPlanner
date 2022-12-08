@@ -16,7 +16,6 @@ router.get("/", async (req, res) => {
     const restaurantsList = await getAllRestaurants();
     res.status(200).json(restaurantsList);
   } catch (e) {
-    console.log(e);
     res.status(e.status ? e.status : 500).json(e);
   }
 });
