@@ -14,6 +14,7 @@ const getTripById = (id) => {
 };
 
 const createTrip = (body) => {
+  console.log(body);
   return axios.post(DATA_URL + "/trips", { body: body }).then((response) => {
     return response.data;
   });
