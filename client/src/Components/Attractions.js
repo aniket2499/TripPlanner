@@ -1228,11 +1228,7 @@ const Attractions = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        let data = await attractionsData.getAttractionsData(
-          "New York City",
-          2,
-          3.0,
-        );
+        let data = await attractionsData.getAttractionsData("austin", 1, 5.0);
         if (data.length === 0) {
           return;
         }
@@ -1318,13 +1314,24 @@ const Attractions = () => {
                             <Typography variant="body2">Add To Bin</Typography>
                           </Button>
                         )}
-                        <CardMedia
-                          component="img"
-                          height="180"
-                          image="https://static.tacdn.com/img2/branding/homepage/home-tab4-hero-1367x520-prog.jpg"
-                          alt="green iguana"
-                          style={{ borderRadius: 11 }}
-                        />
+
+                        {attraction.photo?.images?.original?.url ? (
+                          <CardMedia
+                            component="img"
+                            height="180"
+                            image={attraction.photo.images.original.url}
+                            alt="green iguana"
+                            style={{ borderRadius: 11 }}
+                          />
+                        ) : (
+                          <CardMedia
+                            component="img"
+                            height="180"
+                            image="https://www.planetware.com/photos-large/USNY/usa-best-places-new-york.jpg"
+                            alt="green iguana"
+                            style={{ borderRadius: 11 }}
+                          />
+                        )}
                       </Grid>
                     </Grid>
                   </div>
