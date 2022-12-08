@@ -2,15 +2,22 @@ import React, {useState, useContext} from "react";
 import {Navigate} from 'react-router-dom'
 import {doCreateUserWithEmailAndPassword} from '../firebase/FirebaseFunctions';
 import {AuthContext} from '../firebase/Auth';
-import { Grid } from '@mui/material';
+import {Grid,Paper,Card,CardContent,Button,FormControl,FormLabel,FormControlLabel,CardMedia,Box,Divider,Icon,Stack,ListItem,List,InputLabel,FormHelperText,Autocomplete,TextField} from "@mui/material";
 import Typography from '@mui/material/Typography';
 import SocialSignIn from './SocialSignIn';
+import userService from '../services/userService';
+import {createTheme,ThemeProvider,CssBaseline,responsiveFontSizes} from "@mui/material";
+import CustomTheme from './CustomTheme';
 import "../App.css";
+
+let theme = responsiveFontSizes(CustomTheme);
 
 function SignUp() {
 
   const currUser = useContext(AuthContext);
   const [pswdMatch, setPswdMatch] = useState('');
+  const [finalPswd, setFinalPswd] = useState("");
+  const [userDispName, setUserDispName] = useState("");
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -20,6 +27,8 @@ function SignUp() {
       return false;
     } else {
       try {
+        setFinalPswd(pwd1.value);
+        setUserDispName(displayName.value);
         await doCreateUserWithEmailAndPassword(email.value, pwd1.value, displayName.value);
       } catch (error) {
         alert(error);
@@ -27,19 +36,39 @@ function SignUp() {
     }
   }
 
+  const addToMongo = async(obj) => {
+    
+    await userService.createUser({_id: obj._id, displayName: obj.displayName, email: obj.email, password: obj.password});
+  }
+
   if (currUser) {
-    return <Navigate to="/" />
+    console.log(currUser)
+    console.log("finalPswd");
+    console.log(finalPswd);
+    console.log(currUser._delegate.providerData[0].displayName)
+    addToMongo({_id: currUser._delegate.uid, displayName: userDispName, email: currUser._delegate.email, password: finalPswd});
+    return <Navigate to="/home" />
   }
 
   return(
     <div>
       <br/>
-      <Grid container spacing={2} direction="column" alignItems="center" justifyContent="center" style={{ minHeight: '20vh' }}>
+      <ThemeProvider theme={theme}>
+      <Grid container spacing={3} direction="column" alignItems="center" justifyContent="center" style={{ minHeight: '20vh' }}>
         <Grid item xs={3}>
           <Typography variant="h4" component="h1" gutterBottom>
             Sign Up
           </Typography>
         </Grid>
+        <Paper
+        elevation={3}
+        style={{ padding: "10px", margin: "10px" }}
+        display="flex"
+        justifyContent="center"
+      >
+        <FormLabel id="demo-row-radio-buttons-group-label" sx={{ m: 3 }}>
+                Trip Type
+              </FormLabel>
         <Grid item xs={3}>
           {pswdMatch && <h4 className="error">{pswdMatch}</h4>}
           <form onSubmit={handleSignUp}>
@@ -68,10 +97,12 @@ function SignUp() {
             </button>
           </form>
         </Grid>
+        <br />
         <SocialSignIn />
+      </Paper>
       </Grid>
       <br />
-      
+      </ThemeProvider>
     </div>
   );
 }

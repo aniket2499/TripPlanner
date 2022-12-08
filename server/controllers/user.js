@@ -27,25 +27,12 @@ const getAllUsers = async () => {
 };
 
 const createUser = async (userBody) => {
-  const newUserInfo = new User(userBody);
-
-  newUserInfo.firstName = validation.checkString(
-    newUserInfo.firstName,
-    "First Name",
-  );
-  newUserInfo.lastName = validation.checkString(
-    newUserInfo.lastName,
-    "Last Name",
-  );
+  const newUserInfo = new User(userBody.body);                         
+  console.log("heresekjfn,sdslkjgnlkdfjngskdfngl");
+  console.log(newUserInfo);
+  newUserInfo.displayName = validation.checkString(newUserInfo.displayName,"Display Name");
   newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
-  newUserInfo.password = validation.checkPassword(
-    newUserInfo.password,
-    "User Password",
-  );
-  newUserInfo.dateOfBirth = validation.isValidDate(
-    newUserInfo.dateOfBirth,
-    "Date of Birth",
-  );
+  newUserInfo.password = validation.isValidPassword(newUserInfo.password,"User Password");
   const savedUser = await newUserInfo.save();
   if (savedUser) {
     return savedUser;
@@ -70,10 +57,10 @@ const updateUserById = async (id, updateUserBody) => {
     let updatedUser = {};
 
     id = validation.checkId(id, "User Id");
-    if (newUserInfo.firstName) {
-      newUserInfo.firstName = validation.checkString(
-        newUserInfo.firstName,
-        "First Name",
+    if (newUserInfo.displayName) {
+      newUserInfo.displayName = validation.checkString(
+        newUserInfo.displayName,
+        "Display Name",
       );
     }
     if (newUserInfo.lastName) {
@@ -102,14 +89,8 @@ const updateUserById = async (id, updateUserBody) => {
     }
 
     const oldUserInfo = await User.findById(id);
-    if (
-      newUserInfo.firstName &&
-      newUserInfo.firstName !== oldUserInfo.firstName
-    ) {
-      updatedUser.firstName = newUserInfo.firstName;
-    }
-    if (newUserInfo.lastName && newUserInfo.lastName !== oldUserInfo.lastName) {
-      updatedUser.lastName = newUserInfo.lastName;
+    if (newUserInfo.displayName &&newUserInfo.displayName !== oldUserInfo.displayName) {
+      updatedUser.displayName = newUserInfo.displayName;
     }
     if (newUserInfo.email && newUserInfo.email !== oldUserInfo.email) {
       updatedUser.email = newUserInfo.email;
