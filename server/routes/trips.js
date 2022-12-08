@@ -16,18 +16,49 @@ const {
   acceptTripInvite,
 } = require("../controllers/trip");
 
-router.get("/", getAllTrips);
-
-router.get("/:id", getTripById);
-
-router.post("/", function (req, res, next) {
-  createTrip(req, res, next);
+router.get("/", async (req, res) => {
+  try {
+    const tripsList = await getAllTrips();
+    res.status(200).json(tripsList);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
 });
 
-router.delete("/:id", deleteTripById);
+router.get("/:id", async (req, res) => {
+  try {
+    const trip = await getTripById(req.params.id);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
 
-router.patch("/:id", function (req, res, next) {
-  updateTripById(req, res, next);
+router.post("/create/:userid", async (req, res) => {
+  try {
+    const newTrip = await createTrip(req.params.userid, req.body);
+    res.status(200).json(newTrip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const deletedTrip = await deleteTripById(req.params.id);
+    res.status(200).json(deletedTrip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.patch("/update/:id", async (req, res) => {
+  try {
+    const updatedTrip = await updateTripById(req.params.id, req.body);
+    res.status(200).json(updatedTrip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
 });
 
 router.patch("/:id/attractions", function (req, res, next) {

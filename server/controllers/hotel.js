@@ -3,21 +3,16 @@ const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
 
-const getHotelById = async (req, res, next) => {
-  try {
-    validation.checkId(req.params.id, "Hotel Id");
-    const hotel = await Hotel.findById(req.params.id);
-    if (hotel) {
-      res.status(200).json(hotel);
-    } else {
-      throw {
-        message: `Hotel not found with ID: ${hotel}`,
-        status: 404,
-      };
-    }
-    res.status(200).json(hotel);
-  } catch (err) {
-    next(err);
+const getHotelById = async (id) => {
+  let parsedId = validation.toObjectId(id, "HotelId");
+  const hotel = await Hotel.findById();
+  if (hotel) {
+    return hotel;
+  } else {
+    throw {
+      message: `Hotel not found with ID: ${hotel}`,
+      status: 404,
+    };
   }
 };
 
@@ -33,167 +28,182 @@ const getHotelsFromApi = async (req, res, next) => {
   }
 };
 
-const getAllHotels = async (req, res, next) => {
-  try {
-    const hotels = await Hotel.find();
-    if (hotels.length > 0) {
-      res.status(200).json(hotels);
-    } else {
-      throw {
-        message: `No hotels found`,
-        status: 404,
-      };
-    }
-  } catch (err) {
-    next(err);
+const getAllHotels = async () => {
+  const hotelsList = await Hotel.find();
+  if (hotelsList.length > 0) {
+    return hotelsList;
+  } else {
+    throw {
+      message: `No hotels found`,
+      status: 404,
+    };
   }
 };
 
-const createHotel = async (req, res, next) => {
-  const newHotel = new Hotel(req.body);
-  try {
-    newHotel.location_id = validation.checkStringForNumber(
-      newHotel.location_id,
-      "Hotel Id"
-    );
-    newHotel.name = validation.checkString(newHotel.name, "Hotel Name");
-    newHotel.latitude = validation.checkStringForNumber(
-      newHotel.latitude,
-      "Hotel Latitude"
-    );
-    newHotel.longitude = validation.checkStringForNumber(
-      newHotel.longitude,
-      "Hotel Longitude"
-    );
-    newHotel.num_reviews = validation.checkStringForNumber(
-      newHotel.num_reviews,
-      "Hotel Number of Reviews"
-    );
-    newHotel.category = validation.checkString(
-      newHotel.category,
-      "Hotel Category"
-    );
-    newHotel.image = validation.checkURL(newHotel.image, "Hotel Image");
-    newHotel.address = validation.checkString(
-      newHotel.address,
-      "Hotel Address"
-    );
-    newHotel.web_url = validation.checkURL(newHotel.web_url, "Hotel Web URL");
-    newHotel.rating = validation.checkStringForNumber(
-      newHotel.rating,
-      "Hotel Rating"
-    );
-    newHotel.price_level = validation.checkPriceLevel(
-      newHotel.price_level,
-      "Hotel Price Level"
-    );
-    newHotel.amenities = validation.checkStringArray(
-      newHotel.amenities,
-      "Hotel Amenities"
-    );
+const createHotel = async (hotelBody) => {
+  const newHotelInfo = new Hotel(hotelBody);
+  newHotelInfo.location_id = validation.checkStringForNumber(
+    newHotelInfo.location_id,
+    "Hotel Id",
+  );
+  newHotelInfo.name = validation.checkString(newHotelInfo.name, "Hotel Name");
+  newHotelInfo.latitude = validation.checkStringForNumber(
+    newHotelInfo.latitude,
+    "Hotel Latitude",
+  );
+  newHotelInfo.longitude = validation.checkStringForNumber(
+    newHotelInfo.longitude,
+    "Hotel Longitude",
+  );
+  newHotelInfo.num_reviews = validation.checkStringForNumber(
+    newHotelInfo.num_reviews,
+    "Hotel Number of Reviews",
+  );
+  newHotelInfo.category = validation.checkString(
+    newHotelInfo.category,
+    "Hotel Category",
+  );
+  newHotelInfo.image = validation.checkURL(newHotelInfo.image, "Hotel Image");
+  newHotelInfo.address = validation.checkString(
+    newHotelInfo.address,
+    "Hotel Address",
+  );
+  newHotelInfo.web_url = validation.checkURL(
+    newHotelInfo.web_url,
+    "Hotel Web URL",
+  );
+  newHotelInfo.rating = validation.checkStringForNumber(
+    newHotelInfo.rating,
+    "Hotel Rating",
+  );
+  newHotelInfo.price_level = validation.checkPriceLevel(
+    newHotelInfo.price_level,
+    "Hotel Price Level",
+  );
+  newHotelInfo.amenities = validation.checkStringArray(
+    newHotelInfo.amenities,
+    "Hotel Amenities",
+  );
 
-    newHotel.phone = validation.checkPhoneNumber(newHotel.phone, "Hotel Phone");
-    newHotel.price = validation.checkPriceRange(newHotel.price, "Hotel Price");
+  newHotelInfo.phone = validation.checkPhoneNumber(
+    newHotelInfo.phone,
+    "Hotel Phone",
+  );
+  newHotelInfo.price = validation.checkPriceRange(
+    newHotelInfo.price,
+    "Hotel Price",
+  );
 
-    const savedHotel = await newHotel.save();
-    res.status(201).json(savedHotel);
-  } catch (err) {
-    next(err);
+  const savedHotel = await newHotelInfo.save();
+  if (savedHotel) {
+    return savedHotel;
+  } else {
+    throw {
+      message: `Hotel not saved`,
+      status: 500,
+    };
   }
 };
 
-const updateHotelById = async (req, res, next) => {
-  const newHotelInfo = req.body;
-  let updatedHotel = {};
-  try {
-    validation.checkId(req.params.id, "Hotel Id");
+const updateHotelById = async (id, updateHotelBody) => {
+  let parsedId = validation.toObjectId(id, "HotelId");
+  const hotel = await Hotel.findById(parsedId);
+  if (!hotel) {
+    throw {
+      message: `Hotel not found with ID: ${id}`,
+      status: 404,
+    };
+  } else {
+    const newHotelInfo = updateHotelBody;
+    let updatedHotel = {};
+    id = validation.checkId(id, "Hotel Id");
     if (newHotelInfo.location_id) {
       newHotelInfo.location_id = validation.checkStringForNumber(
         newHotelInfo.location_id,
-        "Hotel Id"
+        "Hotel Id",
       );
     }
     if (newHotelInfo.name) {
       newHotelInfo.name = validation.checkString(
         newHotelInfo.name,
-        "Hotel Name"
+        "Hotel Name",
       );
     }
     if (newHotelInfo.latitude) {
       newHotelInfo.latitude = validation.checkStringForNumber(
         newHotelInfo.latitude,
 
-        "Hotel Latitude"
+        "Hotel Latitude",
       );
     }
     if (newHotelInfo.longitude) {
       newHotelInfo.longitude = validation.checkStringForNumber(
         newHotelInfo.longitude,
-        "Hotel Longitude"
+        "Hotel Longitude",
       );
     }
     if (newHotelInfo.num_reviews) {
       newHotelInfo.num_reviews = validation.checkStringForNumber(
         newHotelInfo.num_reviews,
-        "Hotel Number of Reviews"
+        "Hotel Number of Reviews",
       );
     }
     if (newHotelInfo.category) {
       newHotelInfo.category = validation.checkString(
         newHotelInfo.category,
-        "Hotel Category"
+        "Hotel Category",
       );
     }
     if (newHotelInfo.image) {
       newHotelInfo.image = validation.checkURL(
         newHotelInfo.image,
-        "Hotel Image"
+        "Hotel Image",
       );
     }
     if (newHotelInfo.address) {
       newHotelInfo.address = validation.checkString(
         newHotelInfo.address,
-        "Hotel Address"
+        "Hotel Address",
       );
     }
     if (newHotelInfo.web_url) {
       newHotelInfo.web_url = validation.checkURL(
         newHotelInfo.web_url,
-        "Hotel Web URL"
+        "Hotel Web URL",
       );
     }
     if (newHotelInfo.rating) {
       newHotelInfo.rating = validation.checkStringForNumber(
         newHotelInfo.rating,
-        "Hotel Rating"
+        "Hotel Rating",
       );
     }
     if (newHotelInfo.price_level) {
       newHotelInfo.price_level = validation.checkPriceLevel(
         newHotelInfo.price_level,
-        "Hotel Price Level"
+        "Hotel Price Level",
       );
     }
     if (newHotelInfo.phone) {
       newHotelInfo.phone = validation.checkPhoneNumber(
         newHotelInfo.phone,
-        "Hotel Phone"
+        "Hotel Phone",
       );
     }
     if (newHotelInfo.price) {
       newHotelInfo.price = validation.checkPriceRange(
         newHotelInfo.price,
-        "Hotel Price"
+        "Hotel Price",
       );
     }
     if (newHotelInfo.amenities) {
       newHotelInfo.amenities = validation.checkStringArray(
         newHotelInfo.amenities,
-        "Hotel Amenities"
+        "Hotel Amenities",
       );
     }
 
-    const oldHotelInfo = await Hotel.findById(req.params.id);
+    const oldHotelInfo = await Hotel.findById(id);
     if (
       newHotelInfo.location_id &&
       newHotelInfo.location_id !== oldHotelInfo.location_id
@@ -260,37 +270,49 @@ const updateHotelById = async (req, res, next) => {
     }
 
     if (Object.keys(updatedHotel).length != 0) {
-      updatedHotel = await Hotel.findByIdAndUpdate(
-        req.params.id,
-        updatedHotel,
-        { new: true }
+      const updatedHotel = await Hotel.findByIdAndUpdate(
+        id,
+        { $set: updateHotelBody },
+        { new: true },
       );
       if (updatedHotel) {
-        res.status(200).json(updatedHotel);
+        return updatedHotel;
       } else {
-        res.status(404).json({ message: "Hotel not found" });
+        throw {
+          message: `Hotel with ID: ${id} was not updated`,
+          status: 400,
+        };
       }
     } else {
-      res.status(400).json({ message: "No valid fields to update" });
+      throw {
+        message: `No changes were made to the Hotel with ID: ${id}`,
+        status: 400,
+      };
     }
-  } catch (err) {
-    res.status(500).json({ message: err.message });
   }
 };
 
-const deleteHotelById = async (req, res, next) => {
-  try {
-    id = validation.checkId(req.params.id, "Hotel ID");
-    const Hotel = await Hotel.findByIdAndDelete(req.params.id);
-    if (Hotel) {
-      res
-        .status(200)
-        .json(`Hotel on ID (${req.params.id}) has been deleted...`);
+const deleteHotelById = async (id) => {
+  let parsedId = validation.checkStringForNumber(req.params.id, "HotelID");
+  const hotel = await Hotel.findById(parsedId);
+  if (hotel) {
+    const hotelToDelete = await Hotel.findByIdAndDelete(parsedId);
+    if (hotelToDelete) {
+      return {
+        message: `Hotel with ID: ${id} was deleted`,
+        deleted: true,
+      };
     } else {
-      res.status(404).json({ message: "Hotel not found" });
+      throw {
+        message: `Hotel with ID: ${id} was not deleted`,
+        status: 400,
+      };
     }
-  } catch (err) {
-    next(err);
+  } else {
+    throw {
+      message: `Hotel not found with ID: ${id}`,
+      status: 404,
+    };
   }
 };
 
