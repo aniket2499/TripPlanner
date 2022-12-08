@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../firebase/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Autocomplete } from "@react-google-maps/api";
 
 import SignOutBtn from "./SignOut";
 import "../App.css";
@@ -25,6 +26,17 @@ const Navigation = () => {
 };
 
 const NavigationAuth = () => {
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [coords, setCoords] = useState({});
+  const onLoad = (autoC) => setAutocomplete(autoC);
+
+  const onPlaceChanged = () => {
+    const lat = autocomplete.getPlace().geometry.location.lat();
+    const lng = autocomplete.getPlace().geometry.location.lng();
+    console.log(lat, lng);
+
+    setCoords({ lat, lng });
+  };
   const linksArray = ["home", "flights"];
   const navigate = useNavigate();
   const [value, setValue] = useState();
@@ -61,17 +73,19 @@ const NavigationAuth = () => {
             </Grid>
             <Grid item xs={2}>
               <Box>
-                <TextField
-                  id="outlined-basic"
-                  label="Outlined"
-                  variant="outlined"
-                  style={{ width: "100%" }}
-                />
+                <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Search"
+                    variant="outlined"
+                    style={{ width: "100%" }}
+                  />
+                </Autocomplete>
               </Box>
             </Grid>
             <Grid item xs={2}>
               <Box>
-                <Button onClick={()=>navigate('/account')}>
+                <Button onClick={() => navigate("/account")}>
                   <AccountCircleIcon color="primary" fontSize="large" />
                 </Button>
               </Box>

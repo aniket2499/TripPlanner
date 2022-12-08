@@ -21,6 +21,7 @@ import {
   responsiveFontSizes,
 } from "@mui/material";
 import ChangePassword from "./Components/ChangePassword";
+import CreateTrip from "./Components/CreateTrip";
 
 let theme = createTheme({
   palette: {
@@ -231,6 +232,9 @@ function App() {
               <Route path="/attractions" element={<PrivateRoute />}>
                 <Route path="/attractions" element={<Attractions />} />
               </Route>
+              {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
+              <Route path="/createtrip" element={<CreateTrip />} />
+              {/* </Route> */}
               <Route path="/my-trips" element={<MyTrips />} />
             </Routes>
           </div>
