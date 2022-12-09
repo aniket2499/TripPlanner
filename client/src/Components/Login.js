@@ -108,7 +108,7 @@ function Login() {
               navigate("/signup");
             }}
           >
-            Change to SignUp
+            Sign UP Instead
           </Button>
           <Link
             style={{ textDecoration: "none" }}
