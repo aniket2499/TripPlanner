@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
 import userService from "../services/userService";
+import Maps from "./Maps";
 
 function Home() {
   const currUser = useContext(AuthContext);
@@ -35,7 +36,11 @@ function Home() {
   const allRestaurants = useSelector((state) => state.restaurants);
   console.log(allRestaurants);
 
-  return <div>Home</div>;
+  return (
+    <div>
+      <Maps />
+    </div>
+  );
 }
 
 export default Home;

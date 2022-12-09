@@ -77,6 +77,17 @@ function SignUp() {
     });
   };
 
+  const handlePasswordMatch = () => {
+    if (
+      document.getElementById("pwd1").value ===
+      document.getElementById("pwd2").value
+    ) {
+      document.getElementById("pwd2").innerHTML = "";
+    } else {
+      document.getElementById("pwd2").innerHTML = "Passwords do not match";
+    }
+  };
+
   if (currUser) {
     addToMongo({
       _id: currUser._delegate.uid,
@@ -159,80 +170,6 @@ function SignUp() {
           </Button>
         </Box>
       </form>
-
-      {/* <Grid
-        container
-        spacing={3}
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-        style={{ minHeight: "20vh" }}
-      >
-        <Grid item xs={3}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Sign Up
-          </Typography>
-        </Grid>
-        <Paper
-          elevation={3}
-          style={{ padding: "10px", margin: "10px" }}
-          display="flex"
-          justifyContent="center"
-        >
-          <FormLabel id="demo-row-radio-buttons-group-label" sx={{ m: 3 }}>
-            Trip Type
-          </FormLabel>
-          <Grid item xs={3}>
-            {pswdMatch && <h4 className="error">{pswdMatch}</h4>}
-            <form onSubmit={handleSignUp}>
-              <label>
-                Name:
-                <input
-                  name="displayName"
-                  type="text"
-                  placeholder="Name"
-                  required
-                />
-              </label>
-              <br />
-              <label>
-                Email:
-                <input name="email" type="email" placeholder="Email" required />
-              </label>
-              <br />
-              <label>
-                Password:
-                <input
-                  name="pwd1"
-                  id="pwd1"
-                  type="password"
-                  placeholder="Password"
-                  autoComplete="off"
-                  required
-                />
-              </label>
-              <br />
-              <label>
-                Confirm Password:
-                <input
-                  name="pwd2"
-                  id="pwd2"
-                  type="password"
-                  placeholder="Password"
-                  autoComplete="off"
-                  required
-                />
-              </label>
-              <br />
-              <button id="submitButton" name="submitButton" type="submit">
-                Sign Up
-              </button>
-            </form>
-          </Grid>
-          <br />
-          <SocialSignIn />
-        </Paper>
-      </Grid> */}
     </div>
   );
 }
