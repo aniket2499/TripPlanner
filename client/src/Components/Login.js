@@ -10,8 +10,6 @@ import { Button, Grid, TextField, Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import "../App.css";
 import { Link, useNavigate } from "react-router-dom";
-import { color } from "@mui/system";
-import Navigation from "./Navigation";
 
 function Login() {
   const navigate = useNavigate();
@@ -54,11 +52,9 @@ function Login() {
     } catch (error) {
       // alert(error);
       console.log(error.message);
-      if (error.message === userNotFound) {
+      if (error.message === userNotFound || error.message === invalidPassword) {
         document.getElementById("error").innerHTML =
-          "User not found. Please sign up";
-      } else if (error.message === invalidPassword) {
-        document.getElementById("error").innerHTML = "Invalid password";
+          "User not Found or Invalid Password!";
       }
       // document.getElementById("error").innerHTML = "Invalid email or password";
       // document.getElementById("error").style.color = "red";
@@ -109,6 +105,9 @@ function Login() {
             label="Password"
             type={"password"}
             autoComplete="off"
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
             required
           />
           <Typography variant="body2" id="error" color="red"></Typography>
