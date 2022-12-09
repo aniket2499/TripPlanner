@@ -22,6 +22,7 @@ import {
 } from "@mui/material";
 import ChangePassword from "./Components/ChangePassword";
 import CreateTrip from "./Components/CreateTrip";
+import InviteToTrip from "./Components/InviteToTrip";
 
 let theme = createTheme({
   palette: {
@@ -236,6 +237,9 @@ function App() {
               </Route>
               <Route path="/attractions" element={<PrivateRoute />}>
                 <Route path="/attractions" element={<Attractions />} />
+              </Route>
+              <Route path="/invite" element={<PrivateRoute />}>
+                <Route path="/invite" element={<InviteToTrip />} />
               </Route>
               {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
               <Route path="/createtrip" element={<CreateTrip />} />
