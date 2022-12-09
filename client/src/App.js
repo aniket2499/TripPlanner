@@ -14,7 +14,12 @@ import Restaurants from "./Components/Restaurants";
 import Hotels from "./Components/Hotels";
 import Attractions from "./Components/Attractions";
 import MyTrips from "./Components/MyTrip";
-import {createTheme,ThemeProvider,CssBaseline,responsiveFontSizes} from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
+  responsiveFontSizes,
+} from "@mui/material";
 import ChangePassword from "./Components/ChangePassword";
 import CreateTrip from "./Components/CreateTrip";
 

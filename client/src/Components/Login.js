@@ -44,12 +44,24 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(e.target.elements);
+    const userNotFound =
+      "Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found).";
+    const invalidPassword =
+      "Firebase: The password is invalid or the user does not have a password. (auth/wrong-password).";
     const { email, password } = e.target.elements;
     try {
       await doSignInWithEmailAndPassword(email.value, password.value);
     } catch (error) {
-      alert(error);
+      // alert(error);
+      console.log(error.message);
+      if (error.message === userNotFound) {
+        document.getElementById("error").innerHTML =
+          "User not found. Please sign up";
+      } else if (error.message === invalidPassword) {
+        document.getElementById("error").innerHTML = "Invalid password";
+      }
+      // document.getElementById("error").innerHTML = "Invalid email or password";
+      // document.getElementById("error").style.color = "red";
     }
   };
 
@@ -84,20 +96,22 @@ function Login() {
           <TextField
             margin="normal"
             id="email"
-            variant="outlined"
-            placeholder="Email"
+            label="Email"
             type={"email"}
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
             required
           />
           <TextField
             margin="normal"
             id="password"
-            variant="outlined"
-            placeholder="Password"
+            label="Password"
             type={"password"}
             autoComplete="off"
             required
           />
+          <Typography variant="body2" id="error" color="red"></Typography>
           <Button style={styles.button} variant="contained" type="submit">
             Login
           </Button>
@@ -119,57 +133,6 @@ function Login() {
         </Box>
       </form>
     </div>
-    // <div>
-    //   <br />
-    //   <Grid
-    //     container
-    //     spacing={2}
-    //     direction="column"
-    //     alignItems="center"
-    //     justifyContent="center"
-    //     style={{ minHeight: "20vh" }}
-    //   >
-    //     <Grid item xs={3}>
-    //       <Typography variant="h4" component="h1" gutterBottom>
-    //         Login
-    //       </Typography>
-    //     </Grid>
-    //     <Grid item xs={3}>
-    //       <form onSubmit={handleLogin}>
-    //         <label>
-    //           Email:
-    //           <input name="email" id="email" type="email" placeholder="Email" required />
-    //         </label>
-    //         <br />
-    //         <label>
-    //           Password:
-    //           <input
-    //             name="password"
-    //             id="password"
-    //             type="password"
-    //             placeholder="Password"
-    //             autoComplete="off"
-    //             required
-    //           />
-    //         </label>
-    //         <br />
-    //         <button id="submitButton" name="submitButton" type="submit">
-    //           LogIn
-    //         </button>
-    //       </form>
-    //     </Grid>
-    //     <br />
-    //     <SocialSignIn />
-    //   </Grid>
-    //   <br />
-    //   <button
-    //     id="forgotPassButton"
-    //     name="forgotPassButton"
-    //     onClick={handlePasswordReset}
-    //   >
-    //     Forgot Password
-    //   </button>
-    // </div>
   );
 }
 
