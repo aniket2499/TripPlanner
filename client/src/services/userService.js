@@ -14,20 +14,22 @@ const getUserById = (id) => {
 
 const createUser = (body) => {
   console.log("body", body);
-  return axios.post(DATA_URL + "/users", { body: body }).then((response) => {
-    return response.data;
-  });
+  return axios
+    .post(DATA_URL + "/users/create", { body: body })
+    .then((response) => {
+      return response.data;
+    });
 };
 
 const deleteUserById = (id) => {
-  return axios.delete(DATA_URL + `/users/${id}`).then((response) => {
+  return axios.delete(DATA_URL + `/users/delete/${id}`).then((response) => {
     return response.data;
   });
 };
 
 const updateUserById = (id, body) => {
   return axios
-    .patch(DATA_URL + `/users/${id}`, { body: body })
+    .patch(DATA_URL + `/users/update/${id}`, { body: body })
     .then((response) => {
       return response.data;
     });
