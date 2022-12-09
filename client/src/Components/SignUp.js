@@ -80,8 +80,8 @@ function SignUp() {
       email: currUser._delegate.email,
       password: finalPswd,
     });
-    console.log(currUser);
-    // return <Navigate to="/home" />;
+    // console.log(currUser);
+    return <Navigate to="/home" />;
   }
 
   return (
