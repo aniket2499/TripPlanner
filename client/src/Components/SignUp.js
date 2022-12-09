@@ -90,17 +90,6 @@ function SignUp() {
     }
   };
 
-  const handlePasswordMatch = () => {
-    if (
-      document.getElementById("pwd1").value ===
-      document.getElementById("pwd2").value
-    ) {
-      document.getElementById("pwd2").innerHTML = "";
-    } else {
-      document.getElementById("pwd2").innerHTML = "Passwords do not match";
-    }
-  };
-
   if (currUser) {
     addToMongo({
       _id: currUser._delegate.uid,
