@@ -67,7 +67,7 @@ const NavigationAuth = () => {
               <Tabs
                 indicationColor="inherit"
                 textColor="inherit"
-                value={value in [1, 2, 3] ? value : false}
+                value={value in [0, 1, 2] ? value : false}
                 onChange={(e, value) => setValue(value)}
               >
                 <Typography>
@@ -144,6 +144,9 @@ const NavigationNonAuth = () => {
     } else if (window.location.pathname === "/signup") {
       setValue(3);
     }
+    return () => {
+      setValue(false);
+    };
   }, [value, window.location.pathname]);
 
   return (
@@ -157,7 +160,7 @@ const NavigationNonAuth = () => {
                 id="navbar-tabs"
                 indicationColor="inherit"
                 textColor="inherit"
-                value={value in [1, 2, 3, 4] ? value : false}
+                value={value in [0, 1, 2, 3] ? value : false}
                 onChange={(e, value) => setValue(value)}
               >
                 <Typography>

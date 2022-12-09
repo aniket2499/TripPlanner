@@ -1,4 +1,6 @@
 import axios from "axios";
+import React, { useContext } from "react";
+import { AuthContext } from "../firebase/Auth";
 const DATA_URL = "http://localhost:3001/api";
 
 const getAllTrips = () => {
@@ -93,8 +95,11 @@ const inviteUserToTrip = (id, body) => {
 };
 
 const acceptTripInvite = (id, body) => {
+  const currUser = useContext(AuthContext);
+  const userId = currUser.uid;
+  console.log(userId);
   return axios
-    .post(DATA_URL + `/trips/${id}/accept`, { body: body })
+    .post(DATA_URL + `/trips/${id}/accept/${userId}`, { body: body })
     .then((response) => {
       return response.data;
     });

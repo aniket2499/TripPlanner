@@ -368,62 +368,65 @@ const removeRestaurantFromTrip = async (req, res) => {
 };
 
 const acceptInviteToTrip = async (req, res) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    //checking if user is currently logged in or not
-    const user = await User.getUserById(
-      { params: { id: req.body.id } },
-      res,
-      next,
-    );
-
-    if (user) {
-      if (trip.invites.includes(user.email)) {
-        trip.invites.pull(user.email);
-        trip.users.push(user._id);
-
-        await Trip.updateTripById(
-          { params: { id: req.params.id }, body: trip },
-          res,
-          next,
-        );
-        res.status(200).json(trip);
-      } else {
-        throw {
-          message: `User not invited to trip`,
-          status: 400,
-        };
-      }
+  const trip = await Trip.findById(req.params.tripId);
+  const checkUserDataInMongo = await User.findById(req.params.userId);
+  console.log(checkUserDataInMongo, "====");
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else if (!checkUserDataInMongo) {
+    throw {
+      message: `User not logged in`,
+      status: 400,
+    };
+  } else {
+    if (
+      trip.invites.some((invite) => invite.email === checkUserDataInMongo.email)
+    ) {
+      trip.invites.pull({ email: checkUserDataInMongo.email });
+      trip.users.push(checkUserDataInMongo._id);
+      console.log(checkUserDataInMongo);
+      checkUserDataInMongo.trips.push(trip._id);
+      await checkUserDataInMongo.save();
+      await trip.save();
+      return trip;
     } else {
       throw {
-        message: `User not logged in`,
+        message: `User not invited to trip`,
         status: 400,
       };
     }
-  } catch (err) {
-    console.log(err);
   }
 };
-
 const inviteUserToTrip = async (req, res) => {
-  try {
-    const trip = await Trip.findById(req.params.id);
-    if (!trip.invites.includes(req.body.email)) {
-      trip.invites.push(req.body.email);
-      await Trip.updateTripById(
-        { params: { id: req.params.id }, body: trip },
-        res,
-        next,
-      );
-      res.status(200).json(trip);
+  const trip = await Trip.findById(req.params.id);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    const obj = {
+      email: req.body.email,
+      name: req.body.name,
+    };
+
+    if (
+      trip.invites.filter((invite) => invite.email === obj.email).length ===
+        0 &&
+      trip.users.filter((user) => user.email === obj.email).length === 0
+    ) {
+      trip.invites.push(obj);
+      await trip.save();
+      return trip;
     } else {
       throw {
         message: `User already invited to trip`,
         status: 400,
       };
     }
-  } catch (err) {
-    console.log(err);
   }
 };
 

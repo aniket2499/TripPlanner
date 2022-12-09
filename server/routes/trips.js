@@ -13,7 +13,7 @@ const {
   addRestaurantToTrip,
   removeRestaurantFromTrip,
   inviteUserToTrip,
-  acceptTripInvite,
+  acceptInviteToTrip,
 } = require("../controllers/trip");
 
 router.get("/", async (req, res) => {
@@ -97,26 +97,40 @@ router.patch("/:tripid/hotels/remove/:hotelid", async (req, res) => {
   }
 });
 
-router.patch(
-  "/:tripid/restaurants/add/:restaurantid",
-  function (req, res, next) {
-    addRestaurantToTrip(req, res, next);
-  },
-);
-
-router.patch(
-  "/:id/restaurants/remove/:restaurantid",
-  function (req, res, next) {
-    removeRestaurantFromTrip(req, res, next);
-  },
-);
-
-router.post("/:id/invite", function (req, res, next) {
-  inviteUserToTrip(req, res, next);
+router.patch("/:tripid/restaurants/add/:restaurantid", async (req, res) => {
+  try {
+    const trip = await addRestaurantToTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
 });
 
-router.post("/:id/accept", function (req, res, next) {
-  acceptTripInvite(req, res, next);
+router.patch("/:id/restaurants/remove/:restaurantid", async (req, res) => {
+  try {
+    const trip = await removeRestaurantFromTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.post("/:id/invite", async (req, res) => {
+  try {
+    const trip = await inviteUserToTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.post("/:tripId/accept/:userId", async (req, res) => {
+  try {
+    const trip = await acceptInviteToTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
 });
 
 module.exports = router;
