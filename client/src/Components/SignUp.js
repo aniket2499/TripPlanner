@@ -59,7 +59,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         alert("Account created successfully");
       } catch (error) {
@@ -75,8 +75,6 @@ function SignUp() {
       email: obj.email,
       password: obj.password,
     });
-    doSignOut();
-    navigate("/login");
   };
 
   const handlePasswordMatch = () => {
@@ -97,8 +95,8 @@ function SignUp() {
       email: currUser._delegate.email,
       password: finalPswd,
     });
-    // console.log(currUser);
-    return <Navigate to="/home" />;
+    doSignOut();
+    navigate("/login");
   }
 
   return (
