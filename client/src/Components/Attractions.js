@@ -1228,7 +1228,11 @@ const Attractions = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        let data = await attractionsData.getAttractionsData("austin", 1, 5.0);
+        let data = await attractionsData.getAttractionsData(
+          "los Angeles",
+          1,
+          5.0,
+        );
         if (data.length === 0) {
           return;
         }
