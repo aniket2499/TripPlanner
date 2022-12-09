@@ -1,5 +1,5 @@
 import { Autocomplete, Data } from "@react-google-maps/api";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import tripService from "../services/tripService.js";
 import {
