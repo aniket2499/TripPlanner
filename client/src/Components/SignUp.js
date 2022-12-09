@@ -75,19 +75,6 @@ function SignUp() {
       email: obj.email,
       password: obj.password,
     });
-    doSignOut();
-    navigate("/login");
-  };
-
-  const handlePasswordMatch = () => {
-    if (
-      document.getElementById("pwd1").value ===
-      document.getElementById("pwd2").value
-    ) {
-      document.getElementById("pwd2").innerHTML = "";
-    } else {
-      document.getElementById("pwd2").innerHTML = "Passwords do not match";
-    }
   };
 
   const handlePasswordMatch = () => {
