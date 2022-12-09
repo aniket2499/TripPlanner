@@ -59,7 +59,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         alert("Account created successfully");
       } catch (error) {
@@ -90,6 +90,17 @@ function SignUp() {
     }
   };
 
+  const handlePasswordMatch = () => {
+    if (
+      document.getElementById("pwd1").value ===
+      document.getElementById("pwd2").value
+    ) {
+      document.getElementById("pwd2").innerHTML = "";
+    } else {
+      document.getElementById("pwd2").innerHTML = "Passwords do not match";
+    }
+  };
+
   if (currUser) {
     addToMongo({
       _id: currUser._delegate.uid,
@@ -97,8 +108,8 @@ function SignUp() {
       email: currUser._delegate.email,
       password: finalPswd,
     });
-    // console.log(currUser);
-    return <Navigate to="/home" />;
+    doSignOut();
+    navigate("/login");
   }
 
   return (
