@@ -75,6 +75,7 @@ function SignUp() {
       email: obj.email,
       password: obj.password,
     });
+<<<<<<< HEAD
   };
 
   const handlePasswordMatch = () => {
@@ -86,6 +87,8 @@ function SignUp() {
     } else {
       document.getElementById("pwd2").innerHTML = "Passwords do not match";
     }
+=======
+>>>>>>> a6a085bdd773803b854727d59cb17ae574c1b91a
   };
 
   if (currUser) {
