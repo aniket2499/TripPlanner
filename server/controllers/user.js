@@ -29,6 +29,7 @@ const getAllUsers = async () => {
 const createUser = async (userBody) => {
   const newUserInfo = new User(userBody.body);
   console.log(newUserInfo);
+  console.log(newUserInfo);
   if (newUserInfo.displayName) {
     newUserInfo.displayName = validation.checkString(
       newUserInfo.displayName,
