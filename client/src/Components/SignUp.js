@@ -59,7 +59,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value,
+          displayName.value
         );
         alert("Account created successfully");
       } catch (error) {
@@ -77,17 +77,6 @@ function SignUp() {
     });
     doSignOut();
     navigate("/login");
-  };
-
-  const handlePasswordMatch = () => {
-    if (
-      document.getElementById("pwd1").value ===
-      document.getElementById("pwd2").value
-    ) {
-      document.getElementById("pwd2").innerHTML = "";
-    } else {
-      document.getElementById("pwd2").innerHTML = "Passwords do not match";
-    }
   };
 
   const handlePasswordMatch = () => {

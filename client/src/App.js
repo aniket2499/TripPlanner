@@ -23,6 +23,7 @@ import {
 import ChangePassword from "./Components/ChangePassword";
 import CreateTrip from "./Components/CreateTrip";
 import InviteToTrip from "./Components/InviteToTrip";
+import Maps from "./Components/Maps";
 
 let theme = createTheme({
   palette: {
@@ -240,6 +241,9 @@ function App() {
               </Route>
               <Route path="/invite" element={<PrivateRoute />}>
                 <Route path="/invite" element={<InviteToTrip />} />
+              </Route>
+              <Route path="/maps" element={<PrivateRoute />}>
+                <Route path="/maps" element={<Maps />} />
               </Route>
               {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
               <Route path="/createtrip" element={<CreateTrip />} />
