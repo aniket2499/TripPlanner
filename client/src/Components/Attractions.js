@@ -1228,7 +1228,7 @@ const Attractions = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        let data = await attractionsData.getAttractionsData("austin", 1, 5.0);
+        let data = await attractionsData.getAttractionsData("surat", 1, 5.0);
         if (data.length === 0) {
           return;
         }
@@ -1282,13 +1282,24 @@ const Attractions = () => {
                           {index + 1}
                         </Avatar>
 
-                        <Typography
-                          variant="h6"
-                          component="div"
-                          fontWeight="fontWeightBold"
-                        >
-                          {attraction.name}
-                        </Typography>
+                        {attraction.name ? (
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            fontWeight="fontWeightBold"
+                          >
+                            {attraction.name}
+                          </Typography>
+                        ) : (
+                          <Typography
+                            variant="h6"
+                            component="div"
+                            fontWeight="fontWeightBold"
+                          >
+                            Attraction
+                          </Typography>
+                        )}
+
                         <Typography
                           variant="body2"
                           component="div"

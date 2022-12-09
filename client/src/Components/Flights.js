@@ -1,6 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Navigate } from "react-router";
-import {Grid,Paper,Card,CardContent,Button,CardMedia,Box,Divider,Icon,Stack,ListItem,List,} from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Card,
+  CardContent,
+  Button,
+  CardMedia,
+  Box,
+  Divider,
+  Icon,
+  Stack,
+  ListItem,
+  List,
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyTwoToneIcon from "@mui/icons-material/AttachMoneyTwoTone";
@@ -11,7 +24,9 @@ import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 import FlightTakeoffTwoToneIcon from "@mui/icons-material/FlightTakeoffTwoTone";
 import FlightLandTwoToneIcon from "@mui/icons-material/FlightLandTwoTone";
 import SearchFlightForm from "./Forms/SearchFlightForm";
-import CircularProgress, {circularProgressClasses} from "@mui/material/CircularProgress";
+import CircularProgress, {
+  circularProgressClasses,
+} from "@mui/material/CircularProgress";
 import "../App.css";
 import { Container } from "@mui/system";
 import axios from "axios";
@@ -242,6 +257,7 @@ function Flights(props) {
     fetchFlights();
     setIndex(0);
   };
+  console.log(flights);
 
   return (
     <div>

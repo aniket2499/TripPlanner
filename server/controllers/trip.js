@@ -220,8 +220,6 @@ const deleteTripById = async (id) => {
   }
 };
 
-// user accepts invite to trip and is added to trip
-
 const addAttractionToTrip = async (req, res) => {
   const trip = await Trip.findById(req.params.tripid);
   if (!trip) {
@@ -403,7 +401,7 @@ const acceptInviteToTrip = async (req, res) => {
       };
     }
   } catch (err) {
-    next(err);
+    console.log(err);
   }
 };
 
@@ -425,7 +423,7 @@ const inviteUserToTrip = async (req, res) => {
       };
     }
   } catch (err) {
-    next(err);
+    console.log(err);
   }
 };
 
