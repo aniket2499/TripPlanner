@@ -93,10 +93,10 @@ const inviteUserToTrip = (id, body) => {
     });
 };
 
-const acceptTripInvite = (id, body) => {
-  const currUser = useContext(AuthContext);
-  userId = currUser.uid;
-  console.log(userId);
+const acceptTripInvite = (id, userId, body) => {
+  // const currUser = useContext(AuthContext);
+  // const userId = currUser.uid;
+  // console.log(userId);
   return axios
     .post(DATA_URL + `/trips/${id}/accept/${userId}`, { body: body })
     .then((response) => {
