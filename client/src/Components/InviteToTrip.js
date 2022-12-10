@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import SocialSignIn from "./SocialSignIn";
 import tripService from "../services/tripService";
 import { useNavigate } from "react-router-dom";
-
 import { Button, Grid, TextField, Box } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import "../App.css";
 
-export default function InviteToTrip() {
+function InviteToTrip() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -53,3 +52,5 @@ export default function InviteToTrip() {
     </div>
   );
 }
+
+export default InviteToTrip;
