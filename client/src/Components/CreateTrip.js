@@ -1,8 +1,9 @@
 import { Autocomplete, Data } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import tripService from "../services/tripService.js";
+import { AuthContext } from "../firebase/Auth";
 import {
   Grid,
   Paper,
@@ -29,6 +30,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const CreateTrip = () => {
   let navigate = useNavigate();
+  const currUser = useContext(AuthContext);
   const [autoorgcomplete, setOrgAutocomplete] = useState(null);
   const [autodestcomplete, setDestAutocomplete] = useState(null);
   const [origin, setOrigin] = useState("");
@@ -66,10 +68,12 @@ const CreateTrip = () => {
     setDestCoords({ lat, lng });
   };
   const submitForm = async (event) => {
+    const userId = currUser._delegate.uid;
     setError("");
     setSuccess("");
     event.preventDefault();
     let newValues = {
+      id: userId,
       cur_location: origin,
       destination: destination,
       tripDate: {
@@ -87,7 +91,7 @@ const CreateTrip = () => {
     if (Object.keys(newerrors).length === 0) {
       console.log(newValues);
       await tripService
-        .createTrip(newValues)
+        .createTrip(userId, newValues)
         .then((data) => {
           setSuccess("Trip added successfully!!");
           navigate("/home");
