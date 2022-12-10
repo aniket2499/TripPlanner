@@ -1,3 +1,6 @@
+import { useContext } from "react";
+import { AuthContext } from "../firebase/Auth";
+
 const initialState = [
   {
     name: null,

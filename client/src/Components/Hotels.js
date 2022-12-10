@@ -298,7 +298,9 @@ const Hotels = () => {
                               id={hotel.dup_id}
                               onClick={(e) => {
                                 if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(hotel.id, id);
+                                  tripService.addHotelToTrip(id, {
+                                    hotelId: hotel.id,
+                                  });
                                 } else {
                                 }
                                 hotel.saved = !hotel.saved;
