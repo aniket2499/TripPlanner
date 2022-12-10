@@ -46,8 +46,8 @@ const CreateTrip = () => {
   const [showReturnDate, setShowReturnDate] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
+  
   const dispatch = useDispatch();
-
   const onOriginLoad = (autoC) => {
     setOrgAutocomplete(autoC);
   };
@@ -91,10 +91,10 @@ const CreateTrip = () => {
     if (Object.keys(newerrors).length === 0) {
       console.log(newValues);
       await tripService
-        .createTrip(userId, newValues)
+        .createTrip(newValues)
         .then((data) => {
           setSuccess("Trip added successfully!!");
-          navigate("/home");
+          navigate("/my-trips");
         })
         .catch((e) => {
           setError("Could not Add Trip. Try Again!!");

@@ -30,15 +30,21 @@ const getAllTrips = async () => {
   }
 };
 
-const createTrip = async (tripBody) => {
-  console.log(data, "==");
-  console.log(tripBody, "=");
+const createTrip = async (userId, tripBody) => {
   let parsedId = validation.checkString(userId, "UserId");
-  let startDate = new Date(tripBody.tripDate.startDate);
-  let endDate = new Date(tripBody.tripDate.endDate);
-  let loop = new Date(startDate);
-  const newTripInfo = new Trip(tripBody);
+  let startDate = tripBody.body.tripDate.startDate.split("T")[0];
+  let endDate = tripBody.body.tripDate.endDate.split("T")[0];
+  const newObj = {
+    cur_location: tripBody.body.cur_location,
+    destination: tripBody.body.destination,
+    tripDate: {
+      startDate: startDate,
+      endDate: endDate,
+    },
+  };
 
+  let loop = new Date(startDate);
+  const newTripInfo = new Trip(newObj);
   const savedTrip = await newTripInfo.save();
   if (!savedTrip) {
     throw {
