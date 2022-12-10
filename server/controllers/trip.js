@@ -30,7 +30,9 @@ const getAllTrips = async () => {
   }
 };
 
-const createTrip = async (userId, tripBody) => {
+const createTrip = async (tripBody) => {
+  console.log(data, "==");
+  console.log(tripBody, "=");
   let parsedId = validation.checkString(userId, "UserId");
   let startDate = new Date(tripBody.tripDate.startDate);
   let endDate = new Date(tripBody.tripDate.endDate);
@@ -99,31 +101,31 @@ const updateTripById = async (id, updateTripBody) => {
     if (newTripInfo.tripName) {
       newTripInfo.tripName = validation.checkString(
         newTripInfo.tripName,
-        "TripName",
+        "TripName"
       );
     }
     if (newTripInfo.cur_location) {
       newTripInfo.cur_location = validation.checkString(
         newTripInfo.cur_location,
-        "CurrLocation",
+        "CurrLocation"
       );
     }
     if (newTripInfo.destination) {
       newTripInfo.destination = validation.checkString(
         newTripInfo.destination,
-        "Destination",
+        "Destination"
       );
     }
     if (newTripInfo.tripDate.startDate) {
       newTripInfo.tripDate.startDate = validation.checkDate(
         newTripInfo.tripDate.startDate,
-        "StartDate",
+        "StartDate"
       );
     }
     if (newTripInfo.tripDate.endDate) {
       newTripInfo.tripDate.endDate = validation.checkDate(
         newTripInfo.tripDate.endDate,
-        "EndDate",
+        "EndDate"
       );
     }
     if (newTripInfo.notes) {
@@ -160,7 +162,7 @@ const updateTripById = async (id, updateTripBody) => {
       const updateTrip = await Trip.findByIdAndUpdate(
         id,
         { $set: updateTripBody },
-        { new: true },
+        { new: true }
       );
 
       if (updateTrip) {
@@ -401,7 +403,10 @@ const acceptInviteToTrip = async (req, res) => {
   }
 };
 const inviteUserToTrip = async (req, res) => {
+  // console.log(req.params.id);
+  // console.log(req.body);
   const trip = await Trip.findById(req.params.id);
+  // console.log(trip);
   if (!trip) {
     throw {
       message: `Trip not found`,
@@ -409,17 +414,19 @@ const inviteUserToTrip = async (req, res) => {
     };
   } else {
     const obj = {
-      email: req.body.email,
-      name: req.body.name,
+      email: req.body.body.email,
+      message: req.body.body.message,
     };
-
+    // console.log(obj);
     if (
       trip.invites.filter((invite) => invite.email === obj.email).length ===
         0 &&
       trip.users.filter((user) => user.email === obj.email).length === 0
     ) {
       trip.invites.push(obj);
+      console.log(trip.invites);
       await trip.save();
+      // console.log("trip", trip, "===");
       return trip;
     } else {
       throw {

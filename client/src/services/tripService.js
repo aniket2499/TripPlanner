@@ -16,77 +16,94 @@ const getTripById = (id) => {
 };
 
 const createTrip = (body) => {
-  console.log(body);
-  return axios.post(DATA_URL + "/trips", { body: body }).then((response) => {
-    return response.data;
-  });
+  // console.log(body);
+  const userId = body.id;
+  return axios
+    .post(DATA_URL + `/trips/create/${userId}`, { body: body })
+    .then((response) => {
+      return response.data;
+    });
 };
 
 const deleteTripById = (id) => {
-  return axios.delete(DATA_URL + `/trips/${id}`).then((response) => {
+  return axios.delete(DATA_URL + `/trips/delete/${id}`).then((response) => {
     return response.data;
   });
 };
 
 const updateTripById = (id, body) => {
   return axios
-    .patch(DATA_URL + `/trips/${id}`, { body: body })
+    .patch(DATA_URL + `/trips/update/${id}`, { body: body })
     .then((response) => {
       return response.data;
     });
 };
 
 const addAttractionToTrip = (id, body) => {
+  const attractionid = body.attractionId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/attractions`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/attractions/add/${attractionid}`, {
+      body: body,
+    })
     .then((response) => {
       return response.data;
     });
 };
 
 const removeAttractionFromTrip = (id, body) => {
+  const attractionid = body.attractionId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/attractions/remove`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`, {
+      body: body,
+    })
     .then((response) => {
       return response.data;
     });
 };
 
 const addHotelToTrip = (id, body) => {
+  const hotelId = body.hotelId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`, { body: body })
     .then((response) => {
       return response.data;
     });
 };
 
 const removeHotelFromTrip = (id, body) => {
+  const hotelId = body.hotelId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/remove`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`, { body: body })
     .then((response) => {
       return response.data;
     });
 };
 
 const addRestaurantToTrip = (id, body) => {
+  const restaurantId = body.restaurantId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/restaurants`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/restaurants/add/${restaurantId}`, {
+      body: body,
+    })
     .then((response) => {
       return response.data;
     });
 };
 
 const removeRestaurantFromTrip = (id, body) => {
+  const restaurantId = body.restaurantId;
   return axios
-    .patch(DATA_URL + `/trips/${id}/restaurants/remove`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`, {
+      body: body,
+    })
     .then((response) => {
       return response.data;
     });
 };
 
 const inviteUserToTrip = (id, body) => {
-  id = new Object("60f9b1b1b0b5a8b0b0b0b0b0");
-  console.log(body);
+  console.log(id, "=");
+  console.log(body, "==");
   return axios
     .post(DATA_URL + `/trips/${id}/invite`, { body: body })
     .then((response) => {
