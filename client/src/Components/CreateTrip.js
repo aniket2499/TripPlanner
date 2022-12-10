@@ -1,7 +1,9 @@
 import { Autocomplete, Data } from "@react-google-maps/api";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import tripService from "../services/tripService.js";
+import { AuthContext } from "../firebase/Auth";
 import {
   Grid,
   Paper,
@@ -28,6 +30,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const CreateTrip = () => {
   let navigate = useNavigate();
+  const currUser = useContext(AuthContext);
   const [autoorgcomplete, setOrgAutocomplete] = useState(null);
   const [autodestcomplete, setDestAutocomplete] = useState(null);
   const [origin, setOrigin] = useState("");
@@ -43,7 +46,8 @@ const CreateTrip = () => {
   const [showReturnDate, setShowReturnDate] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
-
+  
+  const dispatch = useDispatch();
   const onOriginLoad = (autoC) => {
     setOrgAutocomplete(autoC);
   };
@@ -64,10 +68,12 @@ const CreateTrip = () => {
     setDestCoords({ lat, lng });
   };
   const submitForm = async (event) => {
+    const userId = currUser._delegate.uid;
     setError("");
     setSuccess("");
     event.preventDefault();
     let newValues = {
+      id: userId,
       cur_location: origin,
       destination: destination,
       tripDate: {
@@ -88,7 +94,7 @@ const CreateTrip = () => {
         .createTrip(newValues)
         .then((data) => {
           setSuccess("Trip added successfully!!");
-          navigate("/home");
+          navigate("/my-trips");
         })
         .catch((e) => {
           setError("Could not Add Trip. Try Again!!");
@@ -160,11 +166,11 @@ const CreateTrip = () => {
                 ) {
                   setStartDateError(true);
                   setStartDateErrorMessage(
-                    "Return date cannot be before departure date"
+                    "Return date cannot be before departure date",
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date"
+                    "Return date cannot be before departure date",
                   );
                 } else {
                   setStartDateError(false);
@@ -199,11 +205,11 @@ const CreateTrip = () => {
                 ) {
                   setStartDateError(true);
                   setStartDateErrorMessage(
-                    "Return date cannot be before departure date"
+                    "Return date cannot be before departure date",
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date"
+                    "Return date cannot be before departure date",
                   );
                 } else {
                   setReturnDateError(false);

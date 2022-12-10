@@ -24,6 +24,7 @@ import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
 import React, { useContext } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
+// import actions from "../actions";
 import userService from "../services/userService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
@@ -32,11 +33,12 @@ const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
 function Home() {
   const currUser = useContext(AuthContext);
+  // const dispatch = useDispatch();
   // console.log(currUser);
 
-  const getCurrUser = async (id) => {
-    return await userService.getUserById(id);
-  };
+  // const getCurrUser = async (id) => {
+  //   return await userService.getUserById(id);
+  // };
 
   const addUserToMongo = async (obj) => {
     console.log(obj);
@@ -50,6 +52,7 @@ function Home() {
 
   if (currUser) {
     // let user = getCurrUser(currUser._delegate.uid);
+    // dispatch(actions.addHotel())
     // if (!user) {
     addUserToMongo({
       _id: currUser._delegate.uid,
@@ -59,8 +62,9 @@ function Home() {
     // }
   }
 
-  const allRestaurants = useSelector((state) => state.restaurants);
-  console.log(allRestaurants);
+  const allHotels = useSelector((state) => state.hotels);
+  console.log("allHotels");
+  console.log(allHotels);
 
   return (
     <div>

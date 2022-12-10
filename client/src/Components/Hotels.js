@@ -47,8 +47,18 @@ const Hotels = () => {
           data[i].saved = false;
         }
 
-        console.log(JSON.stringify(data));
+        console.log(data);
         setHotels(data);
+        dispatch(
+          actions.addHotel(
+            1,
+            "SOHO SUITES",
+            40,
+            -73,
+            "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
+            3,
+          ),
+        );
         setLoading(false);
       } catch (e) {
         return e;
