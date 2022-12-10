@@ -257,6 +257,7 @@ function Flights(props) {
     fetchFlights();
     setIndex(0);
   };
+  console.log(flights);
 
   return (
     <div>

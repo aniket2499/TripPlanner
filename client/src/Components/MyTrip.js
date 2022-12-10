@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import moment from "moment";
-
 import {
   Grid,
   Paper,
@@ -27,6 +26,7 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FlightIcon from "@mui/icons-material/Flight";
 import NotesIcon from "@mui/icons-material/Notes";
 import Typography from "@mui/material/Typography";
+import tripService from "../services/tripService";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyTwoToneIcon from "@mui/icons-material/AttachMoneyTwoTone";
 import LuggageTwoToneIcon from "@mui/icons-material/LuggageTwoTone";
@@ -48,6 +48,14 @@ const MyTrip = () => {
   const endDate = moment("2022-07-05");
 
   const days = [];
+
+  const [loading, setLoading] = useState(false);
+  const [flights, setFlights] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [trip, setTrip] = useState([]);
+
   let day = startDate;
 
   while (day <= endDate) {
@@ -63,6 +71,10 @@ const MyTrip = () => {
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   return (
     <div>

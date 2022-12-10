@@ -1,5 +1,7 @@
-import { Autocomplete } from "@react-google-maps/api";
-import React, { useContext, useState } from "react";
+import { Autocomplete, Data } from "@react-google-maps/api";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import tripService from "../services/tripService.js";
 import {
   Grid,
   Paper,
@@ -16,21 +18,22 @@ import {
   InputLabel,
   FormHelperText,
   TextField,
+  Experimental_CssVarsProvider,
 } from "@mui/material";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import AddIcon from "@mui/icons-material/Add";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 
 const CreateTrip = () => {
-  const [autocomplete, setAutocomplete] = useState(null);
-  const [coords, setCoords] = useState({});
+  let navigate = useNavigate();
+  const [autoorgcomplete, setOrgAutocomplete] = useState(null);
+  const [autodestcomplete, setDestAutocomplete] = useState(null);
+  const [origin, setOrigin] = useState("");
+  const [destination, setDestination] = useState("");
+  const [origincoords, setOriginCoords] = useState({});
+  const [destcoords, setDestCoords] = useState({});
   const [StartDateError, setStartDateError] = useState(false);
   const [ReturnDateError, setReturnDateError] = useState(false);
   const [StartDateErrorMessage, setStartDateErrorMessage] = useState("");
@@ -38,17 +41,69 @@ const CreateTrip = () => {
   const [startDate, setStartDate] = useState(dayjs(new Date()));
   const [returnDate, setReturnDate] = useState(dayjs(new Date()));
   const [showReturnDate, setShowReturnDate] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState("");
 
-  const onLoad = (autoC) => setAutocomplete(autoC);
-
-  const onPlaceChanged = () => {
-    const lat = autocomplete.getPlace().geometry.location.lat();
-    const lng = autocomplete.getPlace().geometry.location.lng();
-    console.log(lat, lng);
-
-    setCoords({ lat, lng });
+  const onOriginLoad = (autoC) => {
+    setOrgAutocomplete(autoC);
   };
-  console.log("here");
+  const onDestinationLoad = (autoC) => {
+    setDestAutocomplete(autoC);
+  };
+
+  const onPlaceOriginChanged = () => {
+    setOrigin(autoorgcomplete.gm_accessors_.place.jj.formattedPrediction);
+    const lat = autoorgcomplete.getPlace().geometry.location.lat();
+    const lng = autoorgcomplete.getPlace().geometry.location.lng();
+    setOriginCoords({ lat, lng });
+  };
+  const onPlaceDestinationChanged = () => {
+    setDestination(autodestcomplete.gm_accessors_.place.jj.formattedPrediction);
+    const lat = autodestcomplete.getPlace().geometry.location.lat();
+    const lng = autodestcomplete.getPlace().geometry.location.lng();
+    setDestCoords({ lat, lng });
+  };
+  const submitForm = async (event) => {
+    setError("");
+    setSuccess("");
+    event.preventDefault();
+    let newValues = {
+      cur_location: origin,
+      destination: destination,
+      tripDate: {
+        startDate: startDate,
+        endDate: returnDate,
+      },
+    };
+    let newerrors = {};
+
+    if (!newValues.cur_location) {
+      newerrors.cur_location = "Origin Location is Invalid";
+    } else if (!newValues.destination) {
+      newerrors.destination = "Destination is Invalid";
+    }
+    if (Object.keys(newerrors).length === 0) {
+      console.log(newValues);
+      await tripService
+        .createTrip(newValues)
+        .then((data) => {
+          setSuccess("Trip added successfully!!");
+          navigate("/home");
+        })
+        .catch((e) => {
+          setError("Could not Add Trip. Try Again!!");
+        });
+    } else {
+      if (newerrors.cur_location) {
+        alert(newerrors.cur_location);
+        setError(newerrors.cur_location);
+      } else {
+        alert(newerrors.destination);
+        setError(newerrors.destination);
+      }
+    }
+  };
+
   return (
     <div>
       <Paper
@@ -63,12 +118,28 @@ const CreateTrip = () => {
           justifyContent="center"
           sx={{ mt: 10 }}
         >
-          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <TextField sx={{ width: 400, ml: 6, mt: 3 }} label="Origin" />
+          <Autocomplete
+            onLoad={onOriginLoad}
+            onPlaceChanged={onPlaceOriginChanged}
+          >
+            <TextField
+              sx={{ width: 400, ml: 6, mt: 3 }}
+              label="Origin"
+              name="cur_location"
+              // onChange={handleChange}
+            />
           </Autocomplete>
 
-          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <TextField sx={{ width: 400, ml: 6, mt: 3 }} label="Destination" />
+          <Autocomplete
+            onLoad={onDestinationLoad}
+            onPlaceChanged={onPlaceDestinationChanged}
+          >
+            <TextField
+              sx={{ width: 400, ml: 6, mt: 3 }}
+              label="Destination"
+              name="destination"
+              // onChange={handleChange}
+            />
           </Autocomplete>
         </Stack>
         <Stack direction="row" justifyContent="center">
@@ -110,6 +181,7 @@ const CreateTrip = () => {
                   {...params}
                   error={StartDateError}
                   helperText={StartDateErrorMessage}
+                  // onChange={handleStartDateChange}
                 />
               )}
             />
@@ -148,13 +220,14 @@ const CreateTrip = () => {
                   {...params}
                   error={ReturnDateError}
                   helperText={ReturnDateErrorMessage}
+                  // onChange={handleEndDateChange}
                 />
               )}
             />
           </LocalizationProvider>
         </Stack>
         <Stack direction="row" justifyContent="center" sx={{ mt: 6, mb: 10 }}>
-          <Button color="primary" variant="contained">
+          <Button color="primary" variant="contained" onClick={submitForm}>
             <AddIcon sx={{ mr: 1 }} />
             Add Trip
           </Button>

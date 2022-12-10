@@ -27,8 +27,7 @@ connection.once("open", () => {
 app.post("/users", async (req, res) => {
   try {
     const User = new Users({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
+      displayName: req.body.displayName,
       email: req.body.email,
       password: req.body.password,
       dateOfBirth: req.body.dateOfBirth,

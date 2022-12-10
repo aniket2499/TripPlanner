@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../firebase/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -41,6 +41,22 @@ const NavigationAuth = () => {
   const navigate = useNavigate();
   const [value, setValue] = useState();
 
+  useEffect(() => {
+    console.log("fired");
+
+    console.log(window.location.pathname);
+    if (
+      window.location.pathname === "/home" ||
+      window.location.pathname === "/"
+    ) {
+      setValue(1);
+    } else if (window.location.pathname === "/flights") {
+      setValue(2);
+    } else {
+      setValue(false);
+    }
+  }, [value, window.location.pathname]);
+
   return (
     <div>
       <AppBar color="inherit" position="relative">
@@ -50,8 +66,8 @@ const NavigationAuth = () => {
             <Grid item xs={5}>
               <Tabs
                 indicationColor="inherit"
-                textColor="#767676"
-                value={value}
+                textColor="inherit"
+                value={value in [0, 1, 2] ? value : false}
                 onChange={(e, value) => setValue(value)}
               >
                 <Typography>
@@ -63,6 +79,7 @@ const NavigationAuth = () => {
                 </Typography>
                 {linksArray.map((link, index) => (
                   <Tab
+                    key={index}
                     label={link}
                     onClick={() => {
                       navigate(`/${link}`);
@@ -102,17 +119,48 @@ const NavigationNonAuth = () => {
   const linksArray = ["home", "login", "signup"];
   const navigate = useNavigate();
   const [value, setValue] = useState();
+
+  // useEffect(() => {
+  //   console.log(window.location.pathname);
+  //   if (window.location.pathname === "/home") {
+  //     setValue(1);
+  //   } else if (window.location.pathname === "/login") {
+  //     setValue(2);
+  //   } else if (window.location.pathname === "/signup") {
+  //     setValue(3);
+  //   }
+  // }, [value]);
+
+  useEffect(() => {
+    console.log("fired");
+    console.log(window.location.pathname);
+    if (
+      window.location.pathname === "/home" ||
+      window.location.pathname === "/"
+    ) {
+      setValue(1);
+    } else if (window.location.pathname === "/login") {
+      setValue(2);
+    } else if (window.location.pathname === "/signup") {
+      setValue(3);
+    }
+    return () => {
+      setValue(false);
+    };
+  }, [value, window.location.pathname]);
+
   return (
     <div>
-      <AppBar color="inherit" position="relative">
+      <AppBar color="inherit" position="relative" id="navbar">
         <Toolbar>
           <Grid sx={{ placeItems: "center" }} container>
             <Grid item xs={2}></Grid>
             <Grid item xs={6}>
               <Tabs
+                id="navbar-tabs"
                 indicationColor="inherit"
-                textColor="#767676"
-                value={value}
+                textColor="inherit"
+                value={value in [0, 1, 2, 3] ? value : false}
                 onChange={(e, value) => setValue(value)}
               >
                 <Typography>
@@ -124,6 +172,7 @@ const NavigationNonAuth = () => {
                 </Typography>
                 {linksArray.map((link, index) => (
                   <Tab
+                    key={index}
                     label={link}
                     onClick={() => {
                       navigate(`/${link}`);
@@ -135,46 +184,6 @@ const NavigationNonAuth = () => {
           </Grid>
         </Toolbar>
       </AppBar>
-      {/* <header className="App-header">
-        <AppBar position="static" color="inherit">
-          <Toolbar>
-            <Link to="/" variant="h5" className="appbar-link">
-              TRAVEL ADVISOR
-            </Link>
-            <Link to="/" variant="h5" className="appbar-link">
-              Home
-            </Link>
-            <Link to="/account" variant="h5" className="appbar-link">
-              Account
-            </Link>
-            <SignOutBtn />
-          </Toolbar>
-        </AppBar>
-      </header> */}
-      {/* <AppBar position="static" color="inherit">
-        <Container maxWidth="xl">
-          <Toolbar>
-            <Typography variant="h4" noWrap component="a" href="/">
-              TRAVEL ADVISOR
-            </Typography>
-            <Button key="home" sx={{ color: "#fff" }}>
-              <Typography variant="h6" component="a" href="/">
-                Home
-              </Typography>
-            </Button>
-            <Button key="signup" sx={{ color: "#fff" }}>
-              <Typography variant="h6" component="a" href="/signup">
-                Sign-up
-              </Typography>
-            </Button>
-            <Button key="login" sx={{ color: "#fff" }}>
-              <Typography variant="h6" component="a" href="/login">
-                Login
-              </Typography>
-            </Button>
-          </Toolbar>
-        </Container>
-      </AppBar> */}
     </div>
   );
 };
