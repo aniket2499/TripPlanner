@@ -10,9 +10,10 @@ const Maps = () => {
       flexDirection: "column",
       justifyContent: "center",
       width: "100px",
+      borderRadius: "100",
     },
     mapContainer: {
-      height: "85vh",
+      height: "37vh",
       width: "100%",
     },
     markerContainer: {
