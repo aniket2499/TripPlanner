@@ -31,36 +31,36 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
 function Home() {
-  //   const currUser = useContext(AuthContext);
-  //   // console.log(currUser);
+  const currUser = useContext(AuthContext);
+  // console.log(currUser);
 
-  //   const getCurrUser = async (id) => {
-  //     return await userService.getUserById(id);
-  //   };
+  const getCurrUser = async (id) => {
+    return await userService.getUserById(id);
+  };
 
-  //   const addUserToMongo = async (obj) => {
-  //     console.log(obj);
-  //     await userService.createUser({
-  //       _id: obj._id,
-  //       displayName: obj.displayName,
-  //       email: obj.email,
-  //       password: "password",
-  //     });
-  //   };
+  const addUserToMongo = async (obj) => {
+    console.log(obj);
+    await userService.createUser({
+      _id: obj._id,
+      displayName: obj.displayName,
+      email: obj.email,
+      password: "password",
+    });
+  };
 
-  //   if (currUser) {
-  //     // let user = getCurrUser(currUser._delegate.uid);
-  //     // if (!user) {
-  //     addUserToMongo({
-  //       _id: currUser._delegate.uid,
-  //       displayName: currUser._delegate.displayName,
-  //       email: currUser._delegate.email,
-  //     });
-  //     // }
-  //   }
+  if (currUser) {
+    // let user = getCurrUser(currUser._delegate.uid);
+    // if (!user) {
+    addUserToMongo({
+      _id: currUser._delegate.uid,
+      displayName: currUser._delegate.displayName,
+      email: currUser._delegate.email,
+    });
+    // }
+  }
 
-  //   const allRestaurants = useSelector((state) => state.restaurants);
-  //   console.log(allRestaurants);
+  const allRestaurants = useSelector((state) => state.restaurants);
+  console.log(allRestaurants);
 
   return (
     <div>
