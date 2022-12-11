@@ -1,3 +1,14 @@
+const addUser = (id) => ({
+  type: "ADD_USER",
+  payload: {
+    id: id,
+  },
+});
+
+const getUser = () => ({
+  type: "GET_USER",
+});
+
 const addAttraction = (
   location_id,
   name,
@@ -117,6 +128,7 @@ const deleteTrip = (location_id) => ({
 });
 
 let exports = {
+  addUser,
   addAttraction,
   deleteAttratcion,
   addHotel,
@@ -125,6 +137,7 @@ let exports = {
   deleteRest,
   addTrip,
   deleteTrip,
+  getUser,
 };
 
 export default exports;

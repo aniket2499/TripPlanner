@@ -29,13 +29,23 @@ import actions from "../actions";
 import hotelsData from "../services/getApiData";
 import modalForHotel from "../modals/modalForHotel";
 import { useEffect, useState } from "react";
+import tripService from "../services/tripService";
+import { useParams } from "react-router-dom";
+
 const Hotels = () => {
   const dispatch = useDispatch();
+
+  const allState = useSelector((state) => state);
+
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = React.useState(false);
   const [hotelId, setHotelId] = useState("");
   const [hotelModal, setModalForHotel] = useState(false);
+
+  // const id = useParams().tripid;
+  const id = "63934796bd080530bbdc3111";
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -47,18 +57,20 @@ const Hotels = () => {
           data[i].saved = false;
         }
 
+        // dispatch(actions.addUser(id));
+        console.log(allState);
         console.log(data);
         setHotels(data);
-        dispatch(
-          actions.addHotel(
-            1,
-            "SOHO SUITES",
-            40,
-            -73,
-            "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
-            3,
-          ),
-        );
+        // dispatch(
+        //   actions.addHotel(
+        //     1,
+        //     "SOHO SUITES",
+        //     40,
+        //     -73,
+        //     "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
+        //     3,
+        //   ),
+        // );
         setLoading(false);
       } catch (e) {
         return e;
@@ -300,6 +312,12 @@ const Hotels = () => {
                             <Button
                               id={hotel.dup_id}
                               onClick={(e) => {
+                                if (hotel.saved === true) {
+                                  tripService.addHotelToTrip(id, {
+                                    hotelId: hotel.id,
+                                  });
+                                } else {
+                                }
                                 hotel.saved = !hotel.saved;
                                 setSavedButton(!savedButton);
                               }}

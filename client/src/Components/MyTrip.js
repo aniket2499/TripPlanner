@@ -1,13 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import moment from "moment";
-import {Grid,Paper,Card,CardContent,Button,CardMedia,Box,Divider,Icon,Stack,ListItem,List,Accordion,AccordionSummary,AccordionDetails,TextField,AppBar} from "@mui/material";
+import {
+  Grid,
+  Paper,
+  Card,
+  CardContent,
+  Button,
+  CardMedia,
+  Box,
+  Divider,
+  Icon,
+  Stack,
+  ListItem,
+  List,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
+  AppBar,
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FlightIcon from "@mui/icons-material/Flight";
 import NotesIcon from "@mui/icons-material/Notes";
 import Typography from "@mui/material/Typography";
+import tripService from "../services/tripService";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyTwoToneIcon from "@mui/icons-material/AttachMoneyTwoTone";
 import LuggageTwoToneIcon from "@mui/icons-material/LuggageTwoTone";
@@ -17,7 +36,9 @@ import AccessTimeTwoToneIcon from "@mui/icons-material/AccessTimeTwoTone";
 import FlightTakeoffTwoToneIcon from "@mui/icons-material/FlightTakeoffTwoTone";
 import FlightLandTwoToneIcon from "@mui/icons-material/FlightLandTwoTone";
 import SearchFlightForm from "./Forms/SearchFlightForm";
-import CircularProgress, {circularProgressClasses} from "@mui/material/CircularProgress";
+import CircularProgress, {
+  circularProgressClasses,
+} from "@mui/material/CircularProgress";
 import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
@@ -27,6 +48,14 @@ const MyTrip = () => {
   const endDate = moment("2022-07-05");
 
   const days = [];
+
+  const [loading, setLoading] = useState(false);
+  const [flights, setFlights] = useState([]);
+  const [hotels, setHotels] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [notes, setNotes] = useState([]);
+  const [trip, setTrip] = useState([]);
+
   let day = startDate;
 
   while (day <= endDate) {
@@ -42,6 +71,10 @@ const MyTrip = () => {
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   return (
     <div>
@@ -172,7 +205,9 @@ const MyTrip = () => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography fontWeight="fontWeightBold">Hotels</Typography>
+                <Stack direction="row" justifyContent="end">
+                  <Typography fontWeight="fontWeightBold">Hotels</Typography>
+                </Stack>
               </AccordionSummary>
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
