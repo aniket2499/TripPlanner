@@ -40,7 +40,7 @@ router.post("/create", async (req, res) => {
 
 router.delete("/delete/:id", async (req, res) => {
   try {
-    const deletedAttraction = await deleteUserById(req.params.id);
+    const deletedAttraction = await deleteAttractionById(req.params.id);
     res.status(200).json(deletedAttraction);
   } catch (e) {
     res.status(500).json(e);
@@ -49,7 +49,10 @@ router.delete("/delete/:id", async (req, res) => {
 
 router.patch("/update/:id", async (req, res) => {
   try {
-    const updatedAttraction = await updateUserById(req.params.id, req.body);
+    const updatedAttraction = await updateAttractionById(
+      req.params.id,
+      req.body
+    );
     res.status(200).json(updatedAttraction);
   } catch (e) {
     res.status(500).json(e);
