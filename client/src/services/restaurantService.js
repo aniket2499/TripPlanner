@@ -13,19 +13,21 @@ const getRestaurantById = (id) => {
 };
 const createRestaurant = (body) => {
   return axios
-    .post(DATA_URL + "/restaurants", { body: body })
+    .post(DATA_URL + "/restaurants/create", { body: body })
     .then((response) => {
       return response.data;
     });
 };
 const deleteRestaurantById = (id) => {
-  return axios.delete(DATA_URL + `/restaurants/${id}`).then((response) => {
-    return response.data;
-  });
+  return axios
+    .delete(DATA_URL + `/restaurants/delete/${id}`)
+    .then((response) => {
+      return response.data;
+    });
 };
 const updateRestaurantById = (id, body) => {
   return axios
-    .patch(DATA_URL + `/restaurants/${id}`, { body: body })
+    .patch(DATA_URL + `/restaurants/update/${id}`, { body: body })
     .then((response) => {
       return response.data;
     });

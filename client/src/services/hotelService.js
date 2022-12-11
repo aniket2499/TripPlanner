@@ -13,18 +13,20 @@ const getHotelById = (id) => {
 };
 
 const createHotel = (body) => {
-  return axios.post(DATA_URL + "/hotels", { body: body }).then((response) => {
-    return response.data;
-  });
+  return axios
+    .post(DATA_URL + "/hotels/create", { body: body })
+    .then((response) => {
+      return response.data;
+    });
 };
 const deleteHotelById = (id) => {
-  return axios.delete(DATA_URL + `/hotels/${id}`).then((response) => {
+  return axios.delete(DATA_URL + `/hotels/delete/${id}`).then((response) => {
     return response.data;
   });
 };
 const updateHotelById = (id, body) => {
   return axios
-    .patch(DATA_URL + `/hotels/${id}`, { body: body })
+    .patch(DATA_URL + `/hotels/update/${id}`, { body: body })
     .then((response) => {
       return response.data;
     });
