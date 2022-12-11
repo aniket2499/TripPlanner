@@ -57,7 +57,8 @@ const Hotels = () => {
           data[i].saved = false;
         }
 
-        // dispatch(actions.addUser(id));
+        dispatch(actions.addUser(id));
+        // dispatch(actions.deleteUser());
         console.log(allState);
         console.log(data);
         setHotels(data);
