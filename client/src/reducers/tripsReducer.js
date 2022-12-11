@@ -1,10 +1,11 @@
-import { useContext } from "react";
-import { AuthContext } from "../firebase/Auth";
+import tripService from "../services/tripService";
+import userService from "../services/userService";
+// import GetUserInfo from "../Components/getUserInfo";
 
 const initialState = [
   {
     name: null,
-    users: [],
+    userId: null,
     cur_location: null,
     destination: null,
     destination_lat: null,
@@ -22,12 +23,11 @@ const tripsReducer = (state = initialState, action) => {
 
   switch (type) {
     case "ADD_TRIP":
-      state.users.push(payload.userId);
       return [
         ...state,
         {
           name: payload.name,
-          users: state.users,
+          userId: payload.userId,
           cur_location: payload.cur_location,
           destination: payload.destination,
           start_date: payload.start_date,

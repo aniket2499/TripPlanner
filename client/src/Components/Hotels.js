@@ -34,6 +34,9 @@ import { useParams } from "react-router-dom";
 
 const Hotels = () => {
   const dispatch = useDispatch();
+
+  const allState = useSelector((state) => state);
+
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = React.useState(false);
@@ -54,15 +57,27 @@ const Hotels = () => {
           data[i].saved = false;
         }
 
-        console.log(id);
+        // dispatch(actions.addUser(id));
+        console.log(allState);
+        console.log(data);
         setHotels(data);
+        // dispatch(
+        //   actions.addHotel(
+        //     1,
+        //     "SOHO SUITES",
+        //     40,
+        //     -73,
+        //     "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
+        //     3,
+        //   ),
+        // );
         setLoading(false);
       } catch (e) {
         return e;
       }
     }
     fetchData();
-  }, [id]);
+  }, []);
 
   if (loading) {
     return (

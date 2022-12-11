@@ -50,14 +50,14 @@ function Login() {
     try {
       await doSignInWithEmailAndPassword(email.value, password.value);
     } catch (error) {
-      // alert(error);
       console.log(error.message);
       if (error.message === userNotFound || error.message === invalidPassword) {
         document.getElementById("error").innerHTML =
           "User not Found or Invalid Password!";
+        document.getElementById("error").style.color = "red";
+      } else {
+        alert(error.message);
       }
-      // document.getElementById("error").innerHTML = "Invalid email or password";
-      // document.getElementById("error").style.color = "red";
     }
   };
 
@@ -67,12 +67,25 @@ function Login() {
       const email = document.getElementById("email").value;
       if (email) {
         await doPasswordReset(email);
-        alert("Password reset email sent to " + email);
+        document.getElementById("error").innerHTML =
+          "Check your email for password reset link";
+        document.getElementById("error").style.color = "green";
       } else {
-        alert("Please enter your email address before clicling reset password");
+        document.getElementById("error").innerHTML =
+          "Please enter your email to reset password";
+        document.getElementById("error").style.color = "red";
       }
     } catch (error) {
-      alert(error);
+      if (
+        error.message ===
+        "Firebase: There is no user record corresponding to this identifier. The user may have been deleted. (auth/user-not-found)."
+      ) {
+        document.getElementById("error").innerHTML =
+          "User not Found for this Email!";
+        document.getElementById("error").style.color = "red";
+      } else {
+        alert(error.message);
+      }
     }
   };
 

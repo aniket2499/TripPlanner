@@ -6,13 +6,12 @@ const initialState = [
 
 let copyState = null;
 
-const tripsReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
     case "ADD_USER":
       return [
-        ...state,
         {
           id: payload.id,
         },
@@ -30,3 +29,5 @@ const tripsReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default userReducer;

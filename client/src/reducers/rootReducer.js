@@ -1,4 +1,16 @@
 import { combineReducers } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
+
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  persistReducer,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import attractionReducer from "./attractionReducer";
 import hotelReducer from "./hotelReducer";
 import restReducer from "./restReducer";

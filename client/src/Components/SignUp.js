@@ -12,6 +12,10 @@ import {
   Grid,
   Paper,
   FormLabel,
+  Alert,
+  Stack,
+  AlertTitle,
+  Modal,
 } from "@mui/material";
 import SocialSignIn from "./SocialSignIn";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,6 +25,9 @@ function SignUp() {
   const [pswdMatch, setPswdMatch] = useState("");
   const [finalPswd, setFinalPswd] = useState("");
   const [userDispName, setUserDispName] = useState("");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
   const styles = {
@@ -44,10 +51,23 @@ function SignUp() {
     button: {
       marginTop: "1rem",
     },
+    modal: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: 400,
+      bgcolor: "background.paper",
+      border: "2px solid #000",
+      boxShadow: 24,
+      p: 4,
+    },
   };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    const userAlreadyExists =
+      "Firebase: The email address is already in use by another account. (auth/email-already-in-use).";
     const { displayName, email, pwd1, pwd2 } = e.target.elements;
     if (pwd1.value !== pwd2.value) {
       setPswdMatch("Passwords do not match");
@@ -61,9 +81,17 @@ function SignUp() {
           pwd1.value,
           displayName.value,
         );
-        alert("Account created successfully");
+        // alert("User Created Successfully");
+        handleOpen();
       } catch (error) {
-        alert(error);
+        console.log(error.message);
+        if (error.message === userAlreadyExists) {
+          document.getElementById("error").innerHTML =
+            "User already exists. Please Login";
+          document.getElementById("error").style.color = "red";
+        } else {
+          alert(error);
+        }
       }
     }
   };
@@ -77,14 +105,18 @@ function SignUp() {
     });
   };
 
-  const handlePasswordMatch = () => {
-    if (
+  const handleValidFormData = () => {
+    console.log(document.getElementById("pwd1").value);
+    console.log(document.getElementById("pwd2").value);
+    console.log(
       document.getElementById("pwd1").value ===
+        document.getElementById("pwd2").value,
+    );
+    if (
+      document.getElementById("pwd1").value !==
       document.getElementById("pwd2").value
     ) {
-      document.getElementById("pwd2").innerHTML = "";
-    } else {
-      document.getElementById("pwd2").innerHTML = "Passwords do not match";
+      document.getElementById("error").innerHTML = "Passwords do not match";
     }
   };
 
@@ -96,7 +128,7 @@ function SignUp() {
       password: finalPswd,
     });
     doSignOut();
-    navigate("/login");
+    // navigate("/login");
   }
 
   return (
@@ -122,6 +154,9 @@ function SignUp() {
             id="displayName"
             label="Name"
             type={"text"}
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
             required
           />
           <TextField
@@ -130,6 +165,9 @@ function SignUp() {
             label="Email"
             type={"email"}
             autoComplete="new-password"
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
             required
           />
           <TextField
@@ -138,7 +176,10 @@ function SignUp() {
             label="Password"
             type={"password"}
             autoComplete="new-password"
-            onChange={handlePasswordMatch}
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
+            // onChange={handlePasswordMatch}
             required
           />
           <TextField
@@ -147,7 +188,10 @@ function SignUp() {
             label="Comfirm Password"
             type={"password"}
             autoComplete="off"
-            onChange={handlePasswordMatch}
+            onChange={() => {
+              document.getElementById("error").innerHTML = "";
+            }}
+            // onChange={handlePasswordMatch}
             required
           />
           <Typography variant="body2" id="error" color="red"></Typography>
@@ -156,6 +200,7 @@ function SignUp() {
             id="submitButton"
             variant="contained"
             type="submit"
+            onClick={handleValidFormData}
           >
             Sign Up
           </Button>
@@ -170,6 +215,31 @@ function SignUp() {
           </Button>
         </Box>
       </form>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styles.modal}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            User Created Successfully
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Please Login
+          </Typography>
+          <Button
+            style={styles.button}
+            variant="contained"
+            onClick={() => {
+              navigate("/login");
+            }}
+          >
+            Log In
+          </Button>
+        </Box>
+      </Modal>
+      ;
     </div>
   );
 }
