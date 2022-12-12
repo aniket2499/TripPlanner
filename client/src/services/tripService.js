@@ -102,10 +102,10 @@ const removeRestaurantFromTrip = (id, body) => {
 };
 
 const inviteUserToTrip = (id, body) => {
-  console.log(id, "=");
+  const trip_id = id.id;
   console.log(body, "==");
   return axios
-    .post(DATA_URL + `/trips/${id}/invite`, { body: body })
+    .post(DATA_URL + `/trips/${trip_id}/invite`, { body: body })
     .then((response) => {
       return response.data;
     });

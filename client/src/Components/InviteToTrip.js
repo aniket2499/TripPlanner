@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import SocialSignIn from "./SocialSignIn";
 import tripService from "../services/tripService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
 
 import { Button, Grid, TextField, Box } from "@mui/material";
@@ -10,15 +10,16 @@ import Typography from "@mui/material/Typography";
 import "../App.css";
 
 function InviteToTrip() {
-
+  const id = useParams();
+  const trip_id = id.id;
+  console.log(id);
   const currUser = useContext(AuthContext);
-
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    const tripId = "63934796bd080530bbdc3111";
+    // const tripId = "63934796bd080530bbdc3111";
     const userId = currUser._delegate.uid;
     e.preventDefault();
     let newData = {
@@ -27,10 +28,10 @@ function InviteToTrip() {
     };
     // console.log(newData, "-====");
     await tripService
-      .inviteUserToTrip(tripId, newData)
+      .inviteUserToTrip(id, newData)
       .then((res) => {
         console.log(res);
-        navigate("/my-trips");
+        navigate(`/my-trips/${trip_id}`);
       })
       .catch((err) => {
         console.log(err);

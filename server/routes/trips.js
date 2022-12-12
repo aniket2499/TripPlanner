@@ -117,6 +117,7 @@ router.patch("/:id/restaurants/remove/:restaurantid", async (req, res) => {
 
 router.post("/:id/invite", async (req, res) => {
   try {
+    console.log(req, "==inside route");
     const trip = await inviteUserToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
