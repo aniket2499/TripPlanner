@@ -10,6 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
 function Home() {
+  const navigate = useNavigate();
   const currUser = useContext(AuthContext);
   // const dispatch = useDispatch();
   // console.log(currUser);
@@ -57,6 +58,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",

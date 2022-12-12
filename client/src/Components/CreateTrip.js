@@ -46,7 +46,7 @@ const CreateTrip = () => {
   const [showReturnDate, setShowReturnDate] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
-  
+
   const dispatch = useDispatch();
   const onOriginLoad = (autoC) => {
     setOrgAutocomplete(autoC);
@@ -93,8 +93,10 @@ const CreateTrip = () => {
       await tripService
         .createTrip(newValues)
         .then((data) => {
+          const trip_id = data._id;
+          console.log(trip_id, "===");
           setSuccess("Trip added successfully!!");
-          navigate("/my-trips");
+          navigate(`/${trip_id}/invite`);
         })
         .catch((e) => {
           setError("Could not Add Trip. Try Again!!");
@@ -166,11 +168,11 @@ const CreateTrip = () => {
                 ) {
                   setStartDateError(true);
                   setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                 } else {
                   setStartDateError(false);
@@ -205,11 +207,11 @@ const CreateTrip = () => {
                 ) {
                   setStartDateError(true);
                   setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                   setReturnDateError(true);
                   setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
+                    "Return date cannot be before departure date"
                   );
                 } else {
                   setReturnDateError(false);

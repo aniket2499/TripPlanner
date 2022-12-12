@@ -270,6 +270,7 @@ function App() {
                   <Route path="/maps" element={<Maps />} />
                 </Route>
                 {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
+
                 <Route path="/createtrip" element={<CreateTrip />} />
                 {/* </Route> */}
                 <Route path="/createtrip" element={<PrivateRoute />}>
