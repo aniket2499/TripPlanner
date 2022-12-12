@@ -38,14 +38,14 @@ function SignUp() {
       alignItems: "center",
       justifyContent: "center",
       margin: "auto",
-      marginTop: "2rem",
-      padding: "3rem",
+      marginTop: "1.5rem",
+      padding: "2rem",
       border: "1px solid #c0c0c0",
       borderRadius: "15px",
       //
     },
     header: {
-      padding: "1rem",
+      padding: "0.5rem",
       textAlign: "center",
     },
     button: {
@@ -150,7 +150,7 @@ function SignUp() {
             Sign Up
           </Typography>
           <TextField
-            margin="normal"
+            margin="dense"
             id="displayName"
             label="Name"
             type={"text"}
@@ -160,7 +160,7 @@ function SignUp() {
             required
           />
           <TextField
-            margin="normal"
+            margin="dense"
             id="email"
             label="Email"
             type={"email"}
@@ -171,7 +171,7 @@ function SignUp() {
             required
           />
           <TextField
-            margin="normal"
+            margin="dense"
             id="pwd1"
             label="Password"
             type={"password"}
@@ -183,7 +183,7 @@ function SignUp() {
             required
           />
           <TextField
-            margin="normal"
+            margin="dense"
             id="pwd2"
             label="Comfirm Password"
             type={"password"}

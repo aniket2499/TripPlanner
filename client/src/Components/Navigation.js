@@ -95,7 +95,10 @@ const NavigationAuth = () => {
                     id="outlined-basic"
                     label="Search"
                     variant="outlined"
-                    style={{ width: "100%" }}
+                    style={{
+                      width: "100%",
+                      marginTop: "0.5rem",
+                    }}
                   />
                 </Autocomplete>
               </Box>
@@ -175,7 +178,7 @@ const NavigationNonAuth = () => {
                     key={index}
                     label={link}
                     onClick={() => {
-                      navigate(`/${link}`);
+                      navigate(`/${link === "home" ? "" : link}`);
                     }}
                   />
                 ))}
