@@ -237,8 +237,8 @@ function App() {
               <Route path="/attractions" element={<PrivateRoute />}>
                 <Route path="/attractions" element={<Attractions />} />
               </Route>
-              <Route path="/invite" element={<PrivateRoute />}>
-                <Route path="/invite" element={<InviteToTrip />} />
+              <Route path="/:id/invite" element={<PrivateRoute />}>
+                <Route path="/:id/invite" element={<InviteToTrip />} />
               </Route>
               <Route path="/maps" element={<PrivateRoute />}>
                 <Route path="/maps" element={<Maps />} />

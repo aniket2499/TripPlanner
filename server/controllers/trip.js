@@ -376,9 +376,10 @@ const removeRestaurantFromTrip = async (req, res) => {
 };
 
 const acceptInviteToTrip = async (req, res) => {
+  console.log(req.params.tripId, "==");
   const trip = await Trip.findById(req.params.tripId);
   const checkUserDataInMongo = await User.findById(req.params.userId);
-  console.log(checkUserDataInMongo, "====");
+  console.log(checkUserDataInMongo, "inside control");
   if (!trip) {
     throw {
       message: `Trip not found`,
