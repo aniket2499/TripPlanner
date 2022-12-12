@@ -1,29 +1,37 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Components/Home";
-import Account from "./Components/Account";
-import Login from "./Components/Login";
-import SignUp from "./Components/SignUp";
-import SignOut from "./Components/SignOut";
-import Navigation from "./Components/Navigation";
+// import Navigation from "./Components/Navigation";
 import { AuthProvider } from "./firebase/Auth";
-import PrivateRoute from "./Components/PrivateRoute";
-import Flights from "./Components/Flights";
-import Restaurants from "./Components/Restaurants";
-import Hotels from "./Components/Hotels";
-import Attractions from "./Components/Attractions";
-import MyTrips from "./Components/MyTrip";
+// import PrivateRoute from "./Components/PrivateRoute";
 import {
   createTheme,
   ThemeProvider,
   CssBaseline,
   responsiveFontSizes,
 } from "@mui/material";
-import ChangePassword from "./Components/ChangePassword";
-import CreateTrip from "./Components/CreateTrip";
-import InviteToTrip from "./Components/InviteToTrip";
-import Maps from "./Components/Maps";
+// import ChangePassword from "./Components/ChangePassword";
+// import CreateTrip from "./Components/CreateTrip";
+// import InviteToTrip from "./Components/InviteToTrip";
+// import Maps from "./Components/Maps";
+
+const Home = lazy(() => import("./Components/Home"));
+const Account = lazy(() => import("./Components/Account"));
+const Login = lazy(() => import("./Components/Login"));
+const SignUp = lazy(() => import("./Components/SignUp"));
+const SignOut = lazy(() => import("./Components/SignOut"));
+const Flights = lazy(() => import("./Components/Flights"));
+const Restaurants = lazy(() => import("./Components/Restaurants"));
+const Hotels = lazy(() => import("./Components/Hotels"));
+const Attractions = lazy(() => import("./Components/Attractions"));
+const MyTrips = lazy(() => import("./Components/MyTrip"));
+const Navigation = lazy(() => import("./Components/Navigation"));
+const PrivateRoute = lazy(() => import("./Components/PrivateRoute"));
+const ChangePassword = lazy(() => import("./Components/ChangePassword"));
+const CreateTrip = lazy(() => import("./Components/CreateTrip"));
+const InviteToTrip = lazy(() => import("./Components/InviteToTrip"));
+const Maps = lazy(() => import("./Components/Maps"));
+const Welcome = lazy(() => import("./Components/Welcome"));
 
 let theme = createTheme({
   palette: {
@@ -216,42 +224,63 @@ function App() {
           <div className="App-header">
             <Navigation />
           </div>
-          <div className="App-body">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/account" element={<PrivateRoute />}>
-                <Route path="/account" element={<Account />} />
-              </Route>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/signout" element={<SignOut />} />
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/flights" element={<Flights />} />
-              <Route path="/restaurants" element={<PrivateRoute />}>
-                <Route path="/restaurants" element={<Restaurants />} />
-              </Route>
-              <Route path="/hotels" element={<PrivateRoute />}>
-                <Route path="/hotels/:tripid" element={<Hotels />} />
-              </Route>
-              <Route path="/attractions" element={<PrivateRoute />}>
-                <Route path="/attractions" element={<Attractions />} />
-              </Route>
-              <Route path="/:id/invite" element={<PrivateRoute />}>
-                <Route path="/:id/invite" element={<InviteToTrip />} />
-              </Route>
-              <Route path="/maps" element={<PrivateRoute />}>
-                <Route path="/maps" element={<Maps />} />
-              </Route>
-              {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
-              <Route path="/createtrip" element={<CreateTrip />} />
-              {/* </Route> */}
-              <Route path="/createtrip" element={<PrivateRoute />}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <div className="App-body">
+              <Routes>
+                <Route path="/" element={<Welcome />} />
+
+                <Route path="/home" element={<PrivateRoute />}>
+                  <Route path="/home" element={<Home />} />
+                </Route>
+
+                <Route path="/account" element={<PrivateRoute />}>
+                  <Route path="/account" element={<Account />} />
+                </Route>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/restaurants" element={<PrivateRoute />}></Route>
+
+                <Route path="/signout" element={<PrivateRoute />}>
+                  <Route path="/signout" element={<SignOut />} />
+                </Route>
+
+                <Route path="/change-password" element={<ChangePassword />} />
+
+                <Route path="/flights" element={<PrivateRoute />}>
+                  <Route path="/flights" element={<Flights />} />
+                </Route>
+
+                <Route path="/restaurants" element={<PrivateRoute />}>
+                  <Route path="/restaurants" element={<Restaurants />} />
+                </Route>
+
+                <Route path="/hotels" element={<PrivateRoute />}>
+                  <Route path="/hotels/:tripid" element={<Hotels />} />
+                </Route>
+
+                <Route path="/attractions" element={<PrivateRoute />}>
+                  <Route path="/attractions" element={<Attractions />} />
+                </Route>
+
+                <Route path="/invite" element={<PrivateRoute />}>
+                  <Route path="/invite" element={<InviteToTrip />} />
+                </Route>
+
+                <Route path="/maps" element={<PrivateRoute />}>
+                  <Route path="/maps" element={<Maps />} />
+                </Route>
+                {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
+
                 <Route path="/createtrip" element={<CreateTrip />} />
-              </Route>
-              <Route path="/my-trips/:id" element={<MyTrips />} />
-            </Routes>
-          </div>
+                {/* </Route> */}
+                <Route path="/createtrip" element={<PrivateRoute />}>
+                  <Route path="/createtrip" element={<CreateTrip />} />
+                </Route>
+
+                <Route path="/my-trips/:id" element={<MyTrips />} />
+              </Routes>
+            </div>
+          </Suspense>
         </Router>
       </AuthProvider>
     </ThemeProvider>
