@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import moment from "moment";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Grid,
   Paper,
@@ -20,12 +21,14 @@ import {
   TextField,
   AppBar,
 } from "@mui/material";
+import actions from "../actions";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import HotelIcon from "@mui/icons-material/Hotel";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import FlightIcon from "@mui/icons-material/Flight";
 import NotesIcon from "@mui/icons-material/Notes";
 import Typography from "@mui/material/Typography";
+import userService from "../services/userService";
 import tripService from "../services/tripService";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyTwoToneIcon from "@mui/icons-material/AttachMoneyTwoTone";
@@ -42,8 +45,12 @@ import CircularProgress, {
 import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../firebase/Auth";
 
+import Maps from "./Maps";
 const MyTrip = () => {
+  const currUser = useContext(AuthContext);
+
   const startDate = moment("2022-07-01");
   const endDate = moment("2022-07-05");
 
@@ -55,7 +62,10 @@ const MyTrip = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
+  const dispatch = useDispatch();
 
+  const trips = useSelector((state) => state.trips);
+  console.log("tripssssss", trips);
   let day = startDate;
 
   while (day <= endDate) {
@@ -75,6 +85,48 @@ const MyTrip = () => {
   useEffect(() => {
     setLoading(true);
   }, []);
+
+  console.log("curruser is " + currUser);
+
+  useEffect(() => {
+    const tripDataForUser = trips.filter(
+      (trip) => trip.userId === currUser._delegate.uid,
+    );
+
+    console.log("tripDataForUser", tripDataForUser);
+  });
+
+  // useEffect(() => {
+  //   const getTripData = async () => {
+  //     const tripDataForUser = await userService.getUserById(
+  //       "wXVLUmRigwbmn8BD8J2EU858OBB2",
+  //     );
+
+  //     tripDataForUser.trips.forEach(async (tripId) => {
+  //       const tripData = await tripService.getTripById(tripId);
+  //       dispatch(
+  //         actions.addTrip({
+  //           name: tripData.tripName,
+  //           userId: "wXVLUmRigwbmn8BD8J2EU858OBB2",
+  //           cur_location: tripData.cur_location,
+  //           destination: tripData.destination,
+  //           start_date: tripData.tripDate.startDate,
+  //           end_date: tripData.tripDate.endDate,
+  //           hotels: tripData.hotels,
+  //           attractions: tripData.attractions,
+  //           restaurants: tripData.restaurants,
+  //           explore: tripData.explore,
+  //           placesToVisit: tripData.placesToVisit,
+  //           itinerary: tripData.itinerary,
+  //           invites: tripData.invites,
+  //         }),
+  //       );
+  //     });
+
+  //     setLoading(false);
+  //   };
+  //   getTripData();
+  // }, []);
 
   return (
     <div>
@@ -424,7 +476,7 @@ const MyTrip = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" align="center" gutterBottom>
-            Map
+            <Maps />
           </Typography>
         </Grid>
       </Grid>
