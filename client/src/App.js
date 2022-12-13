@@ -24,6 +24,7 @@ import ChangePassword from "./Components/ChangePassword";
 import CreateTrip from "./Components/CreateTrip";
 import InviteToTrip from "./Components/InviteToTrip";
 import Maps from "./Components/Maps";
+import SignUpInvite from "./Components/SignUpInvite";
 
 let theme = createTheme({
   palette: {
@@ -225,6 +226,7 @@ function App() {
               </Route>
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/signup/:tripId" element={<SignUpInvite />} />
               <Route path="/signout" element={<SignOut />} />
               <Route path="/change-password" element={<ChangePassword />} />
               <Route path="/flights" element={<Flights />} />
