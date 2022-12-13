@@ -22,7 +22,6 @@ import {
 import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import { Container } from "@mui/system";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import StarIcon from "@mui/icons-material/Star";
@@ -30,11 +29,9 @@ import actions from "../actions";
 import hotelsData from "../services/getApiData";
 import { useEffect, useState } from "react";
 import tripService from "../services/tripService";
-import { useParams } from "react-router-dom";
 import Maps from "./Maps";
-const Hotels = () => {
-  const dispatch = useDispatch();
 
+const Hotels = () => {
   const allState = useSelector((state) => state);
 
   const [hotels, setHotels] = useState([]);

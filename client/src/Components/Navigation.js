@@ -3,7 +3,7 @@ import { AuthContext } from "../firebase/Auth";
 import { Link, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Autocomplete } from "@react-google-maps/api";
-
+import SearchIcon from "@mui/icons-material/Search";
 import SignOutBtn from "./SignOut";
 import "../App.css";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
@@ -91,12 +91,23 @@ const NavigationAuth = () => {
             <Grid item xs={2}>
               <Box>
                 <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-                  <TextField
+                  {/* <TextField
                     id="outlined-basic"
                     label="Search"
                     variant="outlined"
-                    style={{ width: "100%" }}
-                  />
+                    style={{
+                      width: "100%",
+                      marginTop: "0.5rem",
+                    }}
+                  /> */}
+
+                  <div class="search">
+                    <input
+                      type="text"
+                      class="input-search"
+                      placeholder="Type to Search..."
+                    />
+                  </div>
                 </Autocomplete>
               </Box>
             </Grid>
@@ -175,7 +186,7 @@ const NavigationNonAuth = () => {
                     key={index}
                     label={link}
                     onClick={() => {
-                      navigate(`/${link}`);
+                      navigate(`/${link === "home" ? "" : link}`);
                     }}
                   />
                 ))}
