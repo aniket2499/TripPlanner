@@ -14,7 +14,7 @@ html, body{
   width: 100%;
   height: 100%;
 }
-
+/* 
 input{
   position: absolute;
   top: 50%;
@@ -50,7 +50,7 @@ input:hover{
 input:focus,input:not(:placeholder-shown){
   width: 250px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 #ff8870;
-}
+} */
 
 /* .search-box{
   width: fit-content;

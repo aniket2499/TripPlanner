@@ -101,7 +101,7 @@ const NavigationAuth = () => {
                     }}
                   /> */}
 
-                  <div class="search">
+                  <div class="searchbox">
                     <input
                       type="text"
                       class="input-search"
