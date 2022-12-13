@@ -10,9 +10,10 @@ import Typography from "@mui/material/Typography";
 import "../App.css";
 
 function InviteToTrip() {
-  const id = useParams();
-  const trip_id = id.id;
-  console.log(id);
+  const tripId = useParams();
+  const trip_id = tripId.tripId;
+  // tripId = tripId.toString();
+  console.log(trip_id, typeof trip_id);
   const currUser = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -30,7 +31,7 @@ function InviteToTrip() {
     };
     // console.log(newData, "-====");
     await tripService
-      .inviteUserToTrip(id, newData)
+      .inviteUserToTrip(trip_id, newData)
       .then((res) => {
         console.log(res);
         navigate(`/my-trips/${trip_id}`);
