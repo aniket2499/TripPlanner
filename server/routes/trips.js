@@ -17,10 +17,14 @@ const {
 } = require("../controllers/trip");
 
 router.post("/:tripId/accept/:userId", async (req, res) => {
+  console.log(req.params.tripId, "Hello", req.params.userId);
   try {
+    console.log("inside try");
     const trip = await acceptInviteToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
+    console.log("inside catch");
+    console.log(e);
     res.status(e.status ? e.status : 500).json(e);
   }
 });
