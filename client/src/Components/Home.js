@@ -13,38 +13,35 @@ const array1 = [1, 2, 3];
 function Home() {
   const navigate = useNavigate();
   const currUser = useContext(AuthContext);
-  // const dispatch = useDispatch();
-  // console.log(currUser);
+  const dispatch = useDispatch();
 
-  // const getCurrUser = async (id) => {
-  //   return await userService.getUserById(id);
-  // };
+  const userId = currUser._delegate.uid;
+  let newObj = null;
 
-  const addUserToMongo = async (obj) => {
-    console.log(obj);
-    await userService.createUser({
-      _id: obj._id,
-      displayName: obj.displayName,
-      email: obj.email,
-      password: "password",
-    });
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      console.log("Inside Try");
+      return;
+    } catch (e) {
+      console.log("Inside catch");
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUser({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "password",
+      });
+    }
   };
-
-  if (currUser) {
-    // let user = getCurrUser(currUser._delegate.uid);
-    // dispatch(actions.addHotel())
-    // if (!user) {
-    addUserToMongo({
-      _id: currUser._delegate.uid,
-      displayName: currUser._delegate.displayName,
-      email: currUser._delegate.email,
-    });
-    // }
-  }
-
-  const allHotels = useSelector((state) => state.hotels);
-  console.log("allHotels");
-  console.log(allHotels);
+  getData(userId);
+  // const allHotels = useSelector((state) => state.hotels);
+  // console.log("allHotels");
+  // console.log(allHotels);
 
   return (
     <div>

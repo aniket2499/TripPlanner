@@ -6,8 +6,8 @@ const getAllUsers = () => {
     return response.data;
   });
 };
-const getUserById = (id) => {
-  return axios.get(DATA_URL + `/users/${id}`).then((response) => {
+const getUserById = async (id) => {
+  return await axios.get(DATA_URL + `/users/${id}`).then((response) => {
     return response.data;
   });
 };

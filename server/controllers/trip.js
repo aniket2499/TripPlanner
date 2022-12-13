@@ -434,7 +434,7 @@ const inviteUserToTrip = async (req, res) => {
       trip.users.filter((user) => user.email === obj.email).length === 0
     ) {
       trip.invites.push(obj);
-      // console.log(trip.invites);
+      console.log(trip.invites);
       await trip.save();
 
       const userData = await User.findById(trip.users[0]);
@@ -442,10 +442,10 @@ const inviteUserToTrip = async (req, res) => {
       let output = null;
       console.log(signedUpUser, "===signed up user");
 
-      if (signedUpUser) {
+      if (signedUpUser.length > 0) {
         console.log("user found");
         output = invite.logInTripEmail(trip, userData, signedUpUser, obj);
-      } else {
+      } else if (signedUpUser.length === 0) {
         console.log("user not found");
         output = invite.signUpTripEmail(trip, userData, obj);
       }
@@ -478,7 +478,7 @@ const inviteUserToTrip = async (req, res) => {
       });
       return trip;
     } else {
-      console.log("error");
+      // console.log("error");
       throw {
         message: `User with email ${req.body.body.email}, is already invited to trip`,
         status: 400,

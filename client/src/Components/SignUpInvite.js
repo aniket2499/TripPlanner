@@ -22,7 +22,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 function SignUpInvite() {
   const currUser = useContext(AuthContext);
-  const tripId = useParams();
+  const { tripId } = useParams();
+  console.log(tripId, "trip");
   const [pswdMatch, setPswdMatch] = useState("");
   const [finalPswd, setFinalPswd] = useState("");
   const [userDispName, setUserDispName] = useState("");
@@ -97,7 +98,9 @@ function SignUpInvite() {
     }
   };
   const tripsAdded = [];
+  console.log(typeof tripId);
   tripsAdded.push(tripId);
+  console.log(tripsAdded, "===trips array");
 
   const addToMongo = async (obj) => {
     await userService.createUser({
@@ -105,7 +108,7 @@ function SignUpInvite() {
       displayName: obj.displayName,
       email: obj.email,
       password: obj.password,
-      trips: tripsAdded,
+      trips: obj.trips,
     });
   };
 
@@ -125,6 +128,15 @@ function SignUpInvite() {
   };
 
   if (currUser) {
+    // const newObj = {
+    //   _id: currUser._delegate.uid,
+    //   displayName: userDispName,
+    //   email: currUser._delegate.email,
+    //   password: finalPswd,
+    //   trips: tripsAdded,
+    // };
+    // console.log(newObj, "====");
+    console.log(tripsAdded, "===");
     addToMongo({
       _id: currUser._delegate.uid,
       displayName: userDispName,
