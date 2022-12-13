@@ -53,10 +53,10 @@ let theme = createTheme({
       paper: "#ffffff",
     },
     text: {
-      primary: "rgba(0,0,0,0.87)",
-      secondary: "rgba(0,0,0,0.54)",
-      disabled: "rgba(0,0,0,0.38)",
-      hint: "rgba(0,0,0,0.38)",
+      primary: "#000000",
+      secondary: "#000000",
+      disabled: "#000000",
+      hint: "#737373",
     },
     error: {
       main: "#f44336",

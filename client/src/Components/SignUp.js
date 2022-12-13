@@ -5,20 +5,10 @@ import { doSignOut } from "../firebase/FirebaseFunctions";
 import userService from "../services/userService";
 import "../App.css";
 import { Box } from "@mui/system";
-import {
-  Button,
-  TextField,
-  Typography,
-  Grid,
-  Paper,
-  FormLabel,
-  Alert,
-  Stack,
-  AlertTitle,
-  Modal,
-} from "@mui/material";
+import { Button, TextField, Typography, Modal } from "@mui/material";
 import SocialSignIn from "./SocialSignIn";
 import { Link, useNavigate } from "react-router-dom";
+import { ThemeContext } from "@emotion/react";
 
 function SignUp() {
   const currUser = useContext(AuthContext);
@@ -61,6 +51,25 @@ function SignUp() {
       border: "2px solid #000",
       boxShadow: 24,
       p: 4,
+    },
+    textField: {},
+    cssLabel: {
+      color: "#d3d3d3",
+    },
+    cssOutlinedInput: {
+      "&:not(hover):not($disabled):not($cssFocused):not($error) $notchedOutline":
+        {
+          borderColor: "#d3d3d3", //default
+        },
+      "&:hover:not($disabled):not($cssFocused):not($error) $notchedOutline": {
+        borderColor: "#d3d3d3", //hovered #DCDCDC
+      },
+      "&$cssFocused $notchedOutline": {
+        borderColor: "#23A5EB", //focused
+      },
+    },
+    cssInputLabel: {
+      color: "#d3d3d3",
     },
   };
 
@@ -132,7 +141,7 @@ function SignUp() {
   }
 
   return (
-    <div>
+    <div className="bc-image">
       <form onSubmit={handleSignUp} autoComplete="off">
         <Box
           style={styles.box}
@@ -149,6 +158,7 @@ function SignUp() {
           >
             Sign Up
           </Typography>
+
           <TextField
             margin="dense"
             id="displayName"
@@ -165,6 +175,7 @@ function SignUp() {
             label="Email"
             type={"email"}
             autoComplete="new-password"
+            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
@@ -176,6 +187,7 @@ function SignUp() {
             label="Password"
             type={"password"}
             autoComplete="new-password"
+            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
@@ -188,6 +200,7 @@ function SignUp() {
             label="Comfirm Password"
             type={"password"}
             autoComplete="off"
+            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
