@@ -16,6 +16,7 @@ function InviteToTrip() {
   const currUser = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,6 +25,7 @@ function InviteToTrip() {
     e.preventDefault();
     let newData = {
       email: email,
+      name: name,
       message: message,
     };
     // console.log(newData, "-====");
@@ -34,6 +36,7 @@ function InviteToTrip() {
         navigate(`/my-trips/${trip_id}`);
       })
       .catch((err) => {
+        alert(err.response.data.message);
         console.log(err);
       });
   };
@@ -46,6 +49,12 @@ function InviteToTrip() {
           label="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+        />
+        <TextField
+          id="name"
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           id="message"

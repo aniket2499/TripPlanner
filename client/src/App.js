@@ -10,10 +10,13 @@ import {
   CssBaseline,
   responsiveFontSizes,
 } from "@mui/material";
-// import ChangePassword from "./Components/ChangePassword";
-// import CreateTrip from "./Components/CreateTrip";
-// import InviteToTrip from "./Components/InviteToTrip";
-// import Maps from "./Components/Maps";
+
+import ChangePassword from "./Components/ChangePassword";
+import CreateTrip from "./Components/CreateTrip";
+import InviteToTrip from "./Components/InviteToTrip";
+import Maps from "./Components/Maps";
+import SignUpInvite from "./Components/SignUpInvite";
+
 
 const Home = lazy(() => import("./Components/Home"));
 const Account = lazy(() => import("./Components/Account"));
@@ -32,6 +35,7 @@ const CreateTrip = lazy(() => import("./Components/CreateTrip"));
 const InviteToTrip = lazy(() => import("./Components/InviteToTrip"));
 const Maps = lazy(() => import("./Components/Maps"));
 const Welcome = lazy(() => import("./Components/Welcome"));
+
 
 let theme = createTheme({
   palette: {
@@ -224,6 +228,7 @@ function App() {
           <div className="App-header">
             <Navigation />
           </div>
+
           <Suspense fallback={<div>Loading...</div>}>
             <div className="App-body">
               <Routes>
@@ -238,6 +243,7 @@ function App() {
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route path="/signup/:tripId" element={<SignUpInvite />} />
                 <Route path="/restaurants" element={<PrivateRoute />}></Route>
 
                 <Route path="/signout" element={<PrivateRoute />}>
