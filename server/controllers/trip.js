@@ -403,7 +403,7 @@ const acceptInviteToTrip = async (req, res) => {
       checkUserDataInMongo.trips.push(trip._id);
       await checkUserDataInMongo.save();
       await trip.save();
-      res.redirect("http://localhost:3000/login");
+      // res.redirect("http://localhost:3000/login");
       return trip;
     } else {
       throw {
