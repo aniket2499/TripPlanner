@@ -440,16 +440,17 @@ const inviteUserToTrip = async (req, res) => {
       const userData = await User.findById(trip.users[0]);
       const signedUpUser = await User.find({ email: req.body.body.email });
       let output = null;
+      console.log(signedUpUser, "===signed up user");
 
       if (signedUpUser) {
-        console.log("here");
+        console.log("user found");
         output = invite.logInTripEmail(trip, userData, signedUpUser, obj);
       } else {
-        console.log("there--====");
+        console.log("user not found");
         output = invite.signUpTripEmail(trip, userData, obj);
       }
 
-      console.log(output, "==output==");
+      // console.log(output, "==output==");
       let mailTransporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -464,14 +465,14 @@ const inviteUserToTrip = async (req, res) => {
         subject: `Invitation to Trip to ${trip.destination} by ${userData.displayName}`,
         html: output,
       };
-      console.log(details, "=details");
+      // console.log(details, "=details");
 
       mailTransporter.sendMail(details, function (err, data) {
         if (err) {
           console.log(err);
           console.log("Error Occurs");
         } else {
-          console.log(data, "=data=");
+          // console.log(data, "=data=");
           console.log("Email sent successfully");
         }
       });

@@ -16,6 +16,15 @@ const {
   acceptInviteToTrip,
 } = require("../controllers/trip");
 
+router.post("/:tripId/accept/:userId", async (req, res) => {
+  try {
+    const trip = await acceptInviteToTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const tripsList = await getAllTrips();
@@ -119,15 +128,6 @@ router.post("/:id/invite", async (req, res) => {
   // console.log(req.body);
   try {
     const trip = await inviteUserToTrip(req, res);
-    res.status(200).json(trip);
-  } catch (e) {
-    res.status(e.status ? e.status : 500).json(e);
-  }
-});
-
-router.post("/:tripId/accept/:userId", async (req, res) => {
-  try {
-    const trip = await acceptInviteToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);
