@@ -21,7 +21,6 @@ import {
 } from "@mui/material";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import { Container } from "@mui/system";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import StarIcon from "@mui/icons-material/Star";
@@ -30,11 +29,8 @@ import hotelsData from "../services/getApiData";
 import modalForHotel from "../modals/modalForHotel";
 import { useEffect, useState } from "react";
 import tripService from "../services/tripService";
-import { useParams } from "react-router-dom";
 
 const Hotels = () => {
-  const dispatch = useDispatch();
-
   const allState = useSelector((state) => state);
 
   const [hotels, setHotels] = useState([]);
