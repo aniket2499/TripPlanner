@@ -1,27 +1,6 @@
-import {
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  CardMedia,
-  Box,
-  Divider,
-  Icon,
-  Stack,
-  ListItem,
-  List,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Typography,
-  AppBar,
-} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
+import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
 // import actions from "../actions";
