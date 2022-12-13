@@ -88,7 +88,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value,
+          displayName.value
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -119,7 +119,7 @@ function SignUp() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value,
+        document.getElementById("pwd2").value
     );
     if (
       document.getElementById("pwd1").value !==
@@ -130,13 +130,18 @@ function SignUp() {
   };
 
   if (currUser) {
-    addToMongo({
-      _id: currUser._delegate.uid,
-      displayName: userDispName,
-      email: currUser._delegate.email,
-      password: finalPswd,
-    });
-    doSignOut();
+    try {
+      addToMongo({
+        _id: currUser._delegate.uid,
+        displayName: userDispName,
+        email: currUser._delegate.email,
+        password: finalPswd,
+      });
+      doSignOut();
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }
     // navigate("/login");
   }
 

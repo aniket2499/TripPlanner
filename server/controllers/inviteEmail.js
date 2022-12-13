@@ -1,27 +1,28 @@
 const logInTripEmail = (trip, userData, signedUpUser, inviteData) => {
   let userId = signedUpUser[0]._id;
   userId = userId.toString();
-  return `<p> Hello ${inviteData.name},
+  return `<div> Hello ${inviteData.name},<br/>
     Wohooooo!! You have just received an invitation from your friend ${userData.displayName}.
-    You will be goint to ${trip.destination}. The trip would start from ${trip.tripDate.startDate} and
-    it ends at ${trip.tripDate.startDate}. So hurry up and start packing. Hope you have a wonderful time.
+    You will be goint to ${trip.destination}. The trip would take place between ${trip.tripDate.startDate} and
+    ${trip.tripDate.endDate}. So hurry up and start packing. Hope you have a wonderful time.
     Click on the TripPlaner link below to get all the details about your trip and make changes to your itinerary.
-    Your friend also sent you a message: ${inviteData.message}. Accept the invite using the link given below.
-    "http://localhost:3001/api/trips/${trip._id}/accept/${userId}"</p>
-    <button> <a href="http://localhost:3001/api/trips/${trip._id}/accept/${userId}"/> ACCEPT </button>
+    Your friend also sent you a message: ${inviteData.message}. <br/>
+    Accept the invite using the link given below:<br/>
+    http://localhost:3000/${trip._id}/accept/${userId}
+   </div>
     `;
 };
 
 const signUpTripEmail = (trip, userData, inviteData) => {
-  console.log(userData);
-  console.log(inviteData);
-  return `<p> Hello ${inviteData.name},
+  return `<div> Hello ${inviteData.name},<br/>
   Wohooooo!! You have just received an invitation from your friend ${userData.displayName}.
-  You will be goint to ${trip.destination}. The trip would start from ${trip.tripDate.startDate} and
-  it ends at ${trip.tripDate.startDate}. So hurry up and start packing. Hope you have a wonderful time.
+  You will be goint to ${trip.destination}. The trip would take place between ${trip.tripDate.startDate} and
+  it ends at ${trip.tripDate.endDate}. So hurry up and start packing. Hope you have a wonderful time.
   Click on the TripPlaner link below to get all the details about your trip and make changes to your itinerary.
-  Your friend also sent you a message: ${inviteData.message}. Signup using the link given below.</p>
-  <a href="http://localhost:3000/${trip._id}/accept/signup"/><input type=button value='HOME'></a>
+  Your friend also sent you a message: ${inviteData.message}. <br/>
+  SignUp using the link given below:<br/>
+  http://localhost:3000/${trip._id}/accept/signup
+  </div>
   `;
 };
 
