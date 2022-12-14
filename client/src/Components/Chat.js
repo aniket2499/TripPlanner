@@ -1,16 +1,19 @@
 import io from "socket.io-client";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../firebase/Auth";
+import ScrollToBottom from "react-scroll-to-bottom";
 
 const socket = io.connect("http://localhost:3001");
 
-const Chat = () => {
+const Chat = ({ socket, id }) => {
+  const currUser = useContext(AuthContext);
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
-        room: room,
-        author: username,
+        room: id,
+        author: currUser._delegate.displayName,
         message: currentMessage,
         time:
           new Date(Date.now()).getHours() +
@@ -39,7 +42,11 @@ const Chat = () => {
             return (
               <div
                 className="message"
-                id={username === messageContent.author ? "you" : "other"}
+                id={
+                  currUser._delegate.displayName === messageContent.author
+                    ? "you"
+                    : "other"
+                }
               >
                 <div>
                   <div className="message-content">
