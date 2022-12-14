@@ -13,9 +13,11 @@ const userReducer = (state = initialState, action) => {
 
   switch (type) {
     case "INITIALIZE_USER":
-      return {
-        id: payload.id,
-      };
+      return [
+        {
+          id: payload.id,
+        },
+      ];
 
     case "ADD_USER":
       return [

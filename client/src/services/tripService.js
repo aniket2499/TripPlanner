@@ -3,9 +3,10 @@ import React, { useContext } from "react";
 import { AuthContext } from "../firebase/Auth";
 const DATA_URL = "http://localhost:3001/api";
 
-const getAllTrips = () => {
+const getAllTripsForCurrentUser = (id) => {
   return axios.get(DATA_URL + "/trips").then((response) => {
-    return response.data;
+    const trips = response.data.filter((trip) => trip.users[0] == id);
+    return trips;
   });
 };
 
@@ -128,7 +129,6 @@ const acceptTripInvite = (trip, user) => {
 };
 
 const exports = {
-  getAllTrips,
   getTripById,
   createTrip,
   deleteTripById,
@@ -141,6 +141,7 @@ const exports = {
   removeRestaurantFromTrip,
   inviteUserToTrip,
   acceptTripInvite,
+  getAllTripsForCurrentUser,
 };
 
 export default exports;

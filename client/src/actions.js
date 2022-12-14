@@ -106,8 +106,11 @@ const deleteRest = (location_id) => ({
 
 // adding a trip according to parameters from the form
 
-const initializeTrip = () => ({
+const initializeTrip = (userId) => ({
   type: "INITIALIZE_TRIP",
+  payload: {
+    userId: userId,
+  },
 });
 
 const addTrip = (

@@ -16,13 +16,13 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
   dispatch(actions.initializeUser(currUser._delegate.uid));
-  dispatch(actions.initializeTrip());
+  dispatch(actions.initializeTrip(currUser._delegate.uid));
 
   const userId = currUser._delegate.uid;
   let newObj = null;
 
   const trips = useSelector((state) => state.trips);
-
+  console.log("trips" + JSON.stringify(trips));
   const tripExceptFirst = trips.slice(1);
   const tripsForUser = tripExceptFirst.filter(
     (trip) => trip.trip_id.userId === currUser._delegate.uid,
