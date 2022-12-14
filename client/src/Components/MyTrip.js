@@ -83,11 +83,11 @@ const MyTrip = () => {
 
   // console.log("curruser is " + currUser);
 
-  useEffect(() => {
-    const tripDataForUser = trips.filter(
-      (trip) => trip.userId === currUser._delegate.uid
-    );
-  },[]);
+  // useEffect(() => {
+  //   const tripDataForUser = trips.filter(
+  //     (trip) => trip.userId === currUser._delegate.uid
+  //   );
+  // },[]);
 
   // useEffect(() => {
   //   const getTripData = async () => {
