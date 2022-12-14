@@ -44,7 +44,7 @@ function InviteToTrip() {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: "4rem" }}>
       <form onSubmit={handleSubmit}>
         <TextField
           id="email"
