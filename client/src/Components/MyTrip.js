@@ -50,12 +50,9 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
-
   const startDate = moment("2022-07-01");
   const endDate = moment("2022-07-05");
-
   const days = [];
-
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
   const [hotels, setHotels] = useState([]);
@@ -64,8 +61,6 @@ const MyTrip = () => {
   const [trip, setTrip] = useState([]);
   const dispatch = useDispatch();
 
-  const trips = useSelector((state) => state.trips);
-  console.log("tripssssss", trips);
   let day = startDate;
 
   while (day <= endDate) {
@@ -86,15 +81,15 @@ const MyTrip = () => {
     setLoading(true);
   }, []);
 
-  console.log("curruser is " + currUser);
+  // console.log("curruser is " + currUser);
 
-  useEffect(() => {
-    const tripDataForUser = trips.filter(
-      (trip) => trip.userId === currUser._delegate.uid,
-    );
+  // useEffect(() => {
+  //   const tripDataForUser = trips.filter(
+  //     (trip) => trip.userId === currUser._delegate.uid,
+  //   );
 
-    console.log("tripDataForUser", tripDataForUser);
-  });
+  //   // console.log("tripDataForUser", tripDataForUser);
+  // });
 
   // useEffect(() => {
   //   const getTripData = async () => {

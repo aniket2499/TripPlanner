@@ -5,6 +5,13 @@ const addUser = (id) => ({
   },
 });
 
+const initializeUser = (id) => ({
+  type: "INITIALIZE_USER",
+  payload: {
+    id: id,
+  },
+});
+
 const getUser = () => ({
   type: "GET_USER",
 });
@@ -97,26 +104,34 @@ const deleteRest = (location_id) => ({
   },
 });
 
+// adding a trip according to parameters from the form
+
+const initializeTrip = () => ({
+  type: "INITIALIZE_TRIP",
+});
+
 const addTrip = (
-  name,
-  userId,
+  trip_id,
   cur_location,
   destination,
+  startDate,
+  endDate,
   destination_lat,
   destination_long,
-  start_date,
-  end_date,
+  userId,
+  tripName,
 ) => ({
   type: "ADD_TRIP",
   payload: {
-    name: name,
-    userId: userId,
+    trip_id: trip_id,
     cur_location: cur_location,
     destination: destination,
+    startDate: startDate,
+    endDate: endDate,
     destination_lat: destination_lat,
     destination_long: destination_long,
-    start_date: start_date,
-    end_date: end_date,
+    userId: userId,
+    tripName: tripName,
   },
 });
 
@@ -138,6 +153,8 @@ let exports = {
   addTrip,
   deleteTrip,
   getUser,
+  initializeUser,
+  initializeTrip,
 };
 
 export default exports;
