@@ -16,6 +16,19 @@ const {
   acceptInviteToTrip,
 } = require("../controllers/trip");
 
+router.post("/:tripId/accept/:userId", async (req, res) => {
+  console.log(req.params.tripId, "Hello", req.params.userId);
+  try {
+    console.log("inside try");
+    const trip = await acceptInviteToTrip(req, res);
+    res.status(200).json(trip);
+  } catch (e) {
+    console.log("inside catch");
+    console.log(e);
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const tripsList = await getAllTrips();
@@ -116,18 +129,9 @@ router.patch("/:id/restaurants/remove/:restaurantid", async (req, res) => {
 });
 
 router.post("/:id/invite", async (req, res) => {
+  // console.log(req.body);
   try {
-    console.log(req, "==inside route");
     const trip = await inviteUserToTrip(req, res);
-    res.status(200).json(trip);
-  } catch (e) {
-    res.status(e.status ? e.status : 500).json(e);
-  }
-});
-
-router.post("/:tripId/accept/:userId", async (req, res) => {
-  try {
-    const trip = await acceptInviteToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);

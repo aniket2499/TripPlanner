@@ -3,48 +3,55 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
-// import actions from "../actions";
+import actions from "../actions";
 import userService from "../services/userService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
 function Home() {
   const navigate = useNavigate();
   const currUser = useContext(AuthContext);
-  // const dispatch = useDispatch();
-  // console.log(currUser);
+  const dispatch = useDispatch();
+  dispatch(actions.initializeUser(currUser._delegate.uid));
+  dispatch(actions.initializeTrip());
 
-  // const getCurrUser = async (id) => {
-  //   return await userService.getUserById(id);
-  // };
+  const userId = currUser._delegate.uid;
+  let newObj = null;
 
-  const addUserToMongo = async (obj) => {
-    console.log(obj);
-    await userService.createUser({
-      _id: obj._id,
-      displayName: obj.displayName,
-      email: obj.email,
-      password: "password",
-    });
+  const trips = useSelector((state) => state.trips);
+
+  const tripExceptFirst = trips.slice(1);
+  const tripsForUser = tripExceptFirst.filter(
+    (trip) => trip.trip_id.userId == currUser._delegate.uid,
+  );
+  console.log(tripsForUser);
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      console.log("Inside Try");
+      return;
+    } catch (e) {
+      console.log("Inside catch");
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUser({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "password",
+      });
+    }
   };
-
-  if (currUser) {
-    // let user = getCurrUser(currUser._delegate.uid);
-    // dispatch(actions.addHotel())
-    // if (!user) {
-    addUserToMongo({
-      _id: currUser._delegate.uid,
-      displayName: currUser._delegate.displayName,
-      email: currUser._delegate.email,
-    });
-    // }
-  }
-
-  const allHotels = useSelector((state) => state.hotels);
-  console.log("allHotels");
-  console.log(allHotels);
+  getData(userId);
+  // const allHotels = useSelector((state) => state.hotels);
+  // console.log("allHotels");
+  // console.log(allHotels);
 
   return (
     <div style={{ paddingTop: "2rem" }}>
@@ -78,7 +85,7 @@ function Home() {
             </Button>
           </Grid>
           <Grid container spacing={5}>
-            {array.map((item) => (
+            {tripsForUser.map((item) => (
               <Grid item xs={6} sm={6} md={4} lg={3}>
                 <Card
                   sx={{
@@ -104,7 +111,7 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Trip To New York
+                      {item.trip_id.tripName}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -115,7 +122,8 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Dec 8-16, 2022
+                      {item.trip_id.startDate.split("T")[0]} -
+                      {item.trip_id.endDate.split("T")[0]}
                     </Typography>
                   </Card>
                 </Card>

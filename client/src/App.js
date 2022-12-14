@@ -10,10 +10,13 @@ import {
   CssBaseline,
   responsiveFontSizes,
 } from "@mui/material";
+
 // import ChangePassword from "./Components/ChangePassword";
 // import CreateTrip from "./Components/CreateTrip";
 // import InviteToTrip from "./Components/InviteToTrip";
 // import Maps from "./Components/Maps";
+import SignUpInvite from "./Components/SignUpInvite";
+import AcceptInvite from "./Components/AcceptInvite";
 
 const Home = lazy(() => import("./Components/Home"));
 const Account = lazy(() => import("./Components/Account"));
@@ -224,6 +227,7 @@ function App() {
           <div className="App-header">
             <Navigation />
           </div>
+
           <Suspense fallback={<div>Loading...</div>}>
             <div className="App-body">
               <Routes>
@@ -238,6 +242,10 @@ function App() {
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<SignUp />} />
+                <Route
+                  path="/:tripId/accept/signup"
+                  element={<SignUpInvite />}
+                />
                 <Route path="/restaurants" element={<PrivateRoute />}></Route>
 
                 <Route path="/signout" element={<PrivateRoute />}>
@@ -262,22 +270,24 @@ function App() {
                   <Route path="/attractions" element={<Attractions />} />
                 </Route>
 
-                <Route path="/invite" element={<PrivateRoute />}>
-                  <Route path="/invite" element={<InviteToTrip />} />
+                <Route path="/:tripId/invite" element={<PrivateRoute />}>
+                  <Route path="/:tripId/invite" element={<InviteToTrip />} />
                 </Route>
+                <Route
+                  path="/:tripId/accept/:userId"
+                  element={<AcceptInvite />}
+                />
 
                 <Route path="/maps" element={<PrivateRoute />}>
                   <Route path="/maps" element={<Maps />} />
                 </Route>
-                {/* <Route path="/createtrip" element={<PrivateRoute />}> */}
 
-                <Route path="/createtrip" element={<CreateTrip />} />
-                {/* </Route> */}
                 <Route path="/createtrip" element={<PrivateRoute />}>
                   <Route path="/createtrip" element={<CreateTrip />} />
                 </Route>
-
-                <Route path="/my-trips/:id" element={<MyTrips />} />
+                <Route path="/my-trips/:id" element={<PrivateRoute />}>
+                  <Route path="/my-trips/:id" element={<MyTrips />} />
+                </Route>
               </Routes>
             </div>
           </Suspense>

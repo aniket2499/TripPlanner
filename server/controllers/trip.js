@@ -4,6 +4,9 @@ const Hotel = require("../model/Hotel");
 const Restaurant = require("../model/Restaurant");
 const Attraction = require("../model/Attraction");
 const validation = require("../validation/routesValidation");
+const nodemailer = require("nodemailer");
+const invite = require("./inviteEmail");
+const e = require("express");
 
 const getTripById = async (id) => {
   let parsedId = validation.toObjectId(id, "TripId");
@@ -400,6 +403,7 @@ const acceptInviteToTrip = async (req, res) => {
       checkUserDataInMongo.trips.push(trip._id);
       await checkUserDataInMongo.save();
       await trip.save();
+      // res.redirect("http://localhost:3000/login");
       return trip;
     } else {
       throw {
@@ -410,8 +414,6 @@ const acceptInviteToTrip = async (req, res) => {
   }
 };
 const inviteUserToTrip = async (req, res) => {
-  // console.log(req.params.id);
-  // console.log(req.body);
   const trip = await Trip.findById(req.params.id);
   // console.log(trip);
   if (!trip) {
@@ -422,9 +424,10 @@ const inviteUserToTrip = async (req, res) => {
   } else {
     const obj = {
       email: req.body.body.email,
+      name: req.body.body.name,
       message: req.body.body.message,
     };
-    // console.log(obj);
+    // console.log(obj, "====");
     if (
       trip.invites.filter((invite) => invite.email === obj.email).length ===
         0 &&
@@ -433,11 +436,51 @@ const inviteUserToTrip = async (req, res) => {
       trip.invites.push(obj);
       console.log(trip.invites);
       await trip.save();
-      // console.log("trip", trip, "===");
+
+      const userData = await User.findById(trip.users[0]);
+      const signedUpUser = await User.find({ email: req.body.body.email });
+      let output = null;
+      console.log(signedUpUser, "===signed up user");
+
+      if (signedUpUser.length > 0) {
+        console.log("user found");
+        output = invite.logInTripEmail(trip, userData, signedUpUser, obj);
+      } else if (signedUpUser.length === 0) {
+        console.log("user not found");
+        output = invite.signUpTripEmail(trip, userData, obj);
+      }
+
+      // console.log(output, "==output==");
+      let mailTransporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "wanderlog8@gmail.com",
+          pass: "dkmmmoresqbxfjyx",
+        },
+      });
+
+      let details = {
+        from: "wanderlog8@gmail.com",
+        to: `${req.body.body.email}`,
+        subject: `Invitation to Trip to ${trip.destination} by ${userData.displayName}`,
+        html: output,
+      };
+      // console.log(details, "=details");
+
+      mailTransporter.sendMail(details, function (err, data) {
+        if (err) {
+          console.log(err);
+          console.log("Error Occurs");
+        } else {
+          // console.log(data, "=data=");
+          console.log("Email sent successfully");
+        }
+      });
       return trip;
     } else {
+      // console.log("error");
       throw {
-        message: `User already invited to trip`,
+        message: `User with email ${req.body.body.email}, is already invited to trip`,
         status: 400,
       };
     }
