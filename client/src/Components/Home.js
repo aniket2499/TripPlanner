@@ -25,7 +25,7 @@ function Home() {
 
   const tripExceptFirst = trips.slice(1);
   const tripsForUser = tripExceptFirst.filter(
-    (trip) => trip.trip_id.userId == currUser._delegate.uid,
+    (trip) => trip.trip_id.userId === currUser._delegate.uid,
   );
   console.log(tripsForUser);
   const getData = async (id) => {
