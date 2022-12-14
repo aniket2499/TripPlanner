@@ -5,6 +5,8 @@ import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers/rootReducer";
 
+// remove all the data from the storage
+//storage.removeItem("persist:root");
 const persistConfig = {
   key: "root",
   storage,

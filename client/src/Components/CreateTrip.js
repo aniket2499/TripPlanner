@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import tripService from "../services/tripService.js";
 import { AuthContext } from "../firebase/Auth";
+import actions from "../actions";
+
 import {
   Grid,
   Paper,
@@ -46,7 +48,7 @@ const CreateTrip = () => {
   const [showReturnDate, setShowReturnDate] = useState(true);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
-  
+
   const dispatch = useDispatch();
   const onOriginLoad = (autoC) => {
     setOrgAutocomplete(autoC);
@@ -88,13 +90,35 @@ const CreateTrip = () => {
     } else if (!newValues.destination) {
       newerrors.destination = "Destination is Invalid";
     }
+
     if (Object.keys(newerrors).length === 0) {
-      console.log(newValues);
+      // console.log(newValues);
       await tripService
         .createTrip(newValues)
         .then((data) => {
+          console.log("data" + JSON.stringify(data));
+          const trip_id = data._id;
+          dispatch(
+            actions.addTrip({
+              trip_id: trip_id,
+              cur_location: newValues.cur_location,
+              destination: newValues.destination,
+              startDate: newValues.tripDate.startDate,
+              endDate: newValues.tripDate.endDate,
+              destination_lat: destcoords.lat,
+              destination_lng: destcoords.lng,
+              userId: userId,
+              tripName: "Trip to" + " " + newValues.destination.split(",")[0],
+            }),
+          );
+          navigate(`/${trip_id}/invite`);
+
           setSuccess("Trip added successfully!!");
-          navigate("/my-trips");
+          //once trip is created, send data to redux store
+
+          //console.log("data" + data);
+
+          //navigate(`/${trip_id}/invite`);
         })
         .catch((e) => {
           setError("Could not Add Trip. Try Again!!");

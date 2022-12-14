@@ -5,13 +5,25 @@ import { doSignOut } from "../firebase/FirebaseFunctions";
 import userService from "../services/userService";
 import "../App.css";
 import { Box } from "@mui/system";
-import { Button, TextField, Typography, Modal } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Typography,
+  Grid,
+  Paper,
+  FormLabel,
+  Alert,
+  Stack,
+  AlertTitle,
+  Modal,
+} from "@mui/material";
 import SocialSignIn from "./SocialSignIn";
-import { Link, useNavigate } from "react-router-dom";
-import { ThemeContext } from "@emotion/react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-function SignUp() {
+function SignUpInvite() {
   const currUser = useContext(AuthContext);
+  const { tripId } = useParams();
+  console.log(tripId, "trip");
   const [pswdMatch, setPswdMatch] = useState("");
   const [finalPswd, setFinalPswd] = useState("");
   const [userDispName, setUserDispName] = useState("");
@@ -28,14 +40,14 @@ function SignUp() {
       alignItems: "center",
       justifyContent: "center",
       margin: "auto",
-      marginTop: "4rem",
-      padding: "2rem",
+      marginTop: "2rem",
+      padding: "3rem",
       border: "1px solid #c0c0c0",
       borderRadius: "15px",
       //
     },
     header: {
-      padding: "0.5rem",
+      padding: "1rem",
       textAlign: "center",
     },
     button: {
@@ -51,25 +63,6 @@ function SignUp() {
       border: "2px solid #000",
       boxShadow: 24,
       p: 4,
-    },
-    textField: {},
-    cssLabel: {
-      color: "#d3d3d3",
-    },
-    cssOutlinedInput: {
-      "&:not(hover):not($disabled):not($cssFocused):not($error) $notchedOutline":
-        {
-          borderColor: "#d3d3d3", //default
-        },
-      "&:hover:not($disabled):not($cssFocused):not($error) $notchedOutline": {
-        borderColor: "#d3d3d3", //hovered #DCDCDC
-      },
-      "&$cssFocused $notchedOutline": {
-        borderColor: "#23A5EB", //focused
-      },
-    },
-    cssInputLabel: {
-      color: "#d3d3d3",
     },
   };
 
@@ -104,6 +97,10 @@ function SignUp() {
       }
     }
   };
+  const tripsAdded = [];
+  console.log(typeof tripId);
+  tripsAdded.push(tripId);
+  console.log(tripsAdded, "===trips array");
 
   const addToMongo = async (obj) => {
     await userService.createUser({
@@ -111,6 +108,7 @@ function SignUp() {
       displayName: obj.displayName,
       email: obj.email,
       password: obj.password,
+      trips: obj.trips,
     });
   };
 
@@ -130,23 +128,28 @@ function SignUp() {
   };
 
   if (currUser) {
-    try {
-      addToMongo({
-        _id: currUser._delegate.uid,
-        displayName: userDispName,
-        email: currUser._delegate.email,
-        password: finalPswd,
-      });
-      doSignOut();
-    } catch (e) {
-      console.log(e);
-      alert(e);
-    }
+    // const newObj = {
+    //   _id: currUser._delegate.uid,
+    //   displayName: userDispName,
+    //   email: currUser._delegate.email,
+    //   password: finalPswd,
+    //   trips: tripsAdded,
+    // };
+    // console.log(newObj, "====");
+    console.log(tripsAdded, "===");
+    addToMongo({
+      _id: currUser._delegate.uid,
+      displayName: userDispName,
+      email: currUser._delegate.email,
+      password: finalPswd,
+      trips: tripsAdded,
+    });
+    doSignOut();
     // navigate("/login");
   }
 
   return (
-    <div className="bc-image">
+    <div>
       <form onSubmit={handleSignUp} autoComplete="off">
         <Box
           style={styles.box}
@@ -163,9 +166,8 @@ function SignUp() {
           >
             Sign Up
           </Typography>
-
           <TextField
-            margin="dense"
+            margin="normal"
             id="displayName"
             label="Name"
             type={"text"}
@@ -175,24 +177,22 @@ function SignUp() {
             required
           />
           <TextField
-            margin="dense"
+            margin="normal"
             id="email"
             label="Email"
             type={"email"}
             autoComplete="new-password"
-            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
             required
           />
           <TextField
-            margin="dense"
+            margin="normal"
             id="pwd1"
             label="Password"
             type={"password"}
             autoComplete="new-password"
-            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
@@ -200,12 +200,11 @@ function SignUp() {
             required
           />
           <TextField
-            margin="dense"
+            margin="normal"
             id="pwd2"
             label="Comfirm Password"
             type={"password"}
             autoComplete="off"
-            style={styles.textField}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
             }}
@@ -262,4 +261,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignUpInvite;

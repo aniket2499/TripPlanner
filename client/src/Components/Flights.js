@@ -260,7 +260,7 @@ function Flights(props) {
   console.log(flights);
 
   return (
-    <div>
+    <div style={{ paddingTop: "2rem" }}>
       <br />
       <Container>
         <SearchFlightForm handleSearch={handleSearch}></SearchFlightForm>

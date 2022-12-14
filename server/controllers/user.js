@@ -27,13 +27,12 @@ const getAllUsers = async () => {
 };
 
 const createUser = async (userBody) => {
+  console.log(userBody.body);
   const newUserInfo = new User(userBody.body);
-  console.log(newUserInfo);
-  console.log(newUserInfo);
   if (newUserInfo.displayName) {
     newUserInfo.displayName = validation.checkString(
       newUserInfo.displayName,
-      "Display Name",
+      "Display Name"
     );
   }
   if (newUserInfo.email) {
@@ -42,7 +41,7 @@ const createUser = async (userBody) => {
   if (newUserInfo.password) {
     newUserInfo.password = validation.checkString(
       newUserInfo.password,
-      "Password",
+      "Password"
     );
   }
 
@@ -73,19 +72,19 @@ const updateUserById = async (id, updateUserBody) => {
     if (newUserInfo.displayName) {
       newUserInfo.displayName = validation.checkString(
         newUserInfo.displayName,
-        "Display Name",
+        "Display Name"
       );
     }
     if (newUserInfo.lastName) {
       newUserInfo.lastName = validation.checkString(
         newUserInfo.lastName,
-        "Last Name",
+        "Last Name"
       );
     }
     if (newUserInfo.email) {
       newUserInfo.email = validation.checkEmail(
         newUserInfo.email,
-        "User Email",
+        "User Email"
       );
     }
     // if (newUserInfo.password) {
@@ -97,7 +96,7 @@ const updateUserById = async (id, updateUserBody) => {
     if (newUserInfo.dateOfBirth) {
       newUserInfo.dateOfBirth = validation.isValidDate(
         newUserInfo.dateOfBirth,
-        "Date of Birth",
+        "Date of Birth"
       );
     }
 
@@ -129,7 +128,7 @@ const updateUserById = async (id, updateUserBody) => {
       const updateUser = await User.findByIdAndUpdate(
         id,
         { $set: updateUserBody },
-        { new: true },
+        { new: true }
       );
       if (updateUser) {
         return updateUser;
