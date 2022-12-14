@@ -1,27 +1,6 @@
-import {
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  CardMedia,
-  Box,
-  Divider,
-  Icon,
-  Stack,
-  ListItem,
-  List,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  Typography,
-  AppBar,
-} from "@mui/material";
-import { Link } from "react-router-dom";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
+import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
 // import actions from "../actions";
@@ -32,46 +11,44 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
 function Home() {
+  const navigate = useNavigate();
   const currUser = useContext(AuthContext);
-  // const dispatch = useDispatch();
-  // console.log(currUser);
+  const dispatch = useDispatch();
 
-  // const getCurrUser = async (id) => {
-  //   return await userService.getUserById(id);
-  // };
+  const userId = currUser._delegate.uid;
+  let newObj = null;
 
-  const addUserToMongo = async (obj) => {
-    console.log(obj);
-    await userService.createUser({
-      _id: obj._id,
-      displayName: obj.displayName,
-      email: obj.email,
-      password: "password",
-    });
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      console.log("Inside Try");
+      return;
+    } catch (e) {
+      console.log("Inside catch");
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUser({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "password",
+      });
+    }
   };
-
-  if (currUser) {
-    // let user = getCurrUser(currUser._delegate.uid);
-    // dispatch(actions.addHotel())
-    // if (!user) {
-    addUserToMongo({
-      _id: currUser._delegate.uid,
-      displayName: currUser._delegate.displayName,
-      email: currUser._delegate.email,
-    });
-    // }
-  }
-
-  const allHotels = useSelector((state) => state.hotels);
-  console.log("allHotels");
-  console.log(allHotels);
+  getData(userId);
+  // const allHotels = useSelector((state) => state.hotels);
+  // console.log("allHotels");
+  // console.log(allHotels);
 
   return (
     <div>
       <Container>
-        <Grid container>
+        <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
-            <Box sx={{ pt: "2rem", pb: "2rem" }}>
+            <Box sx={{ pb: "2rem" }}>
               <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                 On Going And Upcoming Trips
               </Typography>
@@ -79,11 +56,11 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",
                 backgroundColor: "primary.main",
-                mt: "2.25rem",
                 width: "100%",
               }}
             >
@@ -99,7 +76,7 @@ function Home() {
           </Grid>
           <Grid container spacing={5}>
             {array.map((item) => (
-              <Grid item xs={3}>
+              <Grid item xs={6} sm={6} md={4} lg={3}>
                 <Card
                   sx={{
                     width: "100%",
@@ -148,9 +125,9 @@ function Home() {
         <Maps />
       </Container>
       <Container sx={{ mt: "2rem" }}>
-        <Grid container>
+        <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
-            <Box sx={{ pt: "2rem", pb: "1rem" }}>
+            <Box sx={{ pb: "1rem" }}>
               <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                 Your Past Trips
               </Typography>
@@ -162,7 +139,6 @@ function Home() {
                 pt: "0.3rem",
                 pb: "0.3rem",
                 backgroundColor: "primary.main",
-                mt: "2.25rem",
                 width: "100%",
               }}
             >
@@ -178,13 +154,13 @@ function Home() {
           </Grid>
           <Grid container spacing={7}>
             {array1.map((item) => (
-              <Grid item xs={3}>
+              <Grid item xs={6} sm={6} md={4} lg={3}>
                 <Card
                   sx={{
                     width: "100%",
                     height: "auto",
                     borderRadius: "1rem",
-                    mt: "1rem",
+                    mt: "1.5rem",
                   }}
                 >
                   <CardMedia
@@ -222,68 +198,67 @@ function Home() {
             ))}
           </Grid>
         </Grid>
-        <Grid container>
-          <Grid item xs={12} sm={8} md={8} lg={12}>
-            <Box sx={{ pt: "4.0rem", pb: "0.7rem" }}>
+        <Grid container sx={{ mt: "2rem" }}>
+          <Grid item xs={12} sm={8} md={8} lg={9}>
+            <Box sx={{ pb: "1rem" }}>
               <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-                Explore New Places
+                Explore
               </Typography>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: "bold", mt: "0.5rem" }}
-              >
+              <Typography variant="h5" sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Popular Destinations
               </Typography>
             </Box>
-            <Grid container spacing={12}>
-              {array1.map((item) => (
-                <Grid item xs={4}>
-                  <Card
-                    sx={{
-                      width: "350px",
-                      height: "200",
-                      borderRadius: "1rem",
-                      mt: "1rem",
-                    }}
-                  >
-                    <CardMedia
-                      component="img"
-                      height="210"
-                      image="https://www.planetware.com/photos-large/USNY/new-york-city-statue-of-liberty.jpg"
-                      alt="random"
-                    />
-                    <Card>
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          color: "black",
-                          ml: "0.5rem",
-                          mt: "0.2rem",
-                          mb: "0.2rem",
-                        }}
-                      >
-                        Statue Of Liberty
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          color: "black",
-                          ml: "0.6rem",
-                          mt: "0.2rem",
-                          mb: "0.2rem",
-                        }}
-                      >
-                        The Statue of Liberty Enlightening the World" was a gift
-                        of friendship from the people of France to the United
-                        States and is recognized as a universal symbol of
-                        freedom. The Statue of Liberty was dedicated on October
-                        28, 1886.
-                      </Typography>
-                    </Card>
+          </Grid>
+
+          <Grid container spacing={7}>
+            {array1.map((item) => (
+              <Grid item xs={6} sm={6} md={4} lg={3}>
+                <Card
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "1rem",
+                    mt: "1rem",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image="https://www.prettywildworld.com/wp-content/uploads/2017/11/TOP-TOURIST-ATTRACTIONS-IN-THE-USA-FEATURED-PHOTO.jpg"
+                    alt="random"
+                  />
+                  <Card>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        ml: "0.5rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Golden Gate Bridge
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "black",
+                        ml: "0.6rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Acclaimed as one of the world's most beautiful bridges,
+                      there are many different elements to the Golden Gate
+                      Bridge that make it unique. With its tremendous towers,
+                      sweeping cables, and great span, the Bridge is a sensory
+                      beauty and engineering wonder featuring color, sound and
+                      light.
+                    </Typography>
                   </Card>
-                </Grid>
-              ))}
-            </Grid>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </Container>

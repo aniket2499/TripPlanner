@@ -102,21 +102,26 @@ const removeRestaurantFromTrip = (id, body) => {
 };
 
 const inviteUserToTrip = (id, body) => {
-  console.log(id, "=");
-  console.log(body, "==");
+  // console.log(id, "===");
+  const trip_id = id;
+  // console.log(body, "==");
   return axios
-    .post(DATA_URL + `/trips/${id}/invite`, { body: body })
+    .post(DATA_URL + `/trips/${trip_id}/invite`, { body: body })
     .then((response) => {
       return response.data;
     });
 };
 
-const acceptTripInvite = (id, userId, body) => {
+const acceptTripInvite = (trip, user) => {
+  const tripId = trip.tripId;
+  const userId = user.userId;
+  console.log(userId, "-user");
+  console.log(tripId, "=kjdbcjkb");
   // const currUser = useContext(AuthContext);
   // const userId = currUser.uid;
   // console.log(userId);
   return axios
-    .post(DATA_URL + `/trips/${id}/accept/${userId}`, { body: body })
+    .post(DATA_URL + `/trips/${tripId}/accept/${userId}`)
     .then((response) => {
       return response.data;
     });

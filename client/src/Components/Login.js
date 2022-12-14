@@ -37,7 +37,7 @@ function Login() {
   };
   const currUser = useContext(AuthContext);
   if (currUser) {
-    return navigate("/");
+    return navigate("/home");
   }
 
   const handleLogin = async (e) => {
@@ -90,7 +90,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="bc-image">
       <form onSubmit={handleLogin}>
         <Box
           style={styles.box}
