@@ -1,10 +1,11 @@
 import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
 import actions from "../actions";
 import userService from "../services/userService";
+import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
 
@@ -15,8 +16,34 @@ function Home() {
   const navigate = useNavigate();
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
-  dispatch(actions.initializeUser(currUser._delegate.uid));
-  dispatch(actions.initializeTrip(currUser._delegate.uid));
+
+  useEffect(() => {
+    const userTrips = async () => {
+      await tripService
+        .getAllTripsForCurrentUser(currUser._delegate.uid)
+        .then((response) => {
+          console.log("response");
+          console.log(response);
+          // addTripsToRedicre(response);
+          response.forEach((trip) => {
+            dispatch(
+              actions.addTrip(
+                trip._id,
+                trip.cur_location,
+                trip.destination,
+                trip.tripDate.start_date,
+                trip.tripDate.end_date,
+                "30",
+                "30",
+                currUser._delegate.uid,
+                "spain trip",
+              ),
+            );
+          });
+        });
+    };
+    userTrips();
+  }, []);
 
   const userId = currUser._delegate.uid;
   let newObj = null;
@@ -27,6 +54,7 @@ function Home() {
   const tripsForUser = tripExceptFirst.filter(
     (trip) => trip.trip_id.userId === currUser._delegate.uid,
   );
+  console.log("tripsForUser");
   console.log(tripsForUser);
   const getData = async (id) => {
     try {
