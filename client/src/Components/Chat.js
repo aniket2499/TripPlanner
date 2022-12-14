@@ -2,6 +2,7 @@ import io from "socket.io-client";
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../firebase/Auth";
 import ScrollToBottom from "react-scroll-to-bottom";
+import "./chat.css";
 
 const socket = io.connect("http://localhost:3001");
 
@@ -15,10 +16,6 @@ const Chat = ({ socket, id }) => {
         room: id,
         author: currUser._delegate.displayName,
         message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
       };
 
       await socket.emit("send_message", messageData);
@@ -53,7 +50,6 @@ const Chat = ({ socket, id }) => {
                     <p>{messageContent.message}</p>
                   </div>
                   <div className="message-meta">
-                    <p id="time">{messageContent.time}</p>
                     <p id="author">{messageContent.author}</p>
                   </div>
                 </div>
