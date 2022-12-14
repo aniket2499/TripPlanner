@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -46,10 +46,15 @@ import "../App.css";
 import { Container } from "@mui/system";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../firebase/Auth";
-
 import Maps from "./Maps";
+import io from "socket.io-client";
+import Chat from "./Chat";
+
+const socket = io.connect("http://localhost:3002");
+
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
+  const id = useParams();
   const startDate = moment("2022-07-01");
   const endDate = moment("2022-07-05");
   const days = [];
@@ -60,6 +65,14 @@ const MyTrip = () => {
   const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
   const dispatch = useDispatch();
+
+  const joinRoom = (id) => {
+    if (currUser && id) {
+      socket.emit("join_room", id);
+    }
+  };
+
+  joinRoom(id);
 
   let day = startDate;
 
@@ -83,11 +96,11 @@ const MyTrip = () => {
 
   // console.log("curruser is " + currUser);
 
-  useEffect(() => {
-    const tripDataForUser = trips.filter(
-      (trip) => trip.userId === currUser._delegate.uid
-    );
-  },[]);
+  // useEffect(() => {
+  //   const tripDataForUser = trips.filter(
+  //     (trip) => trip.userId === currUser._delegate.uid
+  //   );
+  // },[]);
 
   // useEffect(() => {
   //   const getTripData = async () => {
@@ -468,6 +481,7 @@ const MyTrip = () => {
           </Stack>
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
+          <Chat socket={socket} id={id} />
           <Typography variant="h6" align="center" gutterBottom>
             <Maps />
           </Typography>

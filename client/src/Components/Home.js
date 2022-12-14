@@ -16,8 +16,6 @@ function Home() {
   const navigate = useNavigate();
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
-  // dispatch(actions.initializeUser(currUser._delegate.uid));
-  // dispatch(actions.initializeTrip())
 
   useEffect(() => {
     const userTrips = async () => {
@@ -51,7 +49,7 @@ function Home() {
   let newObj = null;
 
   const trips = useSelector((state) => state.trips);
-
+  console.log("trips" + JSON.stringify(trips));
   const tripExceptFirst = trips.slice(1);
   const tripsForUser = tripExceptFirst.filter(
     (trip) => trip.trip_id.userId === currUser._delegate.uid,

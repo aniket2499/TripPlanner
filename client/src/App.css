@@ -132,6 +132,10 @@ input:focus,input:not(:placeholder-shown){
   height: 100vh;
 }
 
+.toolbar{ 
+  justify-content: space-between;
+}
+
 .header-app-logo{
   display: flex;
   justify-content: space-between;

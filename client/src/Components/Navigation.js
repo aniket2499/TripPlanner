@@ -63,7 +63,7 @@ const styles = {
   },
   toolbar: {
     display: "flex",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
   },
   drawerContainer: {
     padding: "20px 30px",
@@ -88,7 +88,6 @@ const styles = {
     flexDirection: "column",
     maxWidth: 450,
     alignItems: "center",
-    justifyContent: "center",
     margin: "2rem",
     marginTop: "1.5rem",
     padding: "2rem",
@@ -103,7 +102,7 @@ const styles = {
 
 const headersData = [
   {
-    label: "Home",
+    label: "Dashboard",
     href: "/home",
   },
   {
@@ -118,10 +117,6 @@ const headersData = [
 
 const nonAuthHeadersData = [
   {
-    label: "Home",
-    href: "/",
-  },
-  {
     label: "Login",
     href: "/login",
   },
@@ -133,7 +128,7 @@ const nonAuthHeadersData = [
 
 const drawersData = [
   {
-    label: "Home",
+    label: "Dashboard",
     href: "/home",
   },
   {
@@ -239,7 +234,7 @@ const Navigation = () => {
 
   const displayDesktop = () => {
     return (
-      <Toolbar style={styles.toolbar}>
+      <Toolbar style={styles.toolbar} className="toolbar">
         {tripPlanner}
         <div>
           {getMenuButtons()}
@@ -494,7 +489,7 @@ const Navigation = () => {
 
   const nonAuthDisplayDesktop = () => {
     return (
-      <Toolbar style={styles.toolbar}>
+      <Toolbar style={styles.toolbar} className="toolbar">
         {nonAuthTripPlanner}
         <div>
           {getNonAuthMenuButtons()}
