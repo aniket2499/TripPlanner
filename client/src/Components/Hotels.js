@@ -1,388 +1,300 @@
-import {
-  Grid,
-  Paper,
-  Card,
-  CardContent,
-  Button,
-  CardMedia,
-  Box,
-  Divider,
-  Icon,
-  Stack,
-  ListItem,
-  List,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  TextField,
-  AppBar,
-  Typography,
-  Avatar,
-} from "@mui/material";
-import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import { Container } from "@mui/system";
-import React from "react";
+import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import StarIcon from "@mui/icons-material/Star";
+import { AuthContext } from "../firebase/Auth";
 import actions from "../actions";
-import hotelsData from "../services/getApiData";
-import modalForHotel from "../modals/modalForHotel";
-import { useEffect, useState } from "react";
-import tripService from "../services/tripService";
-import { useParams } from "react-router-dom";
+import userService from "../services/userService";
+import Maps from "./Maps";
+import { Container } from "@mui/system";
 
-const Hotels = () => {
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+const array = [1, 2, 3, 4];
+const array1 = [1, 2, 3];
+function Home() {
+  const navigate = useNavigate();
+  const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
+  dispatch(actions.initializeUser(currUser._delegate.uid));
+  dispatch(actions.initializeTrip());
 
-  const allState = useSelector((state) => state);
+  const userId = currUser._delegate.uid;
+  let newObj = null;
 
-  const [hotels, setHotels] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [savedButton, setSavedButton] = React.useState(false);
-  const [hotelId, setHotelId] = useState("");
-  const [hotelModal, setModalForHotel] = useState(false);
+  const trips = useSelector((state) => state.trips);
 
-  // const id = useParams().tripid;
-  const id = "63934796bd080530bbdc3111";
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        let data = await hotelsData.getHotelData("new york city", 1);
-        if (data.length === 0) {
-          return;
-        }
-        for (let i = 0; i < data.length; i++) {
-          data[i].saved = false;
-        }
-
-        // dispatch(actions.addUser(id));
-        console.log(allState);
-        console.log(data);
-        setHotels(data);
-        // dispatch(
-        //   actions.addHotel(
-        //     1,
-        //     "SOHO SUITES",
-        //     40,
-        //     -73,
-        //     "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
-        //     3,
-        //   ),
-        // );
-        setLoading(false);
-      } catch (e) {
-        return e;
-      }
+  const tripExceptFirst = trips.slice(1);
+  const tripsForUser = tripExceptFirst.filter(
+    (trip) => trip.trip_id.userId == currUser._delegate.uid,
+  );
+  console.log(tripsForUser);
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      console.log("Inside Try");
+      return;
+    } catch (e) {
+      console.log("Inside catch");
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUser({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "password",
+      });
     }
-    fetchData();
-  }, []);
+  };
+  getData(userId);
+  // const allHotels = useSelector((state) => state.hotels);
+  // console.log("allHotels");
+  // console.log(allHotels);
 
-  if (loading) {
-    return (
-      <div>
-        <h2>Loading....</h2>
-      </div>
-    );
-  } else {
-    return (
-      <Grid container>
-        <Grid item xs={12} sm={12} md={6.5} lg={6.5}>
-          <Paper elevation={3}>
-            <Box sx={{ pt: "3rem", pb: "1rem" }}>
+  return (
+    <div style={{ paddingTop: "2rem" }}>
+      <Container>
+        <Grid container sx={{ mt: "3rem" }}>
+          <Grid item xs={12} sm={8} md={8} lg={9}>
+            <Box sx={{ pb: "2rem" }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                On Going And Upcoming Trips
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Button
+              onClick={() => navigate("/createtrip")}
+              sx={{
+                pt: "0.3rem",
+                pb: "0.3rem",
+                backgroundColor: "primary.main",
+                width: "100%",
+              }}
+            >
+              <AddCircleIcon sx={{ color: "white" }} />
               <Typography
-                variant="h5"
-                component="div"
+                variant="body2"
                 fontWeight="fontWeightBold"
+                sx={{ color: "white", ml: "0.8rem" }}
               >
-                Top Hotels In Your Area
+                Plan New Trip
               </Typography>
-            </Box>
-
-            <Card style={{ padding: "1.5rem" }}>
-              {hotels &&
-                hotels.map((hotel, index) => (
-                  <div key={index}>
-                    <Box sx={{ p: 1 }}>
-                      <Divider
-                        style={{
-                          backgroundColor: "blue",
-                          paddingTop: 0.5,
-                          paddingBottom: 0.5,
-                          marginTop: "1rem",
-                          marginBottom: "1rem",
-                        }}
-                      />
-
-                      <div>
-                        <Grid container>
-                          <Grid item xs={12} sm={9} md={8} lg={7}>
-                            <Avatar
-                              sx={{ backgroundColor: "primary.main", mr: 2 }}
-                            >
-                              {index + 1}
-                            </Avatar>
-                            <Typography
-                              variant="h6"
-                              component="div"
-                              fontWeight="fontWeightBold"
-                            >
-                              {hotel.name}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              component="div"
-                              style={{ paddingTop: "1rem" }}
-                            >
-                              Grand, Indo-Saracenic-style, 26m-tall triumphal
-                              stone arch, built on the waterfront in 1924.
-                            </Typography>
-                            <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
-                              {hotel.rating === 1 ? (
-                                <StarIcon
-                                  sx={{
-                                    color: "primary.main",
-                                    "&.half": {
-                                      color: "yellow",
-                                      width: 20,
-                                      height: 20,
-                                    },
-                                  }}
-                                />
-                              ) : hotel.rating === 2 ? (
-                                <div>
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                </div>
-                              ) : hotel.rating === 3 ? (
-                                <div>
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                </div>
-                              ) : hotel.rating === 4 ? (
-                                <div>
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                </div>
-                              ) : hotel.rating === 5 ? (
-                                <div>
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                </div>
-                              ) : (
-                                <div></div>
-                              )}
-                            </Stack>
-                          </Grid>
-
-                          <Grid item xs={12} sm={3} md={4} lg={5}>
-                            <Button
-                              id={hotel.dup_id}
-                              onClick={(e) => {
-                                if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(id, {
-                                    hotelId: hotel.id,
-                                  });
-                                } else {
-                                }
-                                hotel.saved = !hotel.saved;
-                                setSavedButton(!savedButton);
-                              }}
-                            >
-                              {hotel.saved ? (
-                                <TurnedInIcon />
-                              ) : (
-                                <TurnedInNotIcon />
-                              )}
-                              <Typography variant="body2">
-                                {hotel.saved ? "Remove From Bin" : "Add To Bin"}
-                              </Typography>
-                            </Button>
-
-                            <CardMedia
-                              component="img"
-                              height="180"
-                              image={hotel.image}
-                              alt="green iguana"
-                              style={{ borderRadius: 11 }}
-                              // adding on click for opening modalForHotel
-                              onClick={() => {
-                                setModalForHotel(true);
-                                setHotelId(hotel.hotelId);
-                                console.log(hotel.hotelId);
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </div>
-                      {/* <div style={{ marginTop: "1rem" }}>
-                      <Typography variant="body2" fontWeight="fontWeightLight">
-                        {" "}
-                        Situated at the tip of Apollo’s Blunder in South Mumbai,
-                        the Gateway of India is a great place to start your
-                        sightseeing in Mumbai. The gateway was built in 1924, in
-                        memorial to King George V of England, who landed in
-                        India at the same place in 1911. The last British troops
-                        also departed through this gateway after Indian
-                        Independence in 1948.
-                      </Typography>
-                    </div> */}
-                    </Box>
-                  </div>
-                ))}
-            </Card>
-          </Paper>
+            </Button>
+          </Grid>
+          <Grid container spacing={5}>
+            {tripsForUser.map((item) => (
+              <Grid item xs={6} sm={6} md={4} lg={3}>
+                <Card
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "1rem",
+                    mt: "1rem",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image="https://shrm-res.cloudinary.com/image/upload/c_crop,h_705,w_1254,x_0,y_0/w_auto:100,w_1200,q_35,f_auto/v1/Legal%20and%20Compliance/New_York_City2m_b7pxic.jpg"
+                    alt="random"
+                  />
+                  <Card>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        ml: "0.5rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      {item.trip_id.tripName}
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "black",
+                        ml: "0.6rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      {item.trip_id.startDate.split("T")[0]} -
+                      {item.trip_id.endDate.split("T")[0]}
+                    </Typography>
+                  </Card>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={12} md={5.5} lg={5.5}>
-          <Paper elevation={3}>
-            <Box sx={{ p: 2 }}>
-              <Typography variant="h4" component="div">
-                Map
+      </Container>
+      <Container sx={{ mt: "3.9rem" }}>
+        <Maps />
+      </Container>
+      <Container sx={{ mt: "2rem" }}>
+        <Grid container sx={{ mt: "3rem" }}>
+          <Grid item xs={12} sm={8} md={8} lg={9}>
+            <Box sx={{ pb: "1rem" }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                Your Past Trips
               </Typography>
-              <modalForHotel
-                open={modalForHotel}
-                onClose={() => setModalForHotel(false)}
-                hotelId={hotelId}
-              />
             </Box>
-          </Paper>
+          </Grid>
+          <Grid item xs={12} sm={4} md={4} lg={3}>
+            <Button
+              sx={{
+                pt: "0.3rem",
+                pb: "0.3rem",
+                backgroundColor: "primary.main",
+                width: "100%",
+              }}
+            >
+              <AddCircleIcon sx={{ color: "white" }} />
+              <Typography
+                variant="body2"
+                fontWeight="fontWeightBold"
+                sx={{ color: "white", ml: "0.8rem" }}
+              >
+                Plan New Trip
+              </Typography>
+            </Button>
+          </Grid>
+          <Grid container spacing={7}>
+            {array1.map((item) => (
+              <Grid item xs={6} sm={6} md={4} lg={3}>
+                <Card
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "1rem",
+                    mt: "1.5rem",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/495000/495536-bellagio-casino.jpg"
+                    alt="random"
+                  />
+                  <Card>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        ml: "0.5rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Trip To Las Vegas
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "black",
+                        ml: "0.6rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Dec 8-16, 2021
+                    </Typography>
+                  </Card>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+        <Grid container sx={{ mt: "2rem" }}>
+          <Grid item xs={12} sm={8} md={8} lg={9}>
+            <Box sx={{ pb: "1rem" }}>
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                Explore
+              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: "bold", mt: "1rem" }}>
+                Popular Destinations
+              </Typography>
+            </Box>
+          </Grid>
+
+          <Grid container spacing={7}>
+            {array1.map((item) => (
+              <Grid item xs={6} sm={6} md={4} lg={3}>
+                <Card
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    borderRadius: "1rem",
+                    mt: "1rem",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="150"
+                    image="https://www.prettywildworld.com/wp-content/uploads/2017/11/TOP-TOURIST-ATTRACTIONS-IN-THE-USA-FEATURED-PHOTO.jpg"
+                    alt="random"
+                  />
+                  <Card>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: "black",
+                        ml: "0.5rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Golden Gate Bridge
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "black",
+                        ml: "0.6rem",
+                        mt: "0.2rem",
+                        mb: "0.2rem",
+                      }}
+                    >
+                      Acclaimed as one of the world's most beautiful bridges,
+                      there are many different elements to the Golden Gate
+                      Bridge that make it unique. With its tremendous towers,
+                      sweeping cables, and great span, the Bridge is a sensory
+                      beauty and engineering wonder featuring color, sound and
+                      light.
+                    </Typography>
+                  </Card>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Grid>
+      </Container>
+      <Grid container sx={{ mt: "3rem", backgroundColor: "#ededed" }}>
+        <Grid item xs={12} sm={4} md={4} lg={12}>
+          <Box sx={{ pt: "2rem", pb: "1rem" }}>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: "bold", textAlign: "center" }}
+            >
+              About Us
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{ mt: "1rem", textAlign: "center" }}
+            >
+              We are a team of travel enthusiasts who want to make your
+              travel-planning process easier. We are here to help you plan your
+              next trip and make it a memorable one.
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
-    );
-  }
-};
+    </div>
+  );
+}
 
-export default Hotels;
+export default Home;
