@@ -6,7 +6,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers/rootReducer";
 
 // remove all the data from the storage
-//storage.removeItem("persist:root");
+// storage.removeItem("persist:root");
 const persistConfig = {
   key: "root",
   storage,
