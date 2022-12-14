@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start-index":"nodemon index.js",
+    "start-app":"nodemon app.js",
+    "dev":"npm run start-index & npm run start-app",
+    "start": "nodemon run dev"
   },
   "author": "Avengers",
   "license": "ISC",

@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleMapReact from "google-map-react";
 import RoomSharpIcon from "@mui/icons-material/RoomSharp";
+import Chat from "./Chat";
 
 const Maps = () => {
   const styles = {
