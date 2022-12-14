@@ -90,7 +90,7 @@ const MyTrip = () => {
 
   useEffect(() => {
     const tripDataForUser = trips.filter(
-      (trip) => trip.userId === currUser._delegate.uid,
+      (trip) => trip.userId === currUser._delegate.uid
     );
 
     console.log("tripDataForUser", tripDataForUser);
