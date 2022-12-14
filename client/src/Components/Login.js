@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import SocialSignIn from "./SocialSignIn";
-
+import { doSignOut } from "../firebase/FirebaseFunctions";
 import { AuthContext } from "../firebase/Auth";
 import {
   doSignInWithEmailAndPassword,
@@ -21,7 +21,7 @@ function Login() {
       alignItems: "center",
       justifyContent: "center",
       margin: "auto",
-      marginTop: "2rem",
+      marginTop: "5rem",
       padding: "3rem",
       border: "1px solid #c0c0c0",
       borderRadius: "15px",
@@ -36,6 +36,10 @@ function Login() {
     },
   };
   const currUser = useContext(AuthContext);
+
+  useEffect(() => {
+    doSignOut();
+  }, []);
   if (currUser) {
     return navigate("/home");
   }

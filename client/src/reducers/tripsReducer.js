@@ -4,15 +4,15 @@ import userService from "../services/userService";
 
 const initialState = [
   {
-    name: null,
-    userId: null,
+    trip_id: null,
     cur_location: null,
     destination: null,
+    startDate: null,
+    endDate: null,
     destination_lat: null,
     destination_long: null,
-    start_date: null,
-    end_date: null,
-    hotels: [],
+    userId: null,
+    tripName: null,
   },
 ];
 
@@ -20,21 +20,35 @@ let copyState = null;
 
 const tripsReducer = (state = initialState, action) => {
   const { type, payload } = action;
-
+  console.log("payload", payload);
+  console.log("type", type);
   switch (type) {
+    case "INITIALIZE_TRIP":
+      state = {
+        trip_id: "asdf",
+        cur_location: "asdf",
+        destination: "asdf",
+        startDate: "asdf",
+        endDate: "asdf",
+        destination_lat: "asdf",
+        destination_long: "asdf",
+        userId: "asdf",
+        tripName: "asdf",
+      };
+      return [state];
     case "ADD_TRIP":
       return [
         ...state,
         {
-          name: payload.name,
-          userId: payload.userId,
+          trip_id: payload.trip_id,
           cur_location: payload.cur_location,
           destination: payload.destination,
-          start_date: payload.start_date,
-          end_date: payload.end_date,
+          startDate: payload.startDate,
+          endDate: payload.endDate,
           destination_lat: payload.destination_lat,
           destination_long: payload.destination_long,
-          hotels: payload.hotels,
+          userId: payload.userId,
+          tripName: payload.tripName,
         },
       ];
 

@@ -28,7 +28,7 @@ function SignUp() {
       alignItems: "center",
       justifyContent: "center",
       margin: "auto",
-      marginTop: "1.5rem",
+      marginTop: "4rem",
       padding: "2rem",
       border: "1px solid #c0c0c0",
       borderRadius: "15px",
