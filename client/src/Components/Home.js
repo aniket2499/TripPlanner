@@ -47,7 +47,7 @@ function Home() {
   console.log(allHotels);
 
   return (
-    <div>
+    <div style={{ paddingTop: "2rem" }}>
       <Container>
         <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>

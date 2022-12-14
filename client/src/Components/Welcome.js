@@ -18,11 +18,7 @@ function Welcome() {
   return (
     <div className="bc-image">
       <Grid container>
-        <Grid item xs={6}>
-          <Typography variant="h1" color="white">
-            hello
-          </Typography>
-        </Grid>
+        <Grid item xs={6}></Grid>
       </Grid>
     </div>
   );

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+sans:wght@200;300;400;600;700;800;900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+sans:wght@200;300;400;600;700;800;900&display=swap'); */
 
 :root{
   --font-style: 'Nunito-sans', sans-serif;
@@ -109,6 +109,7 @@ input:focus,input:not(:placeholder-shown){
 
 
 .App {
+  /* padding-top: 5rem; */
   text-align: center;
 }
 
@@ -128,10 +129,17 @@ input:focus,input:not(:placeholder-shown){
   background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)), url("https://images.unsplash.com/photo-1642860086450-f711c98b45fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80");
   background-size: cover;
   padding: 1rem;
-  height: 91.6vh;
+  height: 100vh;
 }
 
-
+.header-app-logo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  
+  ;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
