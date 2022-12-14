@@ -18,26 +18,24 @@ const initialState = [
 
 let copyState = null;
 
-const tripsReducer = (state, action) => {
+const tripsReducer = (state = initialState, action) => {
   const { type, payload } = action;
   console.log("payload", payload);
   console.log("type", type);
   switch (type) {
     case "INITIALIZE_TRIP":
-      console.log(state.user.id);
-      return [
-        {
-          trip_id: "asdf",
-          cur_location: "asdf",
-          destination: "asdf",
-          startDate: "asdf",
-          endDate: "asdf",
-          destination_lat: "asdf",
-          destination_long: "asdf",
-          userId: "asdf",
-          tripName: "asdf",
-        },
-      ];
+      state = {
+        trip_id: "asdf",
+        cur_location: "asdf",
+        destination: "asdf",
+        startDate: "asdf",
+        endDate: "asdf",
+        destination_lat: "asdf",
+        destination_long: "asdf",
+        userId: "asdf",
+        tripName: "asdf",
+      };
+      return [state];
     case "ADD_TRIP":
       return [
         ...state,
