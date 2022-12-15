@@ -17,7 +17,6 @@ import {
   AlertTitle,
   Modal,
 } from "@mui/material";
-import SocialSignIn from "./SocialSignIn";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 function SignUpInvite() {
@@ -81,7 +80,7 @@ function SignUpInvite() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -117,7 +116,7 @@ function SignUpInvite() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value
+        document.getElementById("pwd2").value,
     );
     if (
       document.getElementById("pwd1").value !==
@@ -221,7 +220,6 @@ function SignUpInvite() {
           >
             Sign Up
           </Button>
-          <SocialSignIn />
           <Button
             style={styles.button}
             onClick={() => {

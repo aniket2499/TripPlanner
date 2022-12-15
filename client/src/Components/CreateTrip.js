@@ -134,6 +134,19 @@ const CreateTrip = () => {
       newerrors.destination = "Destination is Invalid";
     }
 
+    if (
+      dayjs(newValues.tripDate.endDate).isBefore(
+        dayjs(newValues.tripDate.startDate),
+      ) &&
+      showReturnDate
+    ) {
+      newerrors.tripDate = "Return date cannot be before departure date";
+      setStartDateError(true);
+      setStartDateErrorMessage("Return date cannot be before departure date");
+      setReturnDateError(true);
+      setReturnDateErrorMessage("Return date cannot be before departure date");
+    }
+
     if (Object.keys(newerrors).length === 0) {
       // console.log(newValues);
       await tripService
@@ -253,25 +266,11 @@ const CreateTrip = () => {
                 console.log(event.target.value);
               }}
               onChange={(newValue) => {
-                if (
-                  dayjs(returnDate).isBefore(dayjs(newValue)) &&
-                  showReturnDate
-                ) {
-                  setStartDateError(true);
-                  setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                  setReturnDateError(true);
-                  setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                } else {
-                  setStartDateError(false);
-                  setStartDateErrorMessage("");
-                  setReturnDateError(false);
-                  setReturnDateErrorMessage("");
-                  setStartDate(newValue);
-                }
+                setStartDateError(false);
+                setStartDateErrorMessage("");
+                setReturnDateError(false);
+                setReturnDateErrorMessage("");
+                setStartDate(newValue);
               }}
               id="startDate"
               renderInput={(params) => (
@@ -292,25 +291,11 @@ const CreateTrip = () => {
               inputFormat="MM/DD/YYYY"
               value={returnDate}
               onChange={(newValue) => {
-                if (
-                  dayjs(newValue).isBefore(dayjs(startDate)) &&
-                  showReturnDate
-                ) {
-                  setStartDateError(true);
-                  setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                  setReturnDateError(true);
-                  setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                } else {
-                  setReturnDateError(false);
-                  setReturnDateErrorMessage("");
-                  setStartDateError(false);
-                  setStartDateErrorMessage("");
-                  setReturnDate(newValue);
-                }
+                setReturnDateError(false);
+                setReturnDateErrorMessage("");
+                setStartDateError(false);
+                setStartDateErrorMessage("");
+                setReturnDate(newValue);
               }}
               id="returnDate"
               renderInput={(params) => (
