@@ -122,7 +122,7 @@ function InviteToTrip() {
             sx={{ width: "16rem" }}
             label="Email"
             type={"email"}
-            value={email}
+            // value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
 

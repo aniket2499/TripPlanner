@@ -156,8 +156,6 @@ const nonAuthDrawersData = [
   },
 ];
 
-const settings = [`Welcome, User`, "Account", "Dashboard", "Logout"];
-
 const Navigation = () => {
   const [state, setState] = useState({ mobileView: false, drawerOpen: false });
   const { mobileView, drawerOpen } = state;
@@ -364,6 +362,7 @@ const Navigation = () => {
               key={"logout"}
               onClick={() => {
                 handleCloseUserMenu();
+                doSignOut();
               }}
             >
               <Typography textAlign="center">Logout</Typography>
@@ -680,7 +679,7 @@ const Navigation = () => {
   if (currentUser) {
     return (
       <header>
-        <AppBar style={styles.header}>
+        <AppBar style={styles.header} id="app-bar">
           {mobileView ? displayMobile() : displayDesktop()}
         </AppBar>
       </header>
@@ -688,7 +687,7 @@ const Navigation = () => {
   } else {
     return (
       <header>
-        <AppBar style={styles.nonAuthHeader}>
+        <AppBar style={styles.nonAuthHeader} id="app-bar">
           {mobileView ? nonAuthDisplayMobile() : nonAuthDisplayDesktop()}
         </AppBar>
       </header>
