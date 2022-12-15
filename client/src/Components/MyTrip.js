@@ -66,14 +66,13 @@ const MyTrip = () => {
   const [trip, setTrip] = useState([]);
   const dispatch = useDispatch();
 
-  console.log(id.id, "====");
-  const joinRoom = (id) => {
-    if (currUser && id) {
-      socket.emit("join_room", id);
+  useEffect(() => {
+    if (currUser && id.id) {
+      socket.emit("join_room", id.id);
     }
-  };
+  }, [id.id]);
 
-  joinRoom(id.id);
+  // joinRoom(id.id);
 
   let day = startDate;
 
@@ -115,8 +114,8 @@ const MyTrip = () => {
             trip.invites,
             trip.itinerary,
             trip.placesToVisit,
-            trip.restaurants,
-          ),
+            trip.restaurants
+          )
         );
       });
     };
