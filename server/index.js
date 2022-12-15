@@ -18,54 +18,36 @@ const io = new Server(server, {
 });
 
 async function sendMessage(socket, data) {
-  console.log("here");
-  console(socket);
-
+  console.log("inside function");
   const messages = await client.lRange(`${data}messages`, "0", "-1");
-  if (messages) {
-    await client.lRange(`${data}messages`, "0", "-1", (err, res) => {
-      res.map((x) => {
-        const usernameMessage = x.split(":");
-        const redisUsername = usernameMessage[0];
-        const redisMessage = usernameMessage[1];
-
-        socket.emit("send_message", {
-          room: data,
-          author: redisUsername,
-          message: redisMessage,
-        });
-      });
-    });
+  if (messages.length != 0) {
+    console.log(messages, "messages");
+    console.log(data, "data");
+    try {
+      socket.emit("fromApi", messages);
+    } catch (err) {
+      console.log(err);
+    }
   } else {
+    console.log("here");
     return;
   }
 }
 
-// const pushMshToRedis = async (id, author, msg) => {
-//   // await client.rPush(`${id}messages`, `${author}:${msg}`);
-//   console.log(id, author);
-// };
-
 io.on("connection", (socket) => {
-  console.log("Here");
   console.log(`User Connected: ${socket.id}`);
-
   socket.on("join_room", (data) => {
     sendMessage(socket, data);
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  socket.on("send_message", (data) => {
-    async function PushMessage() {
-      console.log("Insise function");
-      // pushMshToRedis(data.room.id, data.author, data.message);
-      await client.rPush(
-        `${data.room.id}messages`,
-        `${data.author}:${data.message}`
-      );
-    }
-    PushMessage();
+  socket.on("send_message", async (data) => {
+    console.log(data, "dtaa");
+    await client.rPush(
+      `${data.room.id}messages`,
+      `${data.author}:${data.message}`
+    );
     socket.to(data.room.id).emit("receive_message", data);
   });
 
