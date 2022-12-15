@@ -77,7 +77,7 @@ function Home() {
               trips.map((item) => (
                 <Grid item xs={6} sm={6} md={4} lg={3}>
                   <CardActionArea
-                    onClick={() => navigate(`/my-trips/${item.trip_id}`)}
+                    onClick={() => navigate(`/my-trips/${item._id}`)}
                   >
                     <Card
                       sx={{

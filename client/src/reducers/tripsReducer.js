@@ -31,8 +31,7 @@ let copyState = null;
 
 const tripsReducer = (state = [], action) => {
   const { type, payload } = action;
-  console.log("payload", payload);
-  console.log("type", type);
+
   switch (type) {
     case "INITIALIZE_TRIP":
       console.log("payload is aniket: ", payload);

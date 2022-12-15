@@ -49,6 +49,7 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 import io from "socket.io-client";
 import Chat from "./Chat";
+import { initializeState } from "../reducers/hotelReducer";
 
 const socket = io.connect("http://localhost:3002");
 
@@ -65,7 +66,7 @@ const MyTrip = () => {
   const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
   const dispatch = useDispatch();
-
+  const tripId = useParams().id;
   console.log(id.id, "====");
   const joinRoom = (id) => {
     if (currUser && id) {
@@ -76,6 +77,12 @@ const MyTrip = () => {
   joinRoom(id.id);
 
   let day = startDate;
+
+  useEffect(() => {
+    // storage.removeItem("persist:root");
+
+    dispatch(initializeState(tripId));
+  }, []);
 
   while (day <= endDate) {
     days.push(day.format("YYYY-MM-DD"));
@@ -91,46 +98,16 @@ const MyTrip = () => {
     },
   };
 
-  const tripId = useParams().id;
-
   console.log("tripId is " + tripId);
   useEffect(() => {
-    const getTripData = async () => {
-      await tripService.getTripById(tripId).then((trip) => {
-        console.log("trip is " + JSON.stringify(trip));
-        dispatch(
-          actions.addTrip(
-            trip._id,
-            trip.cur_location,
-            trip.destination,
-            trip.tripDate.startDate,
-            trip.tripDate.endDate,
-            "33.7490",
-            "-84.3880",
-            currUser._delegate.uid,
-            `Trip To  ${trip.destination.split(",")[0]}`,
-            trip.hotels,
-            trip.attractions,
-            trip.explore,
-            trip.invites,
-            trip.itinerary,
-            trip.placesToVisit,
-            trip.restaurants,
-          ),
-        );
-      });
-    };
+    const getTripData = async () => {};
     getTripData();
   }, []);
 
   const trips = useSelector((state) => state.trips);
-  console.log("trips" + JSON.stringify(trips));
-  console.log("trips" + JSON.stringify(trips));
-  const tripExceptFirst = trips.slice(1);
-  console.log("tripExceptFirst");
-  console.log(tripExceptFirst);
-  const tripsForUser = tripExceptFirst.filter((trip) => trip.trip_id == tripId);
-  console.log("tripsForUser");
+
+  const currentTrip = trips.filter((trip) => trip._id == tripId);
+  console.log("currentTrip" + JSON.stringify(currentTrip));
   // console.log(tripsForUser);
 
   return (
@@ -238,7 +215,7 @@ const MyTrip = () => {
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
-                            {/* {`Trip to ${tripsForUser[0].destination}`} */}
+                            {`Trip to ${trips[0].destination.split(",")[0]}`}
                           </Typography>
                           <Typography
                             variant="body1"

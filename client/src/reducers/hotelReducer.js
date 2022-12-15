@@ -1,5 +1,6 @@
 // import GetUserInfo from "../Components/GetUserInfo";
 import React, { useContext } from "react";
+import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 
 function GGetUserInfo() {
@@ -28,6 +29,12 @@ const hotelReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case "INITIALIZE_HOTEL":
+      console.log("payload is aniket: ", payload);
+      state = [];
+      state = payload;
+      return state;
+
     case "ADD_HOTEL":
       console.log("GetUserInfo");
       const info = GGetUserInfo();
@@ -55,5 +62,29 @@ const hotelReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+const initializeState = (tripId) => {
+  return async (dispatch, getState) => {
+    let trip = getState().trips.filter((x) => x._id === tripId);
+    console.log(trip);
+    // console.log("entered in the initalization stat:" + getState().user[0].id);
+    trip.hotels.forEach(async (hotel) => {
+      const hotels = await hotelService.getHotelById(hotel);
+      console.log(hotels);
+      dispatch({
+        type: "ADD_HOTEL",
+        payload: hotels,
+      });
+    });
+    //
+    console.log(tripId);
+    dispatch({
+      type: "INITIALIZE_HOTEL",
+      // payload: hotels,
+    });
+  };
+};
+
+export { initializeState };
 
 export default hotelReducer;
