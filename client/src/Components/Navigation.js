@@ -239,7 +239,13 @@ const Navigation = () => {
         <div>
           {getMenuButtons()}
           <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar {...stringAvatar(currentUser._delegate.displayName)} />
+            <Avatar
+              {...stringAvatar(
+                currentUser._delegate.displayName
+                  ? currentUser._delegate.displayName
+                  : "Unknown",
+              )}
+            />
           </Button>
           <Menu
             sx={{ mt: "45px" }}
