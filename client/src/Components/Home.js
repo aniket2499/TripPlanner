@@ -53,8 +53,8 @@ function Home() {
                 trip.invites,
                 trip.itinerary,
                 trip.placesToVisit,
-                trip.restaurants,
-              ),
+                trip.restaurants
+              )
             );
           });
         });
@@ -71,7 +71,7 @@ function Home() {
   console.log("tripExceptFirst");
   console.log(tripExceptFirst);
   const tripsForUser = tripExceptFirst.filter(
-    (trip) => trip.userId === currUser._delegate.uid,
+    (trip) => trip.userId === currUser._delegate.uid
   );
   console.log("tripsForUser");
   console.log(tripsForUser);
@@ -196,6 +196,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",

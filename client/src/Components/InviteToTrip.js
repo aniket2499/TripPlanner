@@ -83,6 +83,7 @@ function InviteToTrip() {
       name: name,
       message: message,
     };
+
     // console.log(newData, "-====");
     await tripService
       .inviteUserToTrip(trip_id, newData)
