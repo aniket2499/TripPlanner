@@ -29,37 +29,18 @@ const initialState = [
 
 let copyState = null;
 
-const tripsReducer = (state = initialState, action) => {
+const tripsReducer = (state = [], action) => {
   const { type, payload } = action;
   console.log("payload", payload);
   console.log("type", type);
   switch (type) {
     case "INITIALIZE_TRIP":
       console.log("payload is aniket: ", payload);
+      state = [];
       state = payload;
-      return [state];
+      return state;
     case "ADD_TRIP":
-      return [
-        ...state,
-        {
-          trip_id: payload.trip_id,
-          cur_location: payload.cur_location,
-          destination: payload.destination,
-          startDate: payload.startDate,
-          endDate: payload.endDate,
-          destination_lat: payload.destination_lat,
-          destination_long: payload.destination_long,
-          userId: payload.userId,
-          tripName: payload.tripName,
-          hotels: payload.hotels,
-          attractions: payload.attractions,
-          explore: payload.explore,
-          invites: payload.invites,
-          itinerary: payload.itinerary,
-          placesToVisit: payload.placesToVisit,
-          restaurants: payload.restaurants,
-        },
-      ];
+      return [...state];
 
     case "DELETE_TRIP":
       copyState = [...state];

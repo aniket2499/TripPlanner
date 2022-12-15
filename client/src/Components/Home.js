@@ -103,7 +103,7 @@ function Home() {
                             mb: "0.2rem",
                           }}
                         >
-                          {item.tripName}
+                          {`Trip to ${item.destination.split(",")[0]}`}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -114,8 +114,7 @@ function Home() {
                             mb: "0.2rem",
                           }}
                         >
-                          {item._id}
-                          {item.startDate} - {item.endDate}
+                          {item.tripDate.startDate} - {item.tripDate.endDate}
                         </Typography>
                       </Card>
                     </Card>
