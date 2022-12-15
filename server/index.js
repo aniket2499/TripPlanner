@@ -6,6 +6,7 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 const client = redis.createClient(6379);
 app.use(cors());
+client.connect();
 
 const server = http.createServer(app);
 
@@ -17,6 +18,9 @@ const io = new Server(server, {
 });
 
 async function sendMessage(socket, data) {
+  console.log("here");
+  console(socket);
+
   const messages = await client.lRange(`${data}messages`, "0", "-1");
   if (messages) {
     await client.lRange(`${data}messages`, "0", "-1", (err, res) => {
@@ -37,18 +41,25 @@ async function sendMessage(socket, data) {
   }
 }
 
+// const pushMshToRedis = async (id, author, msg) => {
+//   // await client.rPush(`${id}messages`, `${author}:${msg}`);
+//   console.log(id, author);
+// };
+
 io.on("connection", (socket) => {
   console.log("Here");
   console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
-    // sendMessage(socket, data);
+    sendMessage(socket, data);
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
   socket.on("send_message", (data) => {
     async function PushMessage() {
+      console.log("Insise function");
+      // pushMshToRedis(data.room.id, data.author, data.message);
       await client.rPush(
         `${data.room.id}messages`,
         `${data.author}:${data.message}`
