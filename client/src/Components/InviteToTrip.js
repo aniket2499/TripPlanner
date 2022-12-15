@@ -22,6 +22,7 @@ function InviteToTrip() {
 
   const handleSubmit = async (e) => {
     // const tripId = "63934796bd080530bbdc3111";
+
     const userId = currUser._delegate.uid;
     e.preventDefault();
     let newData = {
@@ -43,7 +44,7 @@ function InviteToTrip() {
   };
 
   return (
-    <div>
+    <div style={{ paddingTop: "4rem" }}>
       <form onSubmit={handleSubmit}>
         <TextField
           id="email"

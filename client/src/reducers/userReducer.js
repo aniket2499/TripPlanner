@@ -7,9 +7,18 @@ const initialState = [
 let copyState = null;
 
 const userReducer = (state = initialState, action) => {
+  console.log("state" + state);
+
   const { type, payload } = action;
 
   switch (type) {
+    case "INITIALIZE_USER":
+      return [
+        {
+          id: payload.id,
+        },
+      ];
+
     case "ADD_USER":
       console.log(payload.id);
       return [(state[0].id = payload.id)];

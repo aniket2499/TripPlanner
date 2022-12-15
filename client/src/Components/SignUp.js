@@ -28,7 +28,7 @@ function SignUp() {
       alignItems: "center",
       justifyContent: "center",
       margin: "auto",
-      marginTop: "1.5rem",
+      marginTop: "4rem",
       padding: "2rem",
       border: "1px solid #c0c0c0",
       borderRadius: "15px",
@@ -88,7 +88,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -119,7 +119,7 @@ function SignUp() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value
+        document.getElementById("pwd2").value,
     );
     if (
       document.getElementById("pwd1").value !==

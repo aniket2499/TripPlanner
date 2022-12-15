@@ -1,12 +1,14 @@
 import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
-// import actions from "../actions";
+import actions from "../actions";
 import userService from "../services/userService";
+import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
+
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
@@ -15,9 +17,45 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const userTrips = async () => {
+      await tripService
+        .getAllTripsForCurrentUser(currUser._delegate.uid)
+        .then((response) => {
+          console.log("response");
+          console.log(response);
+          // addTripsToRedicre(response);
+          response.forEach((trip) => {
+            dispatch(
+              actions.addTrip(
+                trip._id,
+                trip.cur_location,
+                trip.destination,
+                trip.tripDate.start_date,
+                trip.tripDate.end_date,
+                "30",
+                "30",
+                currUser._delegate.uid,
+                "spain trip",
+              ),
+            );
+          });
+        });
+    };
+    userTrips();
+  }, []);
+
   const userId = currUser._delegate.uid;
   let newObj = null;
 
+  const trips = useSelector((state) => state.trips);
+  console.log("trips" + JSON.stringify(trips));
+  const tripExceptFirst = trips.slice(1);
+  const tripsForUser = tripExceptFirst.filter(
+    (trip) => trip.trip_id.userId === currUser._delegate.uid,
+  );
+  console.log("tripsForUser");
+  console.log(tripsForUser);
   const getData = async (id) => {
     try {
       await userService.getUserById(id);
@@ -44,7 +82,7 @@ function Home() {
   // console.log(allHotels);
 
   return (
-    <div>
+    <div style={{ paddingTop: "2rem" }}>
       <Container>
         <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
@@ -75,7 +113,7 @@ function Home() {
             </Button>
           </Grid>
           <Grid container spacing={5}>
-            {array.map((item) => (
+            {tripsForUser.map((item) => (
               <Grid item xs={6} sm={6} md={4} lg={3}>
                 <Card
                   sx={{
@@ -101,7 +139,7 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Trip To New York
+                      {item.trip_id.tripName}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -112,7 +150,8 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Dec 8-16, 2022
+                      {item.trip_id.startDate.split("T")[0]} -
+                      {item.trip_id.endDate.split("T")[0]}
                     </Typography>
                   </Card>
                 </Card>
