@@ -91,7 +91,6 @@ const MyTrip = () => {
     },
   };
 
-  // accessing trip id from url
   const tripId = useParams().id;
 
   console.log("tripId is " + tripId);
@@ -106,8 +105,8 @@ const MyTrip = () => {
             trip.destination,
             trip.tripDate.startDate,
             trip.tripDate.endDate,
-            trip.destination_lat,
-            trip.destination_long,
+            "33.7490",
+            "-84.3880",
             currUser._delegate.uid,
             `Trip To  ${trip.destination.split(",")[0]}`,
             trip.hotels,
@@ -126,52 +125,13 @@ const MyTrip = () => {
 
   const trips = useSelector((state) => state.trips);
   console.log("trips" + JSON.stringify(trips));
+  console.log("trips" + JSON.stringify(trips));
   const tripExceptFirst = trips.slice(1);
   console.log("tripExceptFirst");
   console.log(tripExceptFirst);
   const tripsForUser = tripExceptFirst.filter((trip) => trip.trip_id == tripId);
   console.log("tripsForUser");
-  console.log(tripsForUser);
-
-  // console.log("curruser is " + currUser);
-
-  // useEffect(() => {
-  //   const tripDataForUser = trips.filter(
-  //     (trip) => trip.userId === currUser._delegate.uid
-  //   );
-  // },[]);
-
-  // useEffect(() => {
-  //   const getTripData = async () => {
-  //     const tripDataForUser = await userService.getUserById(
-  //       "wXVLUmRigwbmn8BD8J2EU858OBB2",
-  //     );
-
-  //     tripDataForUser.trips.forEach(async (tripId) => {
-  //       const tripData = await tripService.getTripById(tripId);
-  //       dispatch(
-  //         actions.addTrip({
-  //           name: tripData.tripName,
-  //           userId: "wXVLUmRigwbmn8BD8J2EU858OBB2",
-  //           cur_location: tripData.cur_location,
-  //           destination: tripData.destination,
-  //           start_date: tripData.tripDate.startDate,
-  //           end_date: tripData.tripDate.endDate,
-  //           hotels: tripData.hotels,
-  //           attractions: tripData.attractions,
-  //           restaurants: tripData.restaurants,
-  //           explore: tripData.explore,
-  //           placesToVisit: tripData.placesToVisit,
-  //           itinerary: tripData.itinerary,
-  //           invites: tripData.invites,
-  //         }),
-  //       );
-  //     });
-
-  //     setLoading(false);
-  //   };
-  //   getTripData();
-  // }, []);
+  // console.log(tripsForUser);
 
   return (
     <div>
@@ -278,7 +238,7 @@ const MyTrip = () => {
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
-                            {`Trip to ${tripsForUser[0].destination}`}
+                            {/* {`Trip to ${tripsForUser[0].destination}`} */}
                           </Typography>
                           <Typography
                             variant="body1"
@@ -286,8 +246,8 @@ const MyTrip = () => {
                             sx={{ mt: 2, ml: 2 }}
                             color="text.hint"
                           >
-                            {tripsForUser[0].startDate} -
-                            {tripsForUser[0].endDate}
+                            {/* {tripsForUser[0].startDate} -
+                            {tripsForUser[0].endDate} */}
                           </Typography>
                         </Stack>
                       </CardContent>
