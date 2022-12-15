@@ -228,7 +228,6 @@ const MyTrip = () => {
                         <Button fontWeight="fontWeightBold">{date}</Button>
                       ))}
                     </AccordionDetails>
-                    <Chat socket={socket} id={id} />
                   </Accordion>
 
                   {/* <ListItem>
@@ -524,6 +523,7 @@ const MyTrip = () => {
         <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" align="center" gutterBottom>
             <Maps />
+            <Chat socket={socket} id={id} />
           </Typography>
         </Grid>
       </Grid>
