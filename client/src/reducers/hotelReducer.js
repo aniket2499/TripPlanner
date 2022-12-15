@@ -30,7 +30,6 @@ const hotelReducer = (state = initialState, action) => {
 
   switch (type) {
     case "INITIALIZE_HOTEL":
-      console.log("payload is aniket: ", payload);
       state = [];
       state = payload;
       return state;
@@ -66,22 +65,21 @@ const hotelReducer = (state = initialState, action) => {
 const initializeState = (tripId) => {
   return async (dispatch, getState) => {
     let trip = getState().trips.filter((x) => x._id === tripId);
-    console.log(trip);
-    // console.log("entered in the initalization stat:" + getState().user[0].id);
-    trip.hotels.forEach(async (hotel) => {
-      const hotels = await hotelService.getHotelById(hotel);
-      console.log(hotels);
-      dispatch({
-        type: "ADD_HOTEL",
-        payload: hotels,
-      });
-    });
-    //
-    console.log(tripId);
+    console.log("hotels aniket trips:" + JSON.stringify(trip[0].hotels));
+    let hotelsData = [];
+    for (let i = 0; i < trip[0].hotels.length; i++) {
+      let hotel = await hotelService.getHotelById(trip[0].hotels[i]);
+      hotelsData.push(hotel);
+    }
+    console.log("hotels aniket:" + hotelsData);
     dispatch({
       type: "INITIALIZE_HOTEL",
-      // payload: hotels,
+      payload: hotelsData,
     });
+    // console.log("entered in the initalization stat:" + getState().user[0].id);
+    // filtering hotels for the current trip
+
+    //
   };
 };
 

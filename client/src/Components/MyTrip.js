@@ -61,7 +61,6 @@ const MyTrip = () => {
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
-  const [hotels, setHotels] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
@@ -104,10 +103,10 @@ const MyTrip = () => {
     getTripData();
   }, []);
 
-  const trips = useSelector((state) => state.trips);
-
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
-  console.log("currentTrip" + JSON.stringify(currentTrip));
+  const hotels = useSelector((state) => state.hotels);
+  console.log("hotels double check aniket:" + JSON.stringify(hotels));
+  // const currentTrip = trips.filter((trip) => trip._id == tripId);
+  // console.log("currentTrip" + JSON.stringify(currentTrip));
   // console.log(tripsForUser);
 
   return (
@@ -215,7 +214,7 @@ const MyTrip = () => {
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
-                            {`Trip to ${trips[0].destination.split(",")[0]}`}
+                            {/* {`Trip to ${trips[0].destination.split(",")[0]}`} */}
                           </Typography>
                           <Typography
                             variant="body1"
