@@ -16,20 +16,25 @@ const io = new Server(server, {
   },
 });
 
-function sendMessage(socket, data) {
-  client.lRange(`${data}messages`, "0", "-1", (err, res) => {
-    res.map((x) => {
-      const usernameMessage = x.split(":");
-      const redisUsername = usernameMessage[0];
-      const redisMessage = usernameMessage[1];
+async function sendMessage(socket, data) {
+  const messages = await client.lRange(`${data}messages`, "0", "-1");
+  if (messages) {
+    await client.lRange(`${data}messages`, "0", "-1", (err, res) => {
+      res.map((x) => {
+        const usernameMessage = x.split(":");
+        const redisUsername = usernameMessage[0];
+        const redisMessage = usernameMessage[1];
 
-      socket.emit("send_message", {
-        room: data,
-        author: redisUsername,
-        message: redisMessage,
+        socket.emit("send_message", {
+          room: data,
+          author: redisUsername,
+          message: redisMessage,
+        });
       });
     });
-  });
+  } else {
+    return;
+  }
 }
 
 io.on("connection", (socket) => {
@@ -37,13 +42,16 @@ io.on("connection", (socket) => {
   console.log(`User Connected: ${socket.id}`);
 
   socket.on("join_room", (data) => {
-    sendMessage(socket, data);
+    // sendMessage(socket, data);
     socket.join(data);
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  socket.on("send_message", (data) => {
-    client.rPush(`${data.room.id}messages`, `${data.author}:${data.message}`);
+  socket.on("send_message", async (data) => {
+    // await client.rPush(
+    //   `${data.room.id}messages`,
+    //   `${data.author}:${data.message}`
+    // );
     socket.to(data.room.id).emit("receive_message", data);
   });
 
