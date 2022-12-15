@@ -66,13 +66,14 @@ const MyTrip = () => {
   const [trip, setTrip] = useState([]);
   const dispatch = useDispatch();
 
+  console.log(id.id, "====");
   const joinRoom = (id) => {
     if (currUser && id) {
       socket.emit("join_room", id);
     }
   };
 
-  joinRoom(id);
+  joinRoom(id.id);
 
   let day = startDate;
 
@@ -227,6 +228,7 @@ const MyTrip = () => {
                         <Button fontWeight="fontWeightBold">{date}</Button>
                       ))}
                     </AccordionDetails>
+                    <Chat socket={socket} id={id} />
                   </Accordion>
 
                   {/* <ListItem>
@@ -520,7 +522,6 @@ const MyTrip = () => {
           </Stack>
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
-          <Chat socket={socket} id={id} />
           <Typography variant="h6" align="center" gutterBottom>
             <Maps />
           </Typography>
