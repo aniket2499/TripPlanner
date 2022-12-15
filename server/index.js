@@ -47,11 +47,14 @@ io.on("connection", (socket) => {
     console.log(`User with ID: ${socket.id} joined room: ${data}`);
   });
 
-  socket.on("send_message", async (data) => {
-    // await client.rPush(
-    //   `${data.room.id}messages`,
-    //   `${data.author}:${data.message}`
-    // );
+  socket.on("send_message", (data) => {
+    async function PushMessage() {
+      await client.rPush(
+        `${data.room.id}messages`,
+        `${data.author}:${data.message}`
+      );
+    }
+    PushMessage();
     socket.to(data.room.id).emit("receive_message", data);
   });
 
