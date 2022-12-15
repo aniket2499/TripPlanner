@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { AuthContext } from "../firebase/Auth";
 const DATA_URL = "http://localhost:3001/api";
 
-
 // const getAllTrips = () => {
 //   return axios.get(DATA_URL + "/trips").then((response) => {
 //     return response.data;
@@ -14,12 +13,13 @@ const getAllTripsForCurrentUser = (id) => {
   return axios.get(DATA_URL + `/trips`).then((response) => {
     const temp = response.data.filter((x) => x.users[0] == id);
     return temp;
-
   });
 };
 
 const getTripById = (id) => {
+  console.log("getTripById");
   return axios.get(DATA_URL + `/trips/${id}`).then((response) => {
+    console.log(response.data);
     return response.data;
   });
 };
