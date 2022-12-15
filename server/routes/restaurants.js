@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/create", async (req, res) => {
+router.post("/create/:tripId", async (req, res) => {
   try {
-    const newRestaurant = await createRestaurant(req.body);
+    const newRestaurant = await createRestaurant(req.body, req.params.tripId);
     res.status(200).json(newRestaurant);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);
@@ -51,7 +51,7 @@ router.patch("/update/:id", async (req, res) => {
   try {
     const updatedRestaurant = await updateRestaurantById(
       req.params.id,
-      req.body
+      req.body,
     );
     res.status(200).json(updatedRestaurant);
   } catch (e) {

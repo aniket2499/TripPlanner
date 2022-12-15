@@ -2,10 +2,11 @@ const Hotel = require("../model/Hotel");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
+const trip = require("../model/Trip");
 
 const getHotelById = async (id) => {
   let parsedId = validation.toObjectId(id, "HotelId");
-  const hotel = await Hotel.findById();
+  const hotel = await Hotel.findById(id);
   if (hotel) {
     return hotel;
   } else {
@@ -40,7 +41,10 @@ const getAllHotels = async () => {
   }
 };
 
-const createHotel = async (hotelBody) => {
+const createHotel = async (hotelBody, id) => {
+  const tripId = id;
+  const trip = await trip.findById(tripId);
+  0;
   const newHotelInfo = new Hotel(hotelBody);
   newHotelInfo.location_id = validation.checkStringForNumber(
     newHotelInfo.location_id,
@@ -59,42 +63,24 @@ const createHotel = async (hotelBody) => {
     newHotelInfo.num_reviews,
     "Hotel Number of Reviews",
   );
-  newHotelInfo.category = validation.checkString(
-    newHotelInfo.category,
-    "Hotel Category",
-  );
+
   newHotelInfo.image = validation.checkURL(newHotelInfo.image, "Hotel Image");
-  newHotelInfo.address = validation.checkString(
-    newHotelInfo.address,
-    "Hotel Address",
-  );
-  newHotelInfo.web_url = validation.checkURL(
-    newHotelInfo.web_url,
-    "Hotel Web URL",
-  );
+
   newHotelInfo.rating = validation.checkStringForNumber(
     newHotelInfo.rating,
     "Hotel Rating",
   );
-  newHotelInfo.price_level = validation.checkPriceLevel(
-    newHotelInfo.price_level,
-    "Hotel Price Level",
-  );
+
   newHotelInfo.amenities = validation.checkStringArray(
     newHotelInfo.amenities,
     "Hotel Amenities",
   );
 
-  newHotelInfo.phone = validation.checkPhoneNumber(
-    newHotelInfo.phone,
-    "Hotel Phone",
-  );
-  newHotelInfo.price = validation.checkPriceRange(
-    newHotelInfo.price,
-    "Hotel Price",
-  );
-
   const savedHotel = await newHotelInfo.save();
+
+  trip.hotels.push(savedHotel._id);
+  await trip.save();
+
   if (savedHotel) {
     return savedHotel;
   } else {
