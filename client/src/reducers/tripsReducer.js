@@ -1,14 +1,18 @@
 import tripService from "../services/tripService";
 import userService from "../services/userService";
+import actions from "../actions";
+import store from "../store";
 // import GetUserInfo from "../Components/getUserInfo";
 
 const initialState = [
   {
-    trip_id: null,
+    _id: null,
     cur_location: null,
     destination: null,
-    startDate: null,
-    endDate: null,
+    tripDate: {
+      startDate: null,
+      endDate: null,
+    },
     destination_lat: null,
     destination_long: null,
     userId: null,
@@ -31,18 +35,8 @@ const tripsReducer = (state = initialState, action) => {
   console.log("type", type);
   switch (type) {
     case "INITIALIZE_TRIP":
-      state = {
-        trip_id: "asdf",
-        cur_location: "asdf",
-        destination: "asdf",
-        startDate: "asdf",
-        endDate: "asdf",
-        destination_lat: "asdf",
-        destination_long: "asdf",
-        userId: "asdf",
-        tripName: "asdf",
-        hotel: [],
-      };
+      console.log("payload is aniket: ", payload);
+      state = payload;
       return [state];
     case "ADD_TRIP":
       return [
@@ -76,5 +70,21 @@ const tripsReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+const initializeState = () => {
+  return async (dispatch, getState) => {
+    console.log("entered in the initalization stat:" + getState().user[0].id);
+    const trips = await tripService.getAllTripsForCurrentUser(
+      getState().user[0].id,
+    );
+    console.log("trips are aniket:" + trips);
+    dispatch({
+      type: "INITIALIZE_TRIP",
+      payload: trips,
+    });
+  };
+};
+
+export { initializeState };
 
 export default tripsReducer;
