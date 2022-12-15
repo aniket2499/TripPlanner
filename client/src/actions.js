@@ -130,6 +130,13 @@ const addTrip = (
   destination_long,
   userId,
   tripName,
+  hotels,
+  attractions,
+  explore,
+  invites,
+  itinerary,
+  placesToVisit,
+  restaurants,
 ) => ({
   type: "ADD_TRIP",
   payload: {
@@ -142,6 +149,13 @@ const addTrip = (
     destination_long: destination_long,
     userId: userId,
     tripName: tripName,
+    hotels: hotels,
+    attractions: attractions,
+    explore: explore,
+    invites: invites,
+    itinerary: itinerary,
+    placesToVisit: placesToVisit,
+    restaurants: restaurants,
   },
 });
 

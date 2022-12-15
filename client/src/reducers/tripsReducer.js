@@ -13,6 +13,13 @@ const initialState = [
     destination_long: null,
     userId: null,
     tripName: null,
+    hotel: [],
+    attractions: [],
+    explore: [],
+    invites: [],
+    itinerary: [],
+    placesToVisit: [],
+    restaurants: [],
   },
 ];
 
@@ -34,6 +41,7 @@ const tripsReducer = (state = initialState, action) => {
         destination_long: "asdf",
         userId: "asdf",
         tripName: "asdf",
+        hotel: [],
       };
       return [state];
     case "ADD_TRIP":
@@ -49,6 +57,13 @@ const tripsReducer = (state = initialState, action) => {
           destination_long: payload.destination_long,
           userId: payload.userId,
           tripName: payload.tripName,
+          hotels: payload.hotels,
+          attractions: payload.attractions,
+          explore: payload.explore,
+          invites: payload.invites,
+          itinerary: payload.itinerary,
+          placesToVisit: payload.placesToVisit,
+          restaurants: payload.restaurants,
         },
       ];
 

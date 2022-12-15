@@ -91,9 +91,47 @@ const MyTrip = () => {
     },
   };
 
+  // accessing trip id from url
+  const tripId = useParams().id;
+
+  console.log("tripId is " + tripId);
   useEffect(() => {
-    setLoading(true);
+    const getTripData = async () => {
+      await tripService.getTripById(tripId).then((trip) => {
+        console.log("trip is " + JSON.stringify(trip));
+        dispatch(
+          actions.addTrip(
+            trip._id,
+            trip.cur_location,
+            trip.destination,
+            trip.tripDate.startDate,
+            trip.tripDate.endDate,
+            trip.destination_lat,
+            trip.destination_long,
+            currUser._delegate.uid,
+            `Trip To  ${trip.destination.split(",")[0]}`,
+            trip.hotels,
+            trip.attractions,
+            trip.explore,
+            trip.invites,
+            trip.itinerary,
+            trip.placesToVisit,
+            trip.restaurants,
+          ),
+        );
+      });
+    };
+    getTripData();
   }, []);
+
+  const trips = useSelector((state) => state.trips);
+  console.log("trips" + JSON.stringify(trips));
+  const tripExceptFirst = trips.slice(1);
+  console.log("tripExceptFirst");
+  console.log(tripExceptFirst);
+  const tripsForUser = tripExceptFirst.filter((trip) => trip.trip_id == tripId);
+  console.log("tripsForUser");
+  console.log(tripsForUser);
 
   // console.log("curruser is " + currUser);
 
@@ -241,7 +279,7 @@ const MyTrip = () => {
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
-                            My Trip
+                            {`Trip to ${tripsForUser[0].destination}`}
                           </Typography>
                           <Typography
                             variant="body1"
@@ -249,7 +287,8 @@ const MyTrip = () => {
                             sx={{ mt: 2, ml: 2 }}
                             color="text.hint"
                           >
-                            start date - end date
+                            {tripsForUser[0].startDate} -
+                            {tripsForUser[0].endDate}
                           </Typography>
                         </Stack>
                       </CardContent>

@@ -1,4 +1,13 @@
-import { Grid, Card, Button, CardMedia, Box, Typography } from "@mui/material";
+
+import {
+  Grid,
+  Card,
+  Button,
+  CardMedia,
+  Box,
+  Typography,
+  CardActionArea,
+} from "@mui/material";
 import React, { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +17,7 @@ import userService from "../services/userService";
 import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
+import storage from "redux-persist/lib/storage";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
@@ -18,25 +28,34 @@ function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    // storage.removeItem("persist:root");
     const userTrips = async () => {
       await tripService
         .getAllTripsForCurrentUser(currUser._delegate.uid)
         .then((response) => {
-          console.log("response");
+          console.log("response+++");
           console.log(response);
           // addTripsToRedicre(response);
           response.forEach((trip) => {
+            // console.log("tripdate+++", trip.tripDate.startDate);
             dispatch(
               actions.addTrip(
                 trip._id,
                 trip.cur_location,
                 trip.destination,
-                trip.tripDate.start_date,
-                trip.tripDate.end_date,
-                "30",
-                "30",
+                trip.tripDate.startDate,
+                trip.tripDate.endDate,
+                trip.destination_lat,
+                trip.destination_long,
                 currUser._delegate.uid,
-                "spain trip",
+                `Trip To  ${trip.destination.split(",")[0]}`,
+                trip.hotels,
+                trip.attractions,
+                trip.explore,
+                trip.invites,
+                trip.itinerary,
+                trip.placesToVisit,
+                trip.restaurants,
               ),
             );
           });
@@ -51,8 +70,10 @@ function Home() {
   const trips = useSelector((state) => state.trips);
   console.log("trips" + JSON.stringify(trips));
   const tripExceptFirst = trips.slice(1);
+  console.log("tripExceptFirst");
+  console.log(tripExceptFirst);
   const tripsForUser = tripExceptFirst.filter(
-    (trip) => trip.trip_id.userId === currUser._delegate.uid,
+    (trip) => trip.userId === currUser._delegate.uid,
   );
   console.log("tripsForUser");
   console.log(tripsForUser);
@@ -115,46 +136,49 @@ function Home() {
           <Grid container spacing={5}>
             {tripsForUser.map((item) => (
               <Grid item xs={6} sm={6} md={4} lg={3}>
-                <Card
-                  sx={{
-                    width: "100%",
-                    height: "auto",
-                    borderRadius: "1rem",
-                    mt: "1rem",
-                  }}
+                <CardActionArea
+                  onClick={() => navigate(`/my-trips/${item.trip_id}`)}
                 >
-                  <CardMedia
-                    component="img"
-                    height="150"
-                    image="https://shrm-res.cloudinary.com/image/upload/c_crop,h_705,w_1254,x_0,y_0/w_auto:100,w_1200,q_35,f_auto/v1/Legal%20and%20Compliance/New_York_City2m_b7pxic.jpg"
-                    alt="random"
-                  />
-                  <Card>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: "black",
-                        ml: "0.5rem",
-                        mt: "0.2rem",
-                        mb: "0.2rem",
-                      }}
-                    >
-                      {item.trip_id.tripName}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "black",
-                        ml: "0.6rem",
-                        mt: "0.2rem",
-                        mb: "0.2rem",
-                      }}
-                    >
-                      {item.trip_id.startDate.split("T")[0]} -
-                      {item.trip_id.endDate.split("T")[0]}
-                    </Typography>
+                  <Card
+                    sx={{
+                      width: "100%",
+                      height: "auto",
+                      borderRadius: "1rem",
+                      mt: "1rem",
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="150"
+                      image="https://shrm-res.cloudinary.com/image/upload/c_crop,h_705,w_1254,x_0,y_0/w_auto:100,w_1200,q_35,f_auto/v1/Legal%20and%20Compliance/New_York_City2m_b7pxic.jpg"
+                      alt="random"
+                    />
+                    <Card>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: "black",
+                          ml: "0.5rem",
+                          mt: "0.2rem",
+                          mb: "0.2rem",
+                        }}
+                      >
+                        {item.tripName}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "black",
+                          ml: "0.6rem",
+                          mt: "0.2rem",
+                          mb: "0.2rem",
+                        }}
+                      >
+                        {item.startDate} - {item.endDate}
+                      </Typography>
+                    </Card>
                   </Card>
-                </Card>
+                </CardActionArea>
               </Grid>
             ))}
           </Grid>

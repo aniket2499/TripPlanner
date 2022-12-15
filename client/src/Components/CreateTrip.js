@@ -152,6 +152,13 @@ const CreateTrip = () => {
               destination_lng: destcoords.lng,
               userId: userId,
               tripName: "Trip to" + " " + newValues.destination.split(",")[0],
+              hotels: ["1111"],
+              attractions: ["1111"],
+              explore: ["1111"],
+              invites: ["1111"],
+              itinerary: ["1111"],
+              placesToVisit: ["1111"],
+              restaurants: ["1111"],
             }),
           );
           navigate(`/${trip_id}/invite`);
