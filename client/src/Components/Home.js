@@ -90,7 +90,7 @@ function Home() {
                       <CardMedia
                         component="img"
                         height="150"
-                        image="https://shrm-res.cloudinary.com/image/upload/c_crop,h_705,w_1254,x_0,y_0/w_auto:100,w_1200,q_35,f_auto/v1/Legal%20and%20Compliance/New_York_City2m_b7pxic.jpg"
+                        image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
                         alt="random"
                       />
                       <Card>

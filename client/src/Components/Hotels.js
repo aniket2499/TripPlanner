@@ -336,9 +336,15 @@ const Hotels = () => {
                               ) : (
                                 <TurnedInNotIcon />
                               )}
-                              <Typography variant="body2">
-                                {hotel.saved ? "Remove From Bin" : "Add To Bin"}
-                              </Typography>
+                              {hotel.saved ? (
+                                <Typography variant="body2">
+                                  Remove From Bin
+                                </Typography>
+                              ) : (
+                                <Typography variant="body2">
+                                  Add To Bin
+                                </Typography>
+                              )}
                             </Button>
 
                             <CardMedia
