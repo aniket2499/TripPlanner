@@ -454,8 +454,8 @@ const inviteUserToTrip = async (req, res) => {
       let mailTransporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "wanderlog8@gmail.com",
-          pass: "dkmmmoresqbxfjyx",
+          user: "tripplanner057@gmail.com",
+          pass: "mdvdrejgamhvndzj",
         },
       });
 

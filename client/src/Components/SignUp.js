@@ -72,6 +72,26 @@ function SignUp() {
       color: "#d3d3d3",
     },
   };
+  const checkPassword = (password) => {
+    if (password.indexOf(" ") > 1) throw "Password must not contain spaces";
+
+    if (!password) throw " Please enter a password";
+
+    password = password.trim();
+
+    if (password.length === 0) throw "Cannot have empty Password";
+
+    if (password.split(" ").length > 1) throw "Password has Spaces inside";
+
+    let letter = /[a-zA-Z]/;
+    let number = /[0-9]/;
+
+    let result = number.test(password) && letter.test(password);
+
+    if (!result) throw "Password must contain numbers and alphabets";
+    if (!(password.split("").length >= 6))
+      throw "Password should have atleast 6 characters";
+  };
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -83,12 +103,14 @@ function SignUp() {
       return false;
     } else {
       try {
+        checkPassword(pwd1.value);
         setFinalPswd(pwd1.value);
+        console.log(finalPswd, "FINAL PASSWORD");
         setUserDispName(displayName.value);
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value,
+          displayName.value
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -99,19 +121,27 @@ function SignUp() {
             "User already exists. Please Login";
           document.getElementById("error").style.color = "red";
         } else {
-          alert(error);
+          console.log(error, "==");
+          document.getElementById("error").innerHTML = error;
+          document.getElementById("error").style.color = "red";
         }
       }
     }
   };
 
   const addToMongo = async (obj) => {
-    await userService.createUser({
-      _id: obj._id,
-      displayName: obj.displayName,
-      email: obj.email,
-      password: obj.password,
-    });
+    console.log("Hello");
+    console.log(obj);
+    try {
+      await userService.createUser({
+        _id: obj._id,
+        displayName: obj.displayName,
+        email: obj.email,
+        password: obj.password,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleValidFormData = () => {
@@ -119,7 +149,7 @@ function SignUp() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value,
+        document.getElementById("pwd2").value
     );
     if (
       document.getElementById("pwd1").value !==
@@ -130,6 +160,8 @@ function SignUp() {
   };
 
   if (currUser) {
+    console.log(currUser, "====");
+    console.log(finalPswd, "===");
     try {
       addToMongo({
         _id: currUser._delegate.uid,
@@ -229,7 +261,7 @@ function SignUp() {
               navigate("/login");
             }}
           >
-            Change to Log in
+            Already have an Account? Login here!
           </Button>
         </Box>
       </form>

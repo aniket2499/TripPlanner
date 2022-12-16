@@ -55,22 +55,25 @@ const checkEmail = (email) => {
 
 const checkPassword = (password) => {
   // check if we have to trim
+  if (password.indexOf(" ") > 1) throw "Password must not contain spaces";
+
   if (!password) throw " Please enter a password";
 
-  if (typeof password != "string") throw "Password must be a string";
-
   password = password.trim();
+
   if (password.length === 0) throw "Cannot have empty Password";
 
   if (password.split(" ").length > 1) throw "Password has Spaces inside";
 
-  var letterNumber = /^[0-9a-zA-Z!@#$%^&*(),.?":{}|<>]+$/; //not sure what all is considred as special char confirm once on slack
-  let result = password.match(letterNumber);
-  if (!(result == password && typeof result === "object"))
-    throw "Password can include AlphaNumeric and have Special Chars";
+  let letter = /[a-zA-Z]/;
+  let number = /[0-9]/;
 
+  let result = number.test(password) && letter.test(password);
+  if (!result) throw "Password must contain numbers and alphabets";
   if (!(password.split("").length >= 6))
     throw "Password should have atleast 6 characters";
+
+  return password;
 };
 
 const checkLocationId = (code) => {
