@@ -105,7 +105,6 @@ function SignUp() {
       try {
         checkPassword(pwd1.value);
         setFinalPswd(pwd1.value);
-        console.log(finalPswd, "FINAL PASSWORD");
         setUserDispName(displayName.value);
         await doCreateUserWithEmailAndPassword(
           email.value,
@@ -115,13 +114,11 @@ function SignUp() {
         // alert("User Created Successfully");
         handleOpen();
       } catch (error) {
-        console.log(error.message);
         if (error.message === userAlreadyExists) {
           document.getElementById("error").innerHTML =
             "User already exists. Please Login";
           document.getElementById("error").style.color = "red";
         } else {
-          console.log(error, "==");
           document.getElementById("error").innerHTML = error;
           document.getElementById("error").style.color = "red";
         }
@@ -130,8 +127,6 @@ function SignUp() {
   };
 
   const addToMongo = async (obj) => {
-    console.log("Hello");
-    console.log(obj);
     try {
       await userService.createUser({
         _id: obj._id,
