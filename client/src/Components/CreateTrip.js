@@ -1,7 +1,7 @@
 import { Autocomplete, Data } from "@react-google-maps/api";
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import tripService from "../services/tripService.js";
 import { AuthContext } from "../firebase/Auth";
 import actions from "../actions";
@@ -143,16 +143,18 @@ const CreateTrip = () => {
           const trip_id = data._id;
           dispatch(
             actions.addTrip({
-              trip_id: trip_id,
+              _id: trip_id,
               cur_location: newValues.cur_location,
               destination: newValues.destination,
-              startDate: newValues.tripDate.startDate,
-              endDate: newValues.tripDate.endDate,
+              tripDate: {
+                startDate: newValues.tripDate.startDate,
+                endDate: newValues.tripDate.endDate,
+              },
               destination_lat: destcoords.lat,
-              destination_lng: destcoords.lng,
+              destination_long: destcoords.lng,
               userId: userId,
               tripName: "Trip to" + " " + newValues.destination.split(",")[0],
-              hotels: ["1111"],
+              hotel: ["1111"],
               attractions: ["1111"],
               explore: ["1111"],
               invites: ["1111"],
@@ -184,6 +186,8 @@ const CreateTrip = () => {
     }
   };
 
+  const trips = useSelector((state) => state.trips);
+  console.log("trips after hitting create trip" + trips);
   return (
     <div>
       <form autoComplete="off" onSubmit={submitForm}>

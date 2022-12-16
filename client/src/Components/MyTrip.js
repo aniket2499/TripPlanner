@@ -102,6 +102,15 @@ const MyTrip = () => {
     setHotels(hotels);
   }, []);
 
+  const restaurants = useSelector((state) => state.restaurants);
+  // console.log(restaurants, "restaurants");
+  const attractions = useSelector((state) => state.attractions);
+  // console.log("attractions for current trip" + JSON.stringify(attractions));
+  const trips = useSelector((state) => state.trips);
+  console.log("trips double check aniket:" + JSON.stringify(trips));
+  const currentTrip = trips.filter((trip) => trip._id == tripId);
+  console.log("currentTrip" + JSON.stringify(currentTrip));
+  console.log(hotels, "state.hotels");
   while (day <= endDate) {
     days.push(day.format("YYYY-MM-DD"));
     day = day.clone().add(1, "d");
@@ -122,15 +131,6 @@ const MyTrip = () => {
     getTripData();
   }, []);
 
-  const restaurants = useSelector((state) => state.restaurants);
-  // console.log(restaurants, "restaurants");
-  const attractions = useSelector((state) => state.attractions);
-  // console.log("attractions for current trip" + JSON.stringify(attractions));
-  const trips = useSelector((state) => state.trips);
-  // console.log("hotels double check aniket:" + JSON.stringify(hotels));
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
-  // console.log("currentTrip" + JSON.stringify(currentTrip));
-  console.log(hotels, "state.hotels");
   return (
     <div>
       <Grid container>
@@ -220,9 +220,7 @@ const MyTrip = () => {
                             fontWeight="fontWeightBold"
                             sx={{ mt: 2, ml: 2 }}
                           >
-                            {`Trip to ${
-                              currentTrip[0].destination.split(",")[0]
-                            }`}
+                            {`Trip to ${currentTrip[0].destination}`}
                           </Typography>
                           <Typography
                             variant="body1"
@@ -230,8 +228,8 @@ const MyTrip = () => {
                             sx={{ mt: 2, ml: 2 }}
                             color="text.hint"
                           >
-                            {currentTrip[0].tripDate.startDate} -
-                            {currentTrip[0].tripDate.endDate}
+                            {/* {currentTrip[0].tripDate.startDate} -{" "}
+                            {currentTrip[0].tripDate.endDate} */}
                           </Typography>
                         </Stack>
                       </CardContent>

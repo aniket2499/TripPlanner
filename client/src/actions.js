@@ -142,42 +142,10 @@ const initializeTrip = (userId) => ({
   },
 });
 
-const addTrip = (
-  trip_id,
-  cur_location,
-  destination,
-  startDate,
-  endDate,
-  destination_lat,
-  destination_long,
-  userId,
-  tripName,
-  hotels,
-  attractions,
-  explore,
-  invites,
-  itinerary,
-  placesToVisit,
-  restaurants,
-) => ({
+const addTrip = (obj) => ({
   type: "ADD_TRIP",
   payload: {
-    trip_id: trip_id,
-    cur_location: cur_location,
-    destination: destination,
-    startDate: startDate,
-    endDate: endDate,
-    destination_lat: destination_lat,
-    destination_long: destination_long,
-    userId: userId,
-    tripName: tripName,
-    hotels: hotels,
-    attractions: attractions,
-    explore: explore,
-    invites: invites,
-    itinerary: itinerary,
-    placesToVisit: placesToVisit,
-    restaurants: restaurants,
+    obj: obj,
   },
 });
 

@@ -39,7 +39,7 @@ const tripsReducer = (state = [], action) => {
       state = payload;
       return state;
     case "ADD_TRIP":
-      return [...state];
+      return [...state, payload.obj];
 
     case "DELETE_TRIP":
       copyState = [...state];
