@@ -10,8 +10,10 @@ const DATA_URL = "http://localhost:3001/api";
 // };
 
 const getAllTripsForCurrentUser = (id) => {
+  console.log("enterd in the get all trips for current user");
   return axios.get(DATA_URL + `/trips`).then((response) => {
-    const temp = response.data.filter((x) => x.users[0] == id);
+    const temp = response.data.filter((x) => x.users[0] === id);
+    console.log("temp is aniket: " + temp);
     return temp;
   });
 };

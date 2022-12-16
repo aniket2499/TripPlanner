@@ -16,15 +16,27 @@ const getUser = () => ({
   type: "GET_USER",
 });
 
+const deleteUser = (id) => ({
+  type: "DELETE_USER",
+  payload: {
+    id: id,
+  },
+});
+
 const addAttraction = (
   location_id,
   name,
   latitude,
   longitude,
-  rating,
-  web_url,
+  num_reviews,
+  category,
   address,
   image,
+  description,
+  rating,
+  web_url,
+  phone,
+  website,
 ) => ({
   type: "ADD_ATTRACTION",
   payload: {
@@ -32,10 +44,15 @@ const addAttraction = (
     name: name,
     latitude: latitude,
     longitude: longitude,
-    rating: rating,
-    web_url: web_url,
+    num_reviews: num_reviews,
+    category: category,
     address: address,
     image: image,
+    description: description,
+    rating: rating,
+    web_url: web_url,
+    phone: phone,
+    website: website,
   },
 });
 
@@ -77,11 +94,17 @@ const addRest = (
   name,
   latitude,
   longitude,
+  num_reviews,
+  category,
   rating,
   web_url,
   address,
   price_level,
   image,
+  description,
+  phone,
+  price,
+  website,
 ) => ({
   type: "ADD_RESTAURANT",
   payload: {
@@ -89,11 +112,17 @@ const addRest = (
     name: name,
     latitude: latitude,
     longitude: longitude,
+    num_reviews: num_reviews,
+    category: category,
     rating: rating,
     web_url: web_url,
     address: address,
     price_level: price_level,
     image: image,
+    description: description,
+    phone: phone,
+    price: price,
+    website: website,
   },
 });
 
@@ -113,42 +142,10 @@ const initializeTrip = (userId) => ({
   },
 });
 
-const addTrip = (
-  trip_id,
-  cur_location,
-  destination,
-  startDate,
-  endDate,
-  destination_lat,
-  destination_long,
-  userId,
-  tripName,
-  hotels,
-  attractions,
-  explore,
-  invites,
-  itinerary,
-  placesToVisit,
-  restaurants,
-) => ({
+const addTrip = (obj) => ({
   type: "ADD_TRIP",
   payload: {
-    trip_id: trip_id,
-    cur_location: cur_location,
-    destination: destination,
-    startDate: startDate,
-    endDate: endDate,
-    destination_lat: destination_lat,
-    destination_long: destination_long,
-    userId: userId,
-    tripName: tripName,
-    hotels: hotels,
-    attractions: attractions,
-    explore: explore,
-    invites: invites,
-    itinerary: itinerary,
-    placesToVisit: placesToVisit,
-    restaurants: restaurants,
+    obj: obj,
   },
 });
 
@@ -161,6 +158,7 @@ const deleteTrip = (location_id) => ({
 
 let exports = {
   addUser,
+  deleteUser,
   addAttraction,
   deleteAttratcion,
   addHotel,

@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) => {
 
 router.get("/data/:location/:pg/:rating", getAttractionsFromApi);
 
-router.post("/create", async (req, res) => {
+router.post("/create/:tripId", async (req, res) => {
   try {
-    const newAttraction = await createAttraction(req.body);
+    const newAttraction = await createAttraction(req.body, req.params.tripId);
     res.status(200).json(newAttraction);
   } catch (e) {
     res.status(500).json(e);
@@ -51,7 +51,7 @@ router.patch("/update/:id", async (req, res) => {
   try {
     const updatedAttraction = await updateAttractionById(
       req.params.id,
-      req.body
+      req.body,
     );
     res.status(200).json(updatedAttraction);
   } catch (e) {

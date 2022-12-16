@@ -7,7 +7,7 @@ import {
   Typography,
   CardActionArea,
 } from "@mui/material";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
@@ -16,89 +16,30 @@ import userService from "../services/userService";
 import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
+import storage from "redux-persist/lib/storage";
+import { initializeState } from "../reducers/tripsReducer";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 const array = [1, 2, 3, 4];
 const array1 = [1, 2, 3];
+
 function Home() {
   const navigate = useNavigate();
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
-
+  const trips = useSelector((state) => state.trips);
   useEffect(() => {
     // storage.removeItem("persist:root");
-    const userTrips = async () => {
-      await tripService
-        .getAllTripsForCurrentUser(currUser._delegate.uid)
-        .then((response) => {
-          console.log("response+++");
-          console.log(response);
-          // addTripsToRedicre(response);
-          response.forEach((trip) => {
-            // console.log("tripdate+++", trip.tripDate.startDate);
-            dispatch(
-              actions.addTrip(
-                trip._id,
-                trip.cur_location,
-                trip.destination,
-                trip.tripDate.startDate,
-                trip.tripDate.endDate,
-                trip.destination_lat,
-                trip.destination_long,
-                currUser._delegate.uid,
-                `Trip To  ${trip.destination.split(",")[0]}`,
-                trip.hotels,
-                trip.attractions,
-                trip.explore,
-                trip.invites,
-                trip.itinerary,
-                trip.placesToVisit,
-                trip.restaurants
-              )
-            );
-          });
-        });
-    };
-    userTrips();
+
+    dispatch(actions.initializeUser(currUser._delegate.uid));
+
+    dispatch(initializeState());
   }, []);
 
   const userId = currUser._delegate.uid;
   let newObj = null;
 
-  const trips = useSelector((state) => state.trips);
-  console.log("trips" + JSON.stringify(trips));
-  const tripExceptFirst = trips.slice(1);
-  console.log("tripExceptFirst");
-  console.log(tripExceptFirst);
-  const tripsForUser = tripExceptFirst.filter(
-    (trip) => trip.userId === currUser._delegate.uid
-  );
-  console.log("tripsForUser");
-  console.log(tripsForUser);
-  const getData = async (id) => {
-    try {
-      await userService.getUserById(id);
-      console.log("Inside Try");
-      return;
-    } catch (e) {
-      console.log("Inside catch");
-      let newObj = {
-        _id: currUser._delegate.uid,
-        displayName: currUser._delegate.displayName,
-        email: currUser._delegate.email,
-      };
-      await userService.createUser({
-        _id: newObj._id,
-        displayName: newObj.displayName,
-        email: newObj.email,
-        password: "password",
-      });
-    }
-  };
-  getData(userId);
-  // const allHotels = useSelector((state) => state.hotels);
-  // console.log("allHotels");
-  // console.log(allHotels);
+  console.log("trips for aniket is:" + JSON.stringify(trips));
 
   return (
     <div style={{ paddingTop: "2rem" }}>
@@ -132,53 +73,54 @@ function Home() {
             </Button>
           </Grid>
           <Grid container spacing={5}>
-            {tripsForUser.map((item) => (
-              <Grid item xs={6} sm={6} md={4} lg={3}>
-                <CardActionArea
-                  onClick={() => navigate(`/my-trips/${item.trip_id}`)}
-                ></CardActionArea>
-                <Card
-                  sx={{
-                    width: "100%",
-                    height: "auto",
-                    borderRadius: "1rem",
-                    mt: "1rem",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="150"
-                    image="https://shrm-res.cloudinary.com/image/upload/c_crop,h_705,w_1254,x_0,y_0/w_auto:100,w_1200,q_35,f_auto/v1/Legal%20and%20Compliance/New_York_City2m_b7pxic.jpg"
-                    alt="random"
-                  />
-                  <Card>
-                    <Typography
-                      variant="body1"
+            {trips &&
+              trips.map((item) => (
+                <Grid item xs={6} sm={6} md={4} lg={3}>
+                  <CardActionArea
+                    onClick={() => navigate(`/my-trips/${item._id}`)}
+                  >
+                    <Card
                       sx={{
-                        color: "black",
-                        ml: "0.5rem",
-                        mt: "0.2rem",
-                        mb: "0.2rem",
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "1rem",
+                        mt: "1rem",
                       }}
                     >
-                      {/* {item.tripName} */}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      sx={{
-                        color: "black",
-                        ml: "0.6rem",
-                        mt: "0.2rem",
-                        mb: "0.2rem",
-                      }}
-                    >
-                      {/* {item.trip_id.startDate.split("T")[0]} -
-                      {item.trip_id.endDate.split("T")[0]} */}
-                    </Typography>
-                  </Card>
-                </Card>
-              </Grid>
-            ))}
+                      <CardMedia
+                        component="img"
+                        height="150"
+                        image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
+                        alt="random"
+                      />
+                      <Card>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            color: "black",
+                            ml: "0.5rem",
+                            mt: "0.2rem",
+                            mb: "0.2rem",
+                          }}
+                        >
+                          {`Trip to ${item.destination.split(",")[0]}`}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "black",
+                            ml: "0.6rem",
+                            mt: "0.2rem",
+                            mb: "0.2rem",
+                          }}
+                        >
+                          {item.tripDate.startDate} - {item.tripDate.endDate}
+                        </Typography>
+                      </Card>
+                    </Card>
+                  </CardActionArea>
+                </Grid>
+              ))}
           </Grid>
         </Grid>
       </Container>
@@ -196,7 +138,6 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
-              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",
