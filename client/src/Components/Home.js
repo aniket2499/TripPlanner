@@ -17,7 +17,6 @@ import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
 import storage from "redux-persist/lib/storage";
-import store from "../store";
 import { initializeState } from "../reducers/tripsReducer";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -29,83 +28,18 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-  console.log(store.getState());
   useEffect(() => {
     // storage.removeItem("persist:root");
-    const userTrips = async () => {
-      await tripService
-        .getAllTripsForCurrentUser(currUser._delegate.uid)
-        .then((response) => {
-          console.log("response+++");
-          console.log(response);
-          // addTripsToRedicre(response);
-          response.forEach((trip) => {
-            // console.log("tripdate+++", trip.tripDate.startDate);
-            if (typeof trips.find((x) => x._id === trip._id) === "undefined") {
-              dispatch(
-                actions.addTrip(
-                  trip._id,
-                  trip.cur_location,
-                  trip.destination,
-                  trip.tripDate.startDate,
-                  trip.tripDate.endDate,
-                  trip.destination_lat,
-                  trip.destination_long,
-                  currUser._delegate.uid,
-                  `Trip To  ${trip.destination.split(",")[0]}`,
-                  trip.hotels,
-                  trip.attractions,
-                  trip.explore,
-                  trip.invites,
-                  trip.itinerary,
-                  trip.placesToVisit,
-                  trip.restaurants,
-                ),
-              );
-            }
-          });
-        });
-    };
-    userTrips();
+
+    dispatch(actions.initializeUser(currUser._delegate.uid));
+
+    dispatch(initializeState());
   }, []);
 
   const userId = currUser._delegate.uid;
   let newObj = null;
 
-  // const trips = useSelector((state) => state.trips);
-  console.log("trips" + JSON.stringify(trips));
-  const tripExceptFirst = trips.slice(1);
-  console.log("tripExceptFirst");
-  console.log(tripExceptFirst);
-  const tripsForUser = tripExceptFirst.filter(
-    (trip) => trip.userId === currUser._delegate.uid,
-  );
-  console.log("tripsForUser");
-  console.log(tripsForUser);
-  const getData = async (id) => {
-    try {
-      await userService.getUserById(id);
-      console.log("Inside Try");
-      return;
-    } catch (e) {
-      console.log("Inside catch");
-      let newObj = {
-        _id: currUser._delegate.uid,
-        displayName: currUser._delegate.displayName,
-        email: currUser._delegate.email,
-      };
-      await userService.createUser({
-        _id: newObj._id,
-        displayName: newObj.displayName,
-        email: newObj.email,
-        password: "password",
-      });
-    }
-  };
-  getData(userId);
-  // const allHotels = useSelector((state) => state.hotels);
-  // console.log("allHotels");
-  // console.log(allHotels);
+  console.log("trips for aniket is:" + JSON.stringify(trips));
 
   return (
     <div style={{ paddingTop: "2rem" }}>
@@ -169,7 +103,7 @@ function Home() {
                             mb: "0.2rem",
                           }}
                         >
-                          {`Trip to ${item.destination.split(",")[0]}`}
+                          {/* {`Trip to ${item.destination.split(",")[0]}`} */}
                         </Typography>
                         <Typography
                           variant="body2"
@@ -204,7 +138,6 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
-              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",
