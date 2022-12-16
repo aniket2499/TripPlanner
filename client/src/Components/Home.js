@@ -161,7 +161,7 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      {item.tripName}
+                      {/* {item.tripName} */}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -172,8 +172,8 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      {item.trip_id.startDate.split("T")[0]} -
-                      {item.trip_id.endDate.split("T")[0]}
+                      {/* {item.trip_id.startDate.split("T")[0]} -
+                      {item.trip_id.endDate.split("T")[0]} */}
                     </Typography>
                   </Card>
                 </Card>

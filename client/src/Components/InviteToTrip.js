@@ -1,4 +1,3 @@
-// creating form for invite user to trip using material ui
 import React, { useState, useContext } from "react";
 import tripService from "../services/tripService";
 import { useNavigate, useParams } from "react-router-dom";
@@ -65,8 +64,6 @@ const styles = {
 function InviteToTrip() {
   const tripId = useParams();
   const trip_id = tripId.tripId;
-  // tripId = tripId.toString();
-  console.log(trip_id, typeof trip_id);
   const currUser = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -74,29 +71,45 @@ function InviteToTrip() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    // const tripId = "63934796bd080530bbdc3111";
-
     const userId = currUser._delegate.uid;
+
     e.preventDefault();
     let newData = {
       email: email,
       name: name,
       message: message,
     };
+    let count = 0;
+    if (!email) {
+      count = count + 1;
+    } else if (!name) {
+      count = count + 1;
+    }
 
-    // console.log(newData, "-====");
-    await tripService
-      .inviteUserToTrip(trip_id, newData)
-      .then((res) => {
-        console.log(res);
-        navigate(`/my-trips/${trip_id}`);
-      })
-      .catch((err) => {
-        // alert(err.response.data.message);
-        document.getElementById("error").innerHTML = err.response.data.message;
+    if (count === 0) {
+      await tripService
+        .inviteUserToTrip(trip_id, newData)
+        .then((res) => {
+          console.log(res);
+          navigate(`/my-trips/${trip_id}`);
+        })
+        .catch((err) => {
+          document.getElementById("error").innerHTML =
+            err.response.data.message;
+          document.getElementById("error").style.color = "red";
+          console.log(err);
+        });
+    } else {
+      if (!email) {
+        document.getElementById("error").innerHTML = "Email Must be provided!!";
         document.getElementById("error").style.color = "red";
-        console.log(err);
-      });
+        count = count + 1;
+      } else if (!name) {
+        document.getElementById("error").innerHTML = "Name must be provided";
+        document.getElementById("error").style.color = "red";
+        count = count + 1;
+      }
+    }
   };
 
   return (
@@ -158,37 +171,19 @@ function InviteToTrip() {
             Invite
             <EmailIcon sx={{ ml: 1, fontSize: "medium" }} />
           </Button>
-          <Button style={styles.button} id="submitButton" type="submit">
+          <Button
+            onClick={() => {
+              navigate(`/my-trips/${trip_id}`);
+            }}
+            style={styles.button}
+            id="submitButton"
+            type="submit"
+          >
             Skip For Now
           </Button>
         </Box>
       </form>
     </div>
-    // <div style={{ paddingTop: "4rem" }}>
-    //   <form onSubmit={handleSubmit}>
-    //     <TextField
-    //       id="email"
-    //       label="Email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //     />
-    //     <TextField
-    //       id="name"
-    //       label="Name"
-    //       value={name}
-    //       onChange={(e) => setName(e.target.value)}
-    //     />
-    //     <TextField
-    //       id="message"
-    //       label="Message"
-    //       value={message}
-    //       onChange={(e) => setMessage(e.target.value)}
-    //     />
-    //     <Button variant="contained" color="primary" type="submit">
-    //       Invite
-    //     </Button>
-    //   </form>
-    // </div>
   );
 }
 
