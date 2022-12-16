@@ -98,7 +98,6 @@ const MyTrip = () => {
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
-
     for (let i = 0; i < hotels.length; i++) {
       hotels[i].calenderButton = false;
     }
