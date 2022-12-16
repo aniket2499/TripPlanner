@@ -2,7 +2,7 @@ const Restaurant = require("../model/Restaurant");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
-const trip = require("../model/Trip");
+const Trip = require("../model/Trip");
 
 const getRestaurantById = async (id) => {
   let parsedId = validation.toObjectId(id, "RestaurantId");
@@ -45,7 +45,7 @@ const getAllRestaurants = async () => {
 
 const createRestaurant = async (restaurantBody, id) => {
   const tripId = id;
-  const trip = await trip.findById(tripId);
+  const trip = await Trip.findById(tripId);
   const newRestaurantInfo = new Restaurant(restaurantBody);
   newRestaurantInfo.location_id = validation.checkStringForNumber(
     newRestaurantInfo.location_id,

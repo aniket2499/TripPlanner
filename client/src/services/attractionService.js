@@ -8,7 +8,9 @@ const getAllAttractions = () => {
 };
 
 const getAttractionById = (id) => {
+  console.log("entered getAttractionById: ");
   return axios.get(DATA_URL + `/attractions/${id}`).then((response) => {
+    console.log("response.data: " + response.data);
     return response.data;
   });
 };

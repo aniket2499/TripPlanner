@@ -2,10 +2,10 @@ const Attraction = require("../model/Attraction");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
-const trip = require("../model/Trip");
+const Trip = require("../model/Trip");
 const getAttractionById = async (id) => {
-  let parsedId = validation.toObjectId(req.params.id, "AttractionId");
-  const attraction = await Attraction.findById(parsedId);
+  // let parsedId = validation.toObjectId(req.params.id, "AttractionId");
+  const attraction = await Attraction.findById(id);
   if (attraction) {
     return attraction;
   } else {
@@ -51,7 +51,7 @@ const getAllAttractions = async () => {
 
 const createAttraction = async (attractionBody, id) => {
   const tripId = id;
-  const trip = await trip.findById(tripId);
+  const trip = await Trip.findById(tripId);
   const newAttractionInfo = new Attraction(attractionBody);
 
   newAttractionInfo.location_id = validation.checkStringForNumber(
