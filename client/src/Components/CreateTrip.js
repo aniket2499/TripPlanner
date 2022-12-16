@@ -24,7 +24,7 @@ const styles = {
   box: {
     display: "flex",
     flexDirection: "column",
-    maxWidth: 450,
+    maxWidth: 400,
     alignItems: "center",
     justifyContent: "center",
     margin: "auto",
@@ -134,6 +134,19 @@ const CreateTrip = () => {
       newerrors.destination = "Destination is Invalid";
     }
 
+    if (
+      dayjs(newValues.tripDate.endDate).isBefore(
+        dayjs(newValues.tripDate.startDate)
+      ) &&
+      showReturnDate
+    ) {
+      newerrors.tripDate = "Return date cannot be before departure date";
+      setStartDateError(true);
+      setStartDateErrorMessage("Return date cannot be before departure date");
+      setReturnDateError(true);
+      setReturnDateErrorMessage("Return date cannot be before departure date");
+    }
+
     if (Object.keys(newerrors).length === 0) {
       // console.log(newValues);
       await tripService
@@ -161,7 +174,7 @@ const CreateTrip = () => {
               itinerary: ["1111"],
               placesToVisit: ["1111"],
               restaurants: ["1111"],
-            }),
+            })
           );
           navigate(`/${trip_id}/invite`);
 
@@ -177,10 +190,16 @@ const CreateTrip = () => {
         });
     } else {
       if (newerrors.cur_location) {
-        alert(newerrors.cur_location);
+        // alert(newerrors.cur_location);
+        document.getElementById("error").innerHTML =
+          "Origin Location is Invalid";
+        document.getElementById("error").style.color = "red";
         setError(newerrors.cur_location);
       } else {
-        alert(newerrors.destination);
+        // alert(newerrors.destination);
+        document.getElementById("error").innerHTML = "Destination is Invalid";
+        document.getElementById("error").style.color = "red";
+
         setError(newerrors.destination);
       }
     }
@@ -198,17 +217,28 @@ const CreateTrip = () => {
             boxShadow: "5px 5px 10px #ccc",
           }}
         >
+          <Typography
+            variant="h4"
+            component="h1"
+            style={styles.header}
+            gutterBottom
+          >
+            Create Trip
+          </Typography>
           <Autocomplete
             onLoad={onOriginLoad}
             onPlaceChanged={onPlaceOriginChanged}
           >
             <TextField
+              sx={{ width: "16rem" }}
               margin="normal"
               label="Origin"
               name="cur_location"
               id="cur_location"
               type={"text"}
-              // onChange={handleChange}
+              onChange={() => {
+                document.getElementById("error").innerHTML = "";
+              }}
             />
           </Autocomplete>
 
@@ -217,12 +247,15 @@ const CreateTrip = () => {
             onPlaceChanged={onPlaceDestinationChanged}
           >
             <TextField
+              sx={{ width: "16rem" }}
               margin="normal"
               label="Destination"
               name="destination"
               id="destination"
               type={"text"}
-              // onChange={handleChange}
+              onChange={() => {
+                document.getElementById("error").innerHTML = "";
+              }}
             />
           </Autocomplete>
 
@@ -237,30 +270,16 @@ const CreateTrip = () => {
                 console.log(event.target.value);
               }}
               onChange={(newValue) => {
-                if (
-                  dayjs(returnDate).isBefore(dayjs(newValue)) &&
-                  showReturnDate
-                ) {
-                  setStartDateError(true);
-                  setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                  setReturnDateError(true);
-                  setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                } else {
-                  setStartDateError(false);
-                  setStartDateErrorMessage("");
-                  setReturnDateError(false);
-                  setReturnDateErrorMessage("");
-                  setStartDate(newValue);
-                }
+                setStartDateError(false);
+                setStartDateErrorMessage("");
+                setReturnDateError(false);
+                setReturnDateErrorMessage("");
+                setStartDate(newValue);
               }}
               id="startDate"
               renderInput={(params) => (
                 <TextField
-                  sx={{ width: 260 }}
+                  sx={{ width: "16rem" }}
                   margin="normal"
                   {...params}
                   error={StartDateError}
@@ -276,30 +295,16 @@ const CreateTrip = () => {
               inputFormat="MM/DD/YYYY"
               value={returnDate}
               onChange={(newValue) => {
-                if (
-                  dayjs(newValue).isBefore(dayjs(startDate)) &&
-                  showReturnDate
-                ) {
-                  setStartDateError(true);
-                  setStartDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                  setReturnDateError(true);
-                  setReturnDateErrorMessage(
-                    "Return date cannot be before departure date",
-                  );
-                } else {
-                  setReturnDateError(false);
-                  setReturnDateErrorMessage("");
-                  setStartDateError(false);
-                  setStartDateErrorMessage("");
-                  setReturnDate(newValue);
-                }
+                setReturnDateError(false);
+                setReturnDateErrorMessage("");
+                setStartDateError(false);
+                setStartDateErrorMessage("");
+                setReturnDate(newValue);
               }}
               id="returnDate"
               renderInput={(params) => (
                 <TextField
-                  sx={{ width: 260 }}
+                  sx={{ width: "16rem" }}
                   margin="normal"
                   {...params}
                   error={ReturnDateError}

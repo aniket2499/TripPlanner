@@ -24,7 +24,7 @@ const getLocationsCoordinates = async (location) => {
   try {
     location = dataValidation.checkLocation(location);
     const data = await axios.get(
-      SEARCH_URL + `&query=${location}` + `&limit=1`,
+      SEARCH_URL + `&query=${location}` + `&limit=1`
     );
     if (!data.data.data[0]) {
       throw new Error("Enter a valid Location");
@@ -48,7 +48,7 @@ const getLocationDetails = async (location) => {
         `?input=${location}` +
         `&key=${process.env.GOOGLE_API_KEY}` +
         `&inputtype=textquery` +
-        `&fields=name,photos`,
+        `&fields=name,photos`
     );
     if (!data.data.candidates[0]) {
       throw new Error("Enter a valid Location");
@@ -80,7 +80,7 @@ const getPhotos = async (location) => {
           `?photoreference=${photo_reference}` +
           `&key=${process.env.GOOGLE_API_KEY}` +
           `&maxwidth=400` +
-          `&maxheight=400`,
+          `&maxheight=400`
       );
 
       return data.config.url;
@@ -128,13 +128,30 @@ const getHotelPhotos = async (imageID) => {
   //   console.log(error);
   // }
 };
-// getHotelPhotos("1");
 
-// getLocationsCoordinates("Chicago");
+const getRestarauntImages = async (imageID) => {
+  const params = {
+    Bucket: process.env.BUCKET,
+    Key: `HotelImages/${imageID}.jpg`,
+  };
+  try {
+    const image = `https://tripplannercs554.s3.amazonaws.com/RestarauntsImages/${imageID}.jpg`;
+    let newObj = {
+      image: image,
+    };
+    return newObj;
+  } catch (error) {
+    throw {
+      message: error.message,
+      status: error.status,
+    };
+  }
+};
 
 module.exports = {
   getLocationsCoordinates,
   getLocationDetails,
   getPhotos,
   getHotelPhotos,
+  getRestarauntImages,
 };
