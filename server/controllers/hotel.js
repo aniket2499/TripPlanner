@@ -2,7 +2,7 @@ const Hotel = require("../model/Hotel");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
-const trip = require("../model/Trip");
+const Trip = require("../model/Trip");
 
 const getHotelById = async (id) => {
   let parsedId = validation.toObjectId(id, "HotelId");
@@ -43,7 +43,7 @@ const getAllHotels = async () => {
 
 const createHotel = async (hotelBody, id) => {
   const tripId = id;
-  const trip = await trip.findById(tripId);
+  const trip = await Trip.findById(tripId);
   0;
   const newHotelInfo = new Hotel(hotelBody);
   newHotelInfo.location_id = validation.checkStringForNumber(
@@ -59,17 +59,13 @@ const createHotel = async (hotelBody, id) => {
     newHotelInfo.longitude,
     "Hotel Longitude",
   );
-  newHotelInfo.num_reviews = validation.checkStringForNumber(
-    newHotelInfo.num_reviews,
-    "Hotel Number of Reviews",
-  );
 
   newHotelInfo.image = validation.checkURL(newHotelInfo.image, "Hotel Image");
 
-  newHotelInfo.rating = validation.checkStringForNumber(
-    newHotelInfo.rating,
-    "Hotel Rating",
-  );
+  // newHotelInfo.rating = validation.checkStringForNumber(
+  //   newHotelInfo.rating,
+  //   "Hotel Rating",
+  // );
 
   newHotelInfo.amenities = validation.checkStringArray(
     newHotelInfo.amenities,
@@ -158,12 +154,12 @@ const updateHotelById = async (id, updateHotelBody) => {
         "Hotel Web URL",
       );
     }
-    if (newHotelInfo.rating) {
-      newHotelInfo.rating = validation.checkStringForNumber(
-        newHotelInfo.rating,
-        "Hotel Rating",
-      );
-    }
+    // if (newHotelInfo.rating) {
+    //   newHotelInfo.rating = validation.checkStringForNumber(
+    //     newHotelInfo.rating,
+    //     "Hotel Rating",
+    //   );
+    // }
     if (newHotelInfo.price_level) {
       newHotelInfo.price_level = validation.checkPriceLevel(
         newHotelInfo.price_level,

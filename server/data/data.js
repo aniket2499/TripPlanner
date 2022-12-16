@@ -22,6 +22,8 @@ const getAllRestaurant = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
   let latitude = baseData.lat;
   let longitude = baseData.lon;
+  let min = 1;
+  let max = 300;
   try {
     const cachedData = await client.hGet(`${location}cachedRestaurants`, pg);
     if (cachedData) {
@@ -51,6 +53,14 @@ const getAllRestaurant = async (location, pg, rating) => {
             "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
           },
         });
+        for (let i = 0; i < data.length; i++) {
+          let imageID = Math.floor(Math.random() * (max - min) + min);
+          let getImage = await cityData.getHotelPhotos(imageID);
+          data[i] = {
+            ...data[i],
+            ...getImage,
+          };
+        }
         await client.hSet(
           `${location}cachedRestaurants`,
           pg,

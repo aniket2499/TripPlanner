@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
   Grid,
   Paper,
@@ -53,6 +55,7 @@ import Chat from "./Chat";
 import { initializeState as initHotel } from "../reducers/hotelReducer";
 import { initializeState as initRest } from "../reducers/restReducer";
 import { initializeState as initAttr } from "../reducers/attractionReducer";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const socket = io.connect("http://localhost:3002");
 
@@ -61,21 +64,28 @@ const MyTrip = () => {
   const id = useParams();
   const startDate = moment("2022-07-01");
   const endDate = moment("2022-07-05");
+  const [itinerary, setItinerary] = useState([]);
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
   const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
-  const dispatch = useDispatch();
-  const tripId = useParams().id;
-  console.log(id.id, "====");
-  const joinRoom = (id) => {
-    if (currUser && id) {
-      socket.emit("join_room", id);
-    }
-  };
+  const [hotelState, setHotels] = useState([]);
+  const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
 
-  joinRoom(id.id);
+  const dispatch = useDispatch();
+  const [value, setValue] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
+  const tripId = useParams().id;
+  const hotels = useSelector((state) => state.hotels);
+
+  useEffect(() => {
+    if (currUser && id.id) {
+      socket.emit("join_room", id.id);
+    }
+  }, [id.id]);
+
+  // joinRoom(id.id);
 
   let day = startDate;
 
@@ -85,6 +95,11 @@ const MyTrip = () => {
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
+
+    for (let i = 0; i < hotels.length; i++) {
+      hotels[i].calenderButton = false;
+    }
+    setHotels(hotels);
   }, []);
 
   while (day <= endDate) {
@@ -100,23 +115,22 @@ const MyTrip = () => {
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
-
-  console.log("tripId is " + tripId);
+  console.log("itinerary" + JSON.stringify(itinerary));
+  // console.log("tripId is " + tripId);
   useEffect(() => {
     const getTripData = async () => {};
     getTripData();
   }, []);
 
-  const hotels = useSelector((state) => state.hotels);
   const restaurants = useSelector((state) => state.restaurants);
   // console.log(restaurants, "restaurants");
   const attractions = useSelector((state) => state.attractions);
-  console.log("attractions for current trip" + JSON.stringify(attractions));
+  // console.log("attractions for current trip" + JSON.stringify(attractions));
   const trips = useSelector((state) => state.trips);
-  console.log("hotels double check aniket:" + JSON.stringify(hotels));
+  // console.log("hotels double check aniket:" + JSON.stringify(hotels));
   const currentTrip = trips.filter((trip) => trip._id == tripId);
-  console.log("currentTrip" + JSON.stringify(currentTrip));
-
+  // console.log("currentTrip" + JSON.stringify(currentTrip));
+  console.log(hotels, "state.hotels");
   return (
     <div>
       <Grid container>
@@ -173,22 +187,6 @@ const MyTrip = () => {
                       ))}
                     </AccordionDetails>
                   </Accordion>
-
-                  {/* <ListItem>
-                <Button variant="contained" color="primary" size="large">
-                  OverView
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button variant="contained" color="primary" size="large">
-                  My Rewards
-                </Button>
-              </ListItem>
-              <ListItem>
-                <Button variant="contained" color="primary" size="large">
-                  My Luggage
-                </Button>
-              </ListItem> */}
                 </List>
               </navbar>
             </div>
@@ -256,40 +254,69 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    {hotels.map(
-                      (
-                        hotel, // hotels is an array of objects}
-                      ) => (
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <Card
-                            sx={{ mt: 2 }}
-                            backgroundColor="primary.main"
-                            style={{ backgroundColor: "" }}
-                          >
-                            <CardContent>
-                              <Stack direction="column" justifyContent="Center">
-                                <Typography
-                                  variant="h5"
-                                  component="h2"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
-                                >
-                                  {hotel.name}
-                                </Typography>
-                                <Typography
-                                  variant="body1"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
-                                  color="text.hint"
-                                >
-                                  Address
-                                </Typography>
-                              </Stack>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ),
-                    )}
+                    {hotelState.map((hotel) => (
+                      <Grid item xs={12} sm={12} md={6} lg={6}>
+                        <Card
+                          sx={{ mt: 2 }}
+                          backgroundColor="primary.main"
+                          style={{ backgroundColor: "" }}
+                        >
+                          <CardContent>
+                            <Stack direction="column" justifyContent="Center">
+                              <Typography
+                                variant="h5"
+                                component="h2"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                              >
+                                {hotel.name}
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                                color="text.hint"
+                              >
+                                Address
+                              </Typography>
+                            </Stack>
+                            <Button
+                              // React material UI open datepicker on button click
+                              // open calendar button
+                              onClick={() => {
+                                hotel.calenderButton = true;
+                              }}
+                            >
+                              <Typography
+                                variant="body2"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2 }}
+                                color="text.hint"
+                              >
+                                add to itinerary
+                              </Typography>
+                            </Button>
+                            {hotel.calenderButton ? (
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DesktopDatePicker
+                                  open={open}
+                                  onClose={() => {
+                                    hotel.calenderButton = false;
+                                  }}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label="Date"
+                                      margin="normal"
+                                    />
+                                  )}
+                                />
+                              </LocalizationProvider>
+                            ) : null}
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                   </Grid>
                 </Paper>
               </AccordionDetails>
@@ -425,7 +452,7 @@ const MyTrip = () => {
                                   </AccordionSummary>
                                   <AccordionDetails>
                                     <Paper className="greyPaper" elevation={0}>
-                                      <Grid containter>
+                                      <Grid container>
                                         <Grid
                                           item
                                           xs={12}

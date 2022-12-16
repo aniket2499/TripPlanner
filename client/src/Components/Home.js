@@ -30,16 +30,78 @@ function Home() {
   const trips = useSelector((state) => state.trips);
   useEffect(() => {
     // storage.removeItem("persist:root");
-
-    dispatch(actions.initializeUser(currUser._delegate.uid));
-
-    dispatch(initializeState());
+    const userTrips = async () => {
+      await tripService
+        .getAllTripsForCurrentUser(currUser._delegate.uid)
+        .then((response) => {
+          console.log("response+++");
+          console.log(response);
+          // addTripsToRedicre(response);
+          response.forEach((trip) => {
+            // console.log("tripdate+++", trip.tripDate.startDate);
+            dispatch(
+              actions.addTrip(
+                trip._id,
+                trip.cur_location,
+                trip.destination,
+                trip.tripDate.startDate,
+                trip.tripDate.endDate,
+                trip.destination_lat,
+                trip.destination_long,
+                currUser._delegate.uid,
+                `Trip To  ${trip.destination.split(",")[0]}`,
+                trip.hotels,
+                trip.attractions,
+                trip.explore,
+                trip.invites,
+                trip.itinerary,
+                trip.placesToVisit,
+                trip.restaurants,
+              ),
+            );
+          });
+        });
+    };
+    userTrips();
   }, []);
 
   const userId = currUser._delegate.uid;
   let newObj = null;
 
-  console.log("trips for aniket is:" + JSON.stringify(trips));
+  // const trips = useSelector((state) => state.trips);
+  console.log("trips" + JSON.stringify(trips));
+  const tripExceptFirst = trips.slice(1);
+  console.log("tripExceptFirst");
+  console.log(tripExceptFirst);
+  const tripsForUser = tripExceptFirst.filter(
+    (trip) => trip.userId === currUser._delegate.uid,
+  );
+  console.log("tripsForUser");
+  console.log(tripsForUser);
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      console.log("Inside Try");
+      return;
+    } catch (e) {
+      console.log("Inside catch");
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUser({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "password",
+      });
+    }
+  };
+  getData(userId);
+  // const allHotels = useSelector((state) => state.hotels);
+  // console.log("allHotels");
+  // console.log(allHotels);
 
   return (
     <div style={{ paddingTop: "2rem" }}>
@@ -138,6 +200,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",

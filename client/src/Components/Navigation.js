@@ -4,7 +4,7 @@ import { Link, Link as RouterLink, useNavigate } from "react-router-dom";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Autocomplete } from "@react-google-maps/api";
 import SearchIcon from "@mui/icons-material/Search";
-import SignOutBtn from "./SignOut";
+import $ from "jquery";
 import "../App.css";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -156,8 +156,6 @@ const nonAuthDrawersData = [
   },
 ];
 
-const settings = [`Welcome, User`, "Account", "Dashboard", "Logout"];
-
 const Navigation = () => {
   const [state, setState] = useState({ mobileView: false, drawerOpen: false });
   const { mobileView, drawerOpen } = state;
@@ -165,9 +163,24 @@ const Navigation = () => {
   const currentUser = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [open, setOpen] = useState(false);
+  const [autocomplete, setAutocomplete] = useState(null);
+  const [coords, setCoords] = useState({});
+  const [destination, setDestination] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [passwordMatch, setPasswordMatch] = useState("");
+  const onLoad = (autoC) => setAutocomplete(autoC);
+
+  const onPlaceChanged = () => {
+    setDestination(autocomplete.gm_accessors_.place.jj.formattedPrediction);
+    const lat = autocomplete.getPlace().geometry.location.lat();
+    const lng = autocomplete.getPlace().geometry.location.lng();
+    console.log(lat, lng);
+
+    setCoords({ lat, lng });
+  };
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -196,6 +209,20 @@ const Navigation = () => {
       window.removeEventListener("resize", () => setResponsiveness());
     };
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const timer = setTimeout(() => {
+        console.log(searchTerm);
+        console.log(destination);
+        navigate(`/search/${searchTerm}`);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    } else {
+      navigate(`/home`);
+    }
+  }, [searchTerm]);
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -236,10 +263,33 @@ const Navigation = () => {
     return (
       <Toolbar style={styles.toolbar} className="toolbar">
         {tripPlanner}
-        <div>
+        <div style={{ display: "flex" }}>
+          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+            <TextField
+              id="search-box"
+              label="Search"
+              variant="outlined"
+              style={{
+                marginTop: "0.5rem",
+                width: "12rem",
+              }}
+              // onChange={(e) => setSearchTerm(e.target.value)}
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSearchTerm(e.target.value);
+              }}
+            />
+          </Autocomplete>
+
           {getMenuButtons()}
           <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar {...stringAvatar(currentUser._delegate.displayName)} />
+            <Avatar
+              {...stringAvatar(
+                currentUser._delegate.displayName
+                  ? currentUser._delegate.displayName
+                  : "Unknown",
+              )}
+            />
           </Button>
           <Menu
             sx={{ mt: "45px" }}
@@ -358,6 +408,7 @@ const Navigation = () => {
               key={"logout"}
               onClick={() => {
                 handleCloseUserMenu();
+                doSignOut();
               }}
             >
               <Typography textAlign="center">Logout</Typography>
@@ -397,6 +448,18 @@ const Navigation = () => {
         </Drawer>
 
         <div>TripPlanner</div>
+        <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+          <TextField
+            id="search-box"
+            label="Search"
+            variant="outlined"
+            style={{
+              marginTop: "0.5rem",
+              width: "12rem",
+              marginLeft: "2rem",
+            }}
+          />
+        </Autocomplete>
       </Toolbar>
     );
   };
@@ -674,7 +737,7 @@ const Navigation = () => {
   if (currentUser) {
     return (
       <header>
-        <AppBar style={styles.header}>
+        <AppBar style={styles.header} id="app-bar">
           {mobileView ? displayMobile() : displayDesktop()}
         </AppBar>
       </header>
@@ -682,7 +745,7 @@ const Navigation = () => {
   } else {
     return (
       <header>
-        <AppBar style={styles.nonAuthHeader}>
+        <AppBar style={styles.nonAuthHeader} id="app-bar">
           {mobileView ? nonAuthDisplayMobile() : nonAuthDisplayDesktop()}
         </AppBar>
       </header>

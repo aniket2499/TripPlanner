@@ -35,6 +35,8 @@ const CreateTrip = lazy(() => import("./Components/CreateTrip"));
 const InviteToTrip = lazy(() => import("./Components/InviteToTrip"));
 const Maps = lazy(() => import("./Components/Maps"));
 const Welcome = lazy(() => import("./Components/Welcome"));
+const Error = lazy(() => import("./Components/Error"));
+const Search = lazy(() => import("./Components/Search"));
 
 let theme = createTheme({
   palette: {
@@ -288,6 +290,10 @@ function App() {
                 <Route path="/my-trips/:id" element={<PrivateRoute />}>
                   <Route path="/my-trips/:id" element={<MyTrips />} />
                 </Route>
+
+                <Route path="/search/:searchTerm" element={<Search />} />
+                <Route path="/404" element={<Error />} />
+                <Route path="*" element={<Error />} />
               </Routes>
             </div>
           </Suspense>
