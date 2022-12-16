@@ -8,7 +8,7 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const ThunkMiddleware = require("redux-thunk").default;
 
 // remove all the data from the storage
-// storage.removeItem("persist:root");
+//  storage.removeItem("persist:root");
 const persistConfig = {
   key: "root",
   storage,

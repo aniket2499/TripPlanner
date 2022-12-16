@@ -12,11 +12,11 @@ const PrivateRoute = () => {
   // If not, return element that will navigate to login page
 
   if (!currentUser) {
-    // alert("You must be logged in to view this page");
-    return navigate("/error");
+    alert("You must be logged in to view this page");
+    // return navigate("/login");
   }
 
-  return currentUser ? <Outlet /> : navigate("/error");
+  return currentUser ? <Outlet /> : navigate("/login");
 };
 
 export default PrivateRoute;

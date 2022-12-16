@@ -1,7 +1,7 @@
 import { Autocomplete, Data } from "@react-google-maps/api";
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import tripService from "../services/tripService.js";
 import { AuthContext } from "../firebase/Auth";
 import actions from "../actions";
@@ -154,28 +154,27 @@ const CreateTrip = () => {
         .then((data) => {
           console.log("data" + JSON.stringify(data));
           const trip_id = data._id;
-          const newTrip = {
-            trip_id: trip_id,
-            cur_location: newValues.cur_location,
-            destination: newValues.destination,
-            startDate: newValues.tripDate.startDate,
-            endDate: newValues.tripDate.endDate,
-            destination_lat: destcoords.lat,
-            destination_long: destcoords.lng,
-            userId: userId,
-            tripName: "Trip to" + " " + newValues.destination.split(",")[0],
-            hotels: ["1111"],
-            attractions: ["1111"],
-            explore: ["1111"],
-            invites: ["1111"],
-            itinerary: ["1111"],
-            placesToVisit: ["1111"],
-            restaurants: ["1111"],
-          };
           dispatch(
             actions.addTrip({
-              newTrip,
-            }),
+              _id: trip_id,
+              cur_location: newValues.cur_location,
+              destination: newValues.destination,
+              tripDate: {
+                startDate: newValues.tripDate.startDate,
+                endDate: newValues.tripDate.endDate,
+              },
+              destination_lat: destcoords.lat,
+              destination_long: destcoords.lng,
+              userId: userId,
+              tripName: "Trip to" + " " + newValues.destination.split(",")[0],
+              hotel: ["1111"],
+              attractions: ["1111"],
+              explore: ["1111"],
+              invites: ["1111"],
+              itinerary: ["1111"],
+              placesToVisit: ["1111"],
+              restaurants: ["1111"],
+            })
           );
           navigate(`/${trip_id}/invite`);
 
@@ -206,6 +205,8 @@ const CreateTrip = () => {
     }
   };
 
+  const trips = useSelector((state) => state.trips);
+  console.log("trips after hitting create trip" + trips);
   return (
     <div>
       <form autoComplete="off" onSubmit={submitForm}>

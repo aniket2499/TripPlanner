@@ -34,6 +34,10 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
+<<<<<<< HEAD
+=======
+
+>>>>>>> adb39e0c085452a944c440c600b7266fe2c6cce0
     "socket.io-client": "^4.1.3",
     "uuid": "^8.3.1"
   },
