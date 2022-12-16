@@ -63,9 +63,9 @@ const socket = io.connect("http://localhost:3002");
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
-  const startDate = moment("2022-07-01");
-  const endDate = moment("2022-07-05");
+
   const [itinerary, setItinerary] = useState([]);
+
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
@@ -116,8 +116,6 @@ const MyTrip = () => {
     }
   }, [id.id]);
 
-  let day = startDate;
-
   useEffect(() => {
     // storage.removeItem("persist:root");
 
@@ -143,7 +141,15 @@ const MyTrip = () => {
   console.log("currentTrip" + JSON.stringify(currentTrip));
   console.log(hotels, "state.hotels");
   console.log(restaurants, "restaurants");
+  // getting start and end date from current trip
 
+  const startDate = moment(currentTrip[0].tripDate.startDate);
+  const endDate = moment(currentTrip[0].tripDate.endDate);
+  let day = startDate;
+
+  console.log(startDate, "startDate");
+  // const startDate = moment("2022-07-01");
+  // const endDate = moment("2022-07-05");
   while (day <= endDate) {
     days.push(day.format("YYYY-MM-DD"));
     day = day.clone().add(1, "d");
@@ -261,7 +267,6 @@ const MyTrip = () => {
                             sx={{ mt: 2, ml: 2 }}
                             color="text.hint"
                           >
-
                             {`${currentTrip[0].tripDate.startDate} - ${currentTrip[0].tripDate.endDate}`}
                           </Typography>
                         </Stack>
@@ -431,7 +436,7 @@ const MyTrip = () => {
                                           <Button
                                             color="primary"
                                             onClick={() =>
-                                              handleDeleteHotel(
+                                              handleDeleteRestaurant(
                                                 tripId,
                                                 restaurant._id,
                                               )
@@ -501,36 +506,97 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    {attractions.map((attraction) => (
-                      <Grid item xs={12} sm={12} md={6} lg={6}>
-                        <Card
-                          sx={{ mt: 2 }}
-                          backgroundColor="primary.main"
-                          style={{ backgroundColor: "" }}
-                        >
-                          <CardContent>
-                            <Stack direction="column" justifyContent="Center">
-                              <Typography
-                                variant="h5"
-                                component="h2"
-                                fontWeight="fontWeightBold"
-                                sx={{ mt: 2, ml: 2 }}
-                              >
-                                {attraction.name}
-                              </Typography>
-                              <Typography
-                                variant="body1"
-                                fontWeight="fontWeightBold"
-                                sx={{ mt: 2, ml: 2 }}
-                                color="text.hint"
-                              >
-                                Address
-                              </Typography>
-                            </Stack>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
+                    <Card styles={{ padding: "1.5rem" }}>
+                      {attractionState &&
+                        attractionState.map((attraction, index) => (
+                          <div key={index}>
+                            <Box sx={{ p: 1 }}>
+                              <Divider
+                                styles={{
+                                  backgroundColor: "blue",
+                                  paddingTop: 0.5,
+                                  paddingBottom: 0.5,
+                                  marginTop: "1rem",
+                                  marginBottom: "1rem",
+                                }}
+                              />
+                              <div>
+                                <Container>
+                                  <Grid
+                                    container
+                                    sx={{ mt: "1rem", mb: "1rem" }}
+                                  >
+                                    <Grid item xs={12} sm={9} md={8} lg={8}>
+                                      <Stack direction="row">
+                                        <Avatar
+                                          sx={{
+                                            backgroundColor: "primary.main",
+                                            mr: "1rem",
+                                          }}
+                                        >
+                                          {index + 1}
+                                        </Avatar>
+                                        <Stack
+                                          direction="row"
+                                          justifyContent="flex-end"
+                                          sx={{ width: "100%", mr: "1rem" }}
+                                        >
+                                          <Button
+                                            color="primary"
+                                            onClick={() =>
+                                              handleDeleteAttraction(
+                                                tripId,
+                                                attraction._id,
+                                              )
+                                            }
+                                          >
+                                            <DeleteIcon />
+                                          </Button>
+                                        </Stack>
+                                      </Stack>
+
+                                      <Typography
+                                        variant="h6"
+                                        component="div"
+                                        fontWeight="fontWeightBold"
+                                        sx={{ mr: "1rem" }}
+                                      >
+                                        {attraction.name}
+                                      </Typography>
+                                      <Typography
+                                        variant="body2"
+                                        component="div"
+                                        style={{
+                                          paddingTop: "0.2rem",
+                                        }}
+                                      >
+                                        The gateway was built in 1924, in
+                                        memorial to King George V of England,
+                                        who landed in India at the same place in
+                                        1911.
+                                      </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={3} md={4} lg={4}>
+                                      <CardMedia
+                                        component="img"
+                                        height="150"
+                                        width="50"
+                                        image={attraction.image}
+                                        alt="green iguana"
+                                        style={{
+                                          borderRadius: 11,
+                                          mr: "2rem",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                </Container>
+                              </div>
+                            </Box>
+                          </div>
+                        ))}
+                    </Card>
                   </Grid>
                 </Paper>
               </AccordionDetails>
