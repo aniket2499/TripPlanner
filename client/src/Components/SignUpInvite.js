@@ -65,6 +65,27 @@ function SignUpInvite() {
     },
   };
 
+  const checkPassword = (password) => {
+    if (password.indexOf(" ") > 1) throw "Password must not contain spaces";
+
+    if (!password) throw " Please enter a password";
+
+    password = password.trim();
+
+    if (password.length === 0) throw "Cannot have empty Password";
+
+    if (password.split(" ").length > 1) throw "Password has Spaces inside";
+
+    let letter = /[a-zA-Z]/;
+    let number = /[0-9]/;
+
+    let result = number.test(password) && letter.test(password);
+
+    if (!result) throw "Password must contain numbers and alphabets";
+    if (!(password.split("").length >= 6))
+      throw "Password should have atleast 6 characters";
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
     const userAlreadyExists =
@@ -75,12 +96,13 @@ function SignUpInvite() {
       return false;
     } else {
       try {
+        checkPassword(pwd1.value);
         setFinalPswd(pwd1.value);
         setUserDispName(displayName.value);
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value,
+          displayName.value
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -91,15 +113,15 @@ function SignUpInvite() {
             "User already exists. Please Login";
           document.getElementById("error").style.color = "red";
         } else {
-          alert(error);
+          document.getElementById("error").innerHTML = error;
+          document.getElementById("error").style.color = "red";
         }
       }
     }
   };
   const tripsAdded = [];
-  console.log(typeof tripId);
+
   tripsAdded.push(tripId);
-  console.log(tripsAdded, "===trips array");
 
   const addToMongo = async (obj) => {
     await userService.createUser({
@@ -116,7 +138,7 @@ function SignUpInvite() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value,
+        document.getElementById("pwd2").value
     );
     if (
       document.getElementById("pwd1").value !==
