@@ -17,6 +17,7 @@ import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
 import storage from "redux-persist/lib/storage";
+import store from "../store";
 import { initializeState } from "../reducers/tripsReducer";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -28,6 +29,7 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+  console.log(store.getState());
   useEffect(() => {
     // storage.removeItem("persist:root");
     const userTrips = async () => {
@@ -39,26 +41,28 @@ function Home() {
           // addTripsToRedicre(response);
           response.forEach((trip) => {
             // console.log("tripdate+++", trip.tripDate.startDate);
-            dispatch(
-              actions.addTrip(
-                trip._id,
-                trip.cur_location,
-                trip.destination,
-                trip.tripDate.startDate,
-                trip.tripDate.endDate,
-                trip.destination_lat,
-                trip.destination_long,
-                currUser._delegate.uid,
-                `Trip To  ${trip.destination.split(",")[0]}`,
-                trip.hotels,
-                trip.attractions,
-                trip.explore,
-                trip.invites,
-                trip.itinerary,
-                trip.placesToVisit,
-                trip.restaurants,
-              ),
-            );
+            if (typeof trips.find((x) => x._id === trip._id) === "undefined") {
+              dispatch(
+                actions.addTrip(
+                  trip._id,
+                  trip.cur_location,
+                  trip.destination,
+                  trip.tripDate.startDate,
+                  trip.tripDate.endDate,
+                  trip.destination_lat,
+                  trip.destination_long,
+                  currUser._delegate.uid,
+                  `Trip To  ${trip.destination.split(",")[0]}`,
+                  trip.hotels,
+                  trip.attractions,
+                  trip.explore,
+                  trip.invites,
+                  trip.itinerary,
+                  trip.placesToVisit,
+                  trip.restaurants,
+                ),
+              );
+            }
           });
         });
     };
