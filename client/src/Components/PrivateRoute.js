@@ -12,8 +12,8 @@ const PrivateRoute = () => {
   // If not, return element that will navigate to login page
 
   if (!currentUser) {
-    alert("You must be logged in to view this page");
-    // return navigate("/login");
+    // alert("You must be logged in to view this page");
+    return navigate("/login");
   }
 
   return currentUser ? <Outlet /> : navigate("/login");
