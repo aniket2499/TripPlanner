@@ -136,7 +136,7 @@ const CreateTrip = () => {
 
     if (
       dayjs(newValues.tripDate.endDate).isBefore(
-        dayjs(newValues.tripDate.startDate)
+        dayjs(newValues.tripDate.startDate),
       ) &&
       showReturnDate
     ) {
@@ -154,25 +154,28 @@ const CreateTrip = () => {
         .then((data) => {
           console.log("data" + JSON.stringify(data));
           const trip_id = data._id;
+          const newTrip = {
+            trip_id: trip_id,
+            cur_location: newValues.cur_location,
+            destination: newValues.destination,
+            startDate: newValues.tripDate.startDate,
+            endDate: newValues.tripDate.endDate,
+            destination_lat: destcoords.lat,
+            destination_long: destcoords.lng,
+            userId: userId,
+            tripName: "Trip to" + " " + newValues.destination.split(",")[0],
+            hotels: ["1111"],
+            attractions: ["1111"],
+            explore: ["1111"],
+            invites: ["1111"],
+            itinerary: ["1111"],
+            placesToVisit: ["1111"],
+            restaurants: ["1111"],
+          };
           dispatch(
             actions.addTrip({
-              trip_id: trip_id,
-              cur_location: newValues.cur_location,
-              destination: newValues.destination,
-              startDate: newValues.tripDate.startDate,
-              endDate: newValues.tripDate.endDate,
-              destination_lat: destcoords.lat,
-              destination_lng: destcoords.lng,
-              userId: userId,
-              tripName: "Trip to" + " " + newValues.destination.split(",")[0],
-              hotels: ["1111"],
-              attractions: ["1111"],
-              explore: ["1111"],
-              invites: ["1111"],
-              itinerary: ["1111"],
-              placesToVisit: ["1111"],
-              restaurants: ["1111"],
-            })
+              newTrip,
+            }),
           );
           navigate(`/${trip_id}/invite`);
 

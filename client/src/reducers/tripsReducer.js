@@ -38,8 +38,30 @@ const tripsReducer = (state = [], action) => {
       state = [];
       state = payload;
       return state;
+
     case "ADD_TRIP":
-      return [...state];
+      console.log("payload is marvin: ", payload);
+      const newTrip = {
+        _id: payload.trip_id,
+        cur_location: payload.cur_location,
+        destination: payload.destination,
+        tripDate: {
+          startDate: payload.startDate,
+          endDate: payload.endDate,
+        },
+        destination_lat: payload.destination_lat,
+        destination_long: payload.destination_long,
+        userId: payload.userId,
+        tripName: payload.tripName,
+        hotel: payload.hotels,
+        attractions: payload.attractions,
+        explore: payload.explore,
+        invites: payload.invites,
+        itinerary: payload,
+        placesToVisit: payload.placesToVisit,
+        restaurants: payload.restaurants,
+      };
+      return [...state, newTrip];
 
     case "DELETE_TRIP":
       copyState = [...state];
