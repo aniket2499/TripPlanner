@@ -79,15 +79,14 @@ const MyTrip = () => {
   const tripId = useParams().id;
   const hotels = useSelector((state) => state.hotels);
 
-
   const joinRoom = (id) => {
     if (currUser && id) {
       socket.emit("join_room", id);
-
+    }
+  };
   useEffect(() => {
     if (currUser && id.id) {
       socket.emit("join_room", id.id);
-
     }
   }, [id.id]);
 
