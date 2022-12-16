@@ -261,8 +261,8 @@ const MyTrip = () => {
                             sx={{ mt: 2, ml: 2 }}
                             color="text.hint"
                           >
-                            {`${currentTrip[0].tripDate.startDate} To 
-                            ${currentTrip[0].tripDate.endDate}`}
+
+                            {`${currentTrip[0].tripDate.startDate} - ${currentTrip[0].tripDate.endDate}`}
                           </Typography>
                         </Stack>
                       </CardContent>

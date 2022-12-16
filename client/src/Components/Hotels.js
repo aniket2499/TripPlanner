@@ -29,6 +29,10 @@ import actions from "../actions";
 import hotelsData from "../services/getApiData";
 import { useEffect, useState } from "react";
 import tripService from "../services/tripService";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Maps from "./Maps";
 
 const Hotels = () => {
@@ -37,6 +41,7 @@ const Hotels = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = React.useState(false);
+  const [calendarDate, setCalendarDate] = useState(false);
 
   // const id = useParams().tripid;
   const id = "63934796bd080530bbdc3111";
@@ -62,6 +67,11 @@ const Hotels = () => {
         }
         for (let i = 0; i < data.length; i++) {
           data[i].saved = false;
+          data[i].pickerOpen = false;
+          data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
+          console.log(
+            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+          );
         }
 
         // dispatch(actions.addUser(id));
@@ -86,7 +96,9 @@ const Hotels = () => {
     }
     fetchData();
   }, []);
+
   console.log(hotels);
+
   if (loading) {
     return (
       <div>
@@ -346,6 +358,37 @@ const Hotels = () => {
                                 </Typography>
                               )}
                             </Button>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DesktopDatePicker
+                                label="Select Date"
+                                disablePast
+                                inputFormat="MM/DD/YYYY"
+                                value={hotel.startDate}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                }}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + hotel.startDate,
+                                  );
+                                  hotel.startDate =
+                                    dayjs(newValue).format("MM/DD/YYYY");
+                                  setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" + hotel.startDate,
+                                  );
+                                }}
+                                id="startDate"
+                                renderInput={(params) => (
+                                  <TextField
+                                    sx={{ width: "16rem" }}
+                                    margin="normal"
+                                    {...params}
+                                    // onChange={handleStartDateChange}
+                                  />
+                                )}
+                              />
+                            </LocalizationProvider>
 
                             <CardMedia
                               component="img"

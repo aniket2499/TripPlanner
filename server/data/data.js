@@ -23,7 +23,7 @@ const getAllRestaurant = async (location, pg, rating) => {
   let latitude = baseData.lat;
   let longitude = baseData.lon;
   let min = 1;
-  let max = 300;
+  let max = 100;
   try {
     const cachedData = await client.hGet(`${location}cachedRestaurants`, pg);
     if (cachedData) {
@@ -55,7 +55,7 @@ const getAllRestaurant = async (location, pg, rating) => {
         });
         for (let i = 0; i < data.length; i++) {
           let imageID = Math.floor(Math.random() * (max - min) + min);
-          let getImage = await cityData.getHotelPhotos(imageID);
+          let getImage = await cityData.getRestarauntImages(imageID);
           data[i] = {
             ...data[i],
             ...getImage,
@@ -64,7 +64,7 @@ const getAllRestaurant = async (location, pg, rating) => {
         await client.hSet(
           `${location}cachedRestaurants`,
           pg,
-          JSON.stringify(data),
+          JSON.stringify(data)
         );
         return data;
       } catch (error) {
@@ -118,7 +118,7 @@ const getAllAttractions = async (location, pg, rating) => {
         await client.hSet(
           `${location}cachedAttractions`,
           pg,
-          JSON.stringify(data),
+          JSON.stringify(data)
         );
         return data;
       } catch (error) {
@@ -161,7 +161,7 @@ const getAllHotels = async (location, pg) => {
             amenities:
               "SWIMMING_POOL,SPA,FITNESS_CENTER,RESTAURANT,PARKING,AIR_CONDITIONING,PETS_ALLOWED,AIRPORT_SHUTTLE,BUSINESS_CENTER,DISABLED_FACILITIES,WIFI,MEETING_ROOMS,NO_KID_ALLOWED,TENNIS,GOLF,KITCHEN,ANIMAL_WATCHING,BABY-SITTING,BEACH,CASINO,JACUZZI,SAUNA,SOLARIUM,MASSAGE,VALET_PARKING,BAR or LOUNGE,KID_WELCOME,NO_PORN_FILMS,MINIBAR,TELEVISION,WI-FI_IN_ROOM,ROOM_SERVICE,GUARDED_PARKG,SERV_SPEC_MENU",
             ratings: "2,3,4,5",
-          },
+          }
         );
         const hotelData = data.data;
         let hotelList = hotelData.slice(low, high);
@@ -176,7 +176,7 @@ const getAllHotels = async (location, pg) => {
         await client.hSet(
           `${location}cachedHotels`,
           pg,
-          JSON.stringify(hotelList),
+          JSON.stringify(hotelList)
         );
         return hotelList;
       } catch (error) {

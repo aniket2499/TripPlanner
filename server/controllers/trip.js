@@ -47,6 +47,7 @@ const createTrip = async (userId, tripBody) => {
   };
 
   let loop = new Date(startDate);
+  endDate = new Date(endDate);
   const newTripInfo = new Trip(newObj);
   const savedTrip = await newTripInfo.save();
   if (!savedTrip) {
@@ -110,31 +111,31 @@ const updateTripById = async (id, updateTripBody) => {
     if (newTripInfo.tripName) {
       newTripInfo.tripName = validation.checkString(
         newTripInfo.tripName,
-        "TripName"
+        "TripName",
       );
     }
     if (newTripInfo.cur_location) {
       newTripInfo.cur_location = validation.checkString(
         newTripInfo.cur_location,
-        "CurrLocation"
+        "CurrLocation",
       );
     }
     if (newTripInfo.destination) {
       newTripInfo.destination = validation.checkString(
         newTripInfo.destination,
-        "Destination"
+        "Destination",
       );
     }
     if (newTripInfo.tripDate.startDate) {
       newTripInfo.tripDate.startDate = validation.checkDate(
         newTripInfo.tripDate.startDate,
-        "StartDate"
+        "StartDate",
       );
     }
     if (newTripInfo.tripDate.endDate) {
       newTripInfo.tripDate.endDate = validation.checkDate(
         newTripInfo.tripDate.endDate,
-        "EndDate"
+        "EndDate",
       );
     }
     if (newTripInfo.notes) {
@@ -171,7 +172,7 @@ const updateTripById = async (id, updateTripBody) => {
       const updateTrip = await Trip.findByIdAndUpdate(
         id,
         { $set: updateTripBody },
-        { new: true }
+        { new: true },
       );
 
       if (updateTrip) {
@@ -454,8 +455,8 @@ const inviteUserToTrip = async (req, res) => {
       let mailTransporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: "wanderlog8@gmail.com",
-          pass: "dkmmmoresqbxfjyx",
+          user: "tripplanner057@gmail.com",
+          pass: "mdvdrejgamhvndzj",
         },
       });
 
