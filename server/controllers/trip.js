@@ -359,7 +359,7 @@ const addRestaurantToTrip = async (req, res) => {
 };
 
 const removeRestaurantFromTrip = async (req, res) => {
-  const trip = await Trip.findById(req.params.tripid);
+  const trip = await Trip.findById(req.params.id);
   if (!trip) {
     throw {
       message: `Trip not found`,
