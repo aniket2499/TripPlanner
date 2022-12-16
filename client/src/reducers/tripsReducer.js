@@ -38,6 +38,7 @@ const tripsReducer = (state = [], action) => {
       state = [];
       state = payload;
       return state;
+
     case "ADD_TRIP":
       return [...state, payload.obj];
 

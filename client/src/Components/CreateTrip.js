@@ -136,7 +136,7 @@ const CreateTrip = () => {
 
     if (
       dayjs(newValues.tripDate.endDate).isBefore(
-        dayjs(newValues.tripDate.startDate)
+        dayjs(newValues.tripDate.startDate),
       ) &&
       showReturnDate
     ) {
@@ -174,7 +174,7 @@ const CreateTrip = () => {
               itinerary: ["1111"],
               placesToVisit: ["1111"],
               restaurants: ["1111"],
-            })
+            }),
           );
           navigate(`/${trip_id}/invite`);
 
