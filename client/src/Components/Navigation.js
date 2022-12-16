@@ -9,6 +9,7 @@ import "../App.css";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import MenuIcon from "@mui/icons-material/Menu";
 import { doChangePassword, doSignOut } from "../firebase/FirebaseFunctions";
+import Search from "./Search";
 
 import {
   Toolbar,
@@ -214,13 +215,13 @@ const Navigation = () => {
     if (searchTerm) {
       const timer = setTimeout(() => {
         console.log(searchTerm);
-        console.log(destination);
-        navigate(`/search/${searchTerm}`);
+        // navigate(`/search/${searchTerm}`);
+        return <Search />;
       }, 500);
 
       return () => clearTimeout(timer);
     } else {
-      navigate(`/home`);
+      // navigate(`/home`);
     }
   }, [searchTerm]);
 
@@ -273,10 +274,10 @@ const Navigation = () => {
                 marginTop: "0.5rem",
                 width: "12rem",
               }}
-              // onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
               onSubmit={(e) => {
                 e.preventDefault();
-                setSearchTerm(e.target.value);
+                // setSearchTerm(e.target.value);
               }}
             />
           </Autocomplete>
