@@ -17,6 +17,7 @@ import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
 import storage from "redux-persist/lib/storage";
+import store from "../store";
 import { initializeState } from "../reducers/tripsReducer";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -28,6 +29,7 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+  console.log(store.getState());
   useEffect(() => {
     // storage.removeItem("persist:root");
 
