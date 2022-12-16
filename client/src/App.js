@@ -292,8 +292,8 @@ function App() {
                 </Route>
 
                 <Route path="/search/:searchTerm" element={<Search />} />
-                <Route path="/404" element={<Error />} />
-                <Route path="*" element={<Error />} />
+                {/* <Route path="/404" element={<Error />} /> */}
+                {/* <Route path="*" element={<Error />} /> */}
               </Routes>
             </div>
           </Suspense>
