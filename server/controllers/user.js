@@ -1,5 +1,6 @@
 const User = require("../model/User");
 const validation = require("../validation/routesValidation");
+const valid = require("../validation/dataValidation");
 
 const getUserById = async (id) => {
   let parsedId = validation.checkString(id, "UserId");
@@ -27,7 +28,7 @@ const getAllUsers = async () => {
 };
 
 const createUser = async (userBody) => {
-  console.log(userBody.body);
+  // console.log(userBody.body);
   const newUserInfo = new User(userBody.body);
   if (newUserInfo.displayName) {
     newUserInfo.displayName = validation.checkString(
@@ -39,13 +40,11 @@ const createUser = async (userBody) => {
     newUserInfo.email = validation.checkEmail(newUserInfo.email, "User Email");
   }
   if (newUserInfo.password) {
-    newUserInfo.password = validation.checkString(
-      newUserInfo.password,
-      "Password"
-    );
+    newUserInfo.password = valid.checkPassword(newUserInfo.password);
   }
 
   const savedUser = await newUserInfo.save();
+
   if (savedUser) {
     return savedUser;
   } else {
