@@ -2,10 +2,10 @@ const Attraction = require("../model/Attraction");
 const data = require("../data/data.js");
 const validation = require("../validation/routesValidation");
 const newValidation = require("../validation/dataValidation.js");
-
+const Trip = require("../model/Trip");
 const getAttractionById = async (id) => {
-  let parsedId = validation.toObjectId(req.params.id, "AttractionId");
-  const attraction = await Attraction.findById(parsedId);
+  // let parsedId = validation.toObjectId(req.params.id, "AttractionId");
+  const attraction = await Attraction.findById(id);
   if (attraction) {
     return attraction;
   } else {
@@ -49,66 +49,70 @@ const getAllAttractions = async () => {
   }
 };
 
-const createAttraction = async (attractionBody) => {
+const createAttraction = async (attractionBody, id) => {
+  const tripId = id;
+  const trip = await Trip.findById(tripId);
   const newAttractionInfo = new Attraction(attractionBody);
 
   newAttractionInfo.location_id = validation.checkStringForNumber(
     newAttractionInfo.location_id,
-    "Location Id"
+    "Location Id",
   );
 
   newAttractionInfo.name = validation.checkString(
     newAttractionInfo.name,
-    "Attraction Name"
+    "Attraction Name",
   );
 
   newAttractionInfo.latitude = validation.checkStringForNumber(
     newAttractionInfo.latitude,
-    "Latitude"
+    "Latitude",
   );
   newAttractionInfo.longitude = validation.checkStringForNumber(
     newAttractionInfo.longitude,
-    "Longitude"
+    "Longitude",
   );
   newAttractionInfo.description = validation.checkString(
     newAttractionInfo.description,
-    "Description"
+    "Description",
   );
 
   newAttractionInfo.image = validation.checkURL(
     newAttractionInfo.image,
-    "Image"
+    "Image",
   );
   newAttractionInfo.category = validation.checkString(
     newAttractionInfo.category,
-    "Category"
+    "Category",
   );
   newAttractionInfo.rating = validation.checkStringForNumber(
     newAttractionInfo.rating,
-    "Rating"
+    "Rating",
   );
 
   newAttractionInfo.website = validation.checkURL(
     newAttractionInfo.website,
-    "Website"
+    "Website",
   );
   newAttractionInfo.phone = validation.checkPhoneNumber(
     newAttractionInfo.phone,
-    "Phone"
+    "Phone",
   );
   newAttractionInfo.address = validation.checkString(
     newAttractionInfo.address,
-    "Address"
+    "Address",
   );
   newAttractionInfo.web_url = validation.checkURL(
     newAttractionInfo.web_url,
-    "Web Url"
+    "Web Url",
   );
   newAttractionInfo.num_reviews = validation.checkStringForNumber(
     newAttractionInfo.num_reviews,
-    "Number of Reviews"
+    "Number of Reviews",
   );
   const attraction = await newAttractionInfo.save();
+  trip.attractions.push(attraction);
+  await trip.save();
   if (attraction) {
     return attraction;
   } else {
@@ -135,85 +139,85 @@ const updateAttractionById = async (id, updateAttractionBody) => {
     if (newAttractionInfo.location_id) {
       newAttractionInfo.location_id = validation.checkStringForNumber(
         newAttractionInfo.location_id,
-        "Location Id"
+        "Location Id",
       );
     }
     if (newAttractionInfo.name) {
       newAttractionInfo.name = validation.checkString(
         newAttractionInfo.name,
-        "Attraction Name"
+        "Attraction Name",
       );
     }
     if (newAttractionInfo.latitude) {
       newAttractionInfo.latitude = validation.checkStringForNumber(
         newAttractionInfo.latitude,
-        "Latitude"
+        "Latitude",
       );
     }
     if (newAttractionInfo.longitude) {
       newAttractionInfo.longitude = validation.checkStringForNumber(
         newAttractionInfo.longitude,
-        "Longitude"
+        "Longitude",
       );
     }
     if (newAttractionInfo.description) {
       newAttractionInfo.description = validation.checkString(
         newAttractionInfo.description,
-        "Description"
+        "Description",
       );
     }
     if (newAttractionInfo.image) {
       newAttractionInfo.image = validation.checkURL(
         newAttractionInfo.image,
-        "Image"
+        "Image",
       );
     }
     if (newAttractionInfo.category) {
       newAttractionInfo.category = validation.checkString(
         newAttractionInfo.category,
-        "Category"
+        "Category",
       );
     }
     if (newAttractionInfo.rating) {
       newAttractionInfo.rating = validation.checkStringForNumber(
         newAttractionInfo.rating,
-        "Rating"
+        "Rating",
       );
     }
     if (newAttractionInfo.price) {
       newAttractionInfo.price = validation.checkStringForNumber(
         newAttractionInfo.price,
-        "Price"
+        "Price",
       );
     }
     if (newAttractionInfo.website) {
       newAttractionInfo.website = validation.checkURL(
         newAttractionInfo.website,
-        "Website"
+        "Website",
       );
     }
     if (newAttractionInfo.phone) {
       newAttractionInfo.phone = validation.checkPhoneNumber(
         newAttractionInfo.phone,
-        "Phone"
+        "Phone",
       );
     }
     if (newAttractionInfo.address) {
       newAttractionInfo.address = validation.checkString(
         newAttractionInfo.address,
-        "Address"
+        "Address",
       );
     }
     if (newAttractionInfo.web_url) {
       newAttractionInfo.web_url = validation.checkURL(
         newAttractionInfo.web_url,
-        "Web Url"
+        "Web Url",
       );
     }
     if (newAttractionInfo.num_reviews) {
       newAttractionInfo.num_reviews = validation.checkStringForNumber(
         newAttractionInfo.num_reviews,
-        "Number of Reviews"
+        "Number of Reviews",
       );
     }
     const oldAttractionInfo = await Attraction.findById(id);
@@ -309,7 +313,7 @@ const updateAttractionById = async (id, updateAttractionBody) => {
       const updatedAttraction = await Attraction.findByIdAndUpdate(
         id,
         { $set: updatedAttraction },
-        { new: true }
+        { new: true },
       );
       if (updatedAttraction) {
         res.status(200).json(updatedAttraction);

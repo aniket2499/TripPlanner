@@ -20,19 +20,16 @@ const userReducer = (state = initialState, action) => {
       ];
 
     case "ADD_USER":
-      return [
-        {
-          id: payload.id,
-        },
-      ];
+      console.log(payload.id);
+      return [(state[0].id = payload.id)];
 
     case "GET_USER":
       return [...state];
 
     case "DELETE_USER":
-      copyState = [...state];
-      copyState = copyState.filter((x) => x.id !== payload.id);
-      return [...copyState];
+      state[0].id = null;
+      // copyState = copyState.filter((x) => x.id !== payload.id);
+      return [...state];
 
     default:
       return state;

@@ -29,9 +29,9 @@ router.get("/:id", async (req, res) => {
 
 router.get("/data/:location/:pg", getHotelsFromApi);
 
-router.post("/create", async (req, res) => {
+router.post("/create/:tripId", async (req, res) => {
   try {
-    const newHotel = await createHotel(req.body);
+    const newHotel = await createHotel(req.body, req.params.tripId);
     res.status(200).json(newHotel);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);
