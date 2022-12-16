@@ -37,7 +37,10 @@ const createTrip = (body) => {
 };
 
 const deleteTripById = (id) => {
+  console.log("deleteTripById" + id);
   return axios.delete(DATA_URL + `/trips/delete/${id}`).then((response) => {
+    console.log("deleteTripById" + id);
+
     return response.data;
   });
 };
@@ -62,11 +65,9 @@ const addAttractionToTrip = (id, body) => {
 };
 
 const removeAttractionFromTrip = (id, body) => {
-  const attractionid = body.attractionId;
+  const attractionid = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`, {
-      body: body,
-    })
+    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`)
     .then((response) => {
       return response.data;
     });
@@ -82,9 +83,9 @@ const addHotelToTrip = (id, body) => {
 };
 
 const removeHotelFromTrip = (id, body) => {
-  const hotelId = body.hotelId;
+  const hotelId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`)
     .then((response) => {
       return response.data;
     });
@@ -102,11 +103,9 @@ const addRestaurantToTrip = (id, body) => {
 };
 
 const removeRestaurantFromTrip = (id, body) => {
-  const restaurantId = body.restaurantId;
+  const restaurantId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`, {
-      body: body,
-    })
+    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`)
     .then((response) => {
       return response.data;
     });
