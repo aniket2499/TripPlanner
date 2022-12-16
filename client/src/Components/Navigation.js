@@ -221,7 +221,7 @@ const Navigation = () => {
 
       return () => clearTimeout(timer);
     } else {
-      navigate(`/home`);
+      // navigate(`/home`);
     }
   }, [searchTerm]);
 
