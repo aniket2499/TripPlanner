@@ -7,6 +7,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteHotel } from "../reducers/hotelReducer";
+import { saveAs } from "file-saver";
 import {
   Grid,
   Paper,
@@ -55,22 +56,21 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 import io from "socket.io-client";
 import Chat from "./Chat";
-
 import { initializeState as initHotel } from "../reducers/hotelReducer";
 import { initializeState as initRest } from "../reducers/restReducer";
 import { initializeState as initAttr } from "../reducers/attractionReducer";
 import { initializeState as initTrip } from "../reducers/tripsReducer";
+import axios from "axios";
+import { jsPDF } from "jspdf";
+// import { Base64 } from "js-base64";
 
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-
+// const base64 = new Base64();
 const socket = io.connect("http://localhost:3002");
 
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
-
   const [itinerary, setItinerary] = useState([]);
-
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
@@ -80,11 +80,32 @@ const MyTrip = () => {
   const [attractionState, setAttractions] = useState([]);
   const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
   const [notesValue, setNotesValue] = useState("");
-
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const tripId = useParams().id;
+  const hotels = useSelector((state) => state.hotels);
+  const restaurants = useSelector((state) => state.restaurants);
+  const attractions = useSelector((state) => state.attractions);
+  const trips = useSelector((state) => state.trips);
+  const currentTrip = trips.filter((trip) => trip._id == tripId);
+
+  const handleDownload = (e) => {
+    e.preventDefault();
+    const objectForPDF = {
+      trip: currentTrip,
+      hotels: hotels,
+      restaurants: restaurants,
+      attractions: attractions,
+    };
+    console.log("objectForPDF", objectForPDF);
+    tripService.createPDF(objectForPDF).then((res) => {
+      tripService.fetchPDF().then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+        saveAs(file, "trip.pdf");
+      });
+    });
+  };
 
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
@@ -117,12 +138,6 @@ const MyTrip = () => {
       socket.emit("join_room", id.id);
     }
   }, [id.id]);
-
-  const hotels = useSelector((state) => state.hotels);
-  const restaurants = useSelector((state) => state.restaurants);
-  const attractions = useSelector((state) => state.attractions);
-  const trips = useSelector((state) => state.trips);
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
 
   useEffect(() => {
     // storage.removeItem("persist:root");
@@ -270,6 +285,7 @@ const MyTrip = () => {
                           >
                             {`Trip to ${currentTrip[0].destination}`}
                           </Typography>
+
                           <Typography
                             variant="body1"
                             fontWeight="fontWeightBold"
@@ -285,6 +301,15 @@ const MyTrip = () => {
                 </Grid>
               </Paper>
             </Box>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDownload}
+              sx={{ mt: 2, ml: 2 }}
+            >
+              Download PDF
+            </Button>
             <Accordion>
               <AccordionSummary
                 style={{ flexDirection: "row-reverse" }}
@@ -300,7 +325,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {hotelState &&
+                      {hotelState.length > 0 &&
                         hotelState.map((hotel, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -341,7 +366,7 @@ const MyTrip = () => {
                                                 e,
                                                 tripId,
                                                 hotel._id,
-                                                hotel
+                                                hotel,
                                               )
                                             }
                                           >
@@ -411,7 +436,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant // hotels is an array of objects}
+                        restaurant, // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -441,11 +466,11 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      )
+                      ),
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
-                      {restaurantState &&
+                      {restaurantState.length > 0 &&
                         restaurantState.map((restaurant, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -484,7 +509,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteRestaurant(
                                                 tripId,
-                                                restaurant._id
+                                                restaurant._id,
                                               )
                                             }
                                           >
@@ -553,7 +578,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {attractionState &&
+                      {attractionState.length > 0 &&
                         attractionState.map((attraction, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -593,7 +618,7 @@ const MyTrip = () => {
                                               handleDeleteAttraction(
                                                 e,
                                                 tripId,
-                                                attraction._id
+                                                attraction._id,
                                               )
                                             }
                                           >

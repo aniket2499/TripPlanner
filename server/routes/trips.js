@@ -1,4 +1,7 @@
 const express = require("express");
+const pdf = require("html-pdf");
+const pdfTemplate = require("../documents");
+
 const router = express.Router();
 const {
   getAllTrips,
@@ -135,4 +138,30 @@ router.post("/:id/invite", async (req, res) => {
   }
 });
 
+router.post("/trips/pdf", async (req, res) => {
+  console.log("creating pdf");
+
+  try {
+    pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", (err) => {
+      if (err) {
+        console.log(err);
+        res.send(Promise.reject());
+      }
+      res.send(Promise.resolve());
+    });
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.get("/fetch/pdf", (req, res) => {
+  console.log("fetching pdf");
+  console.log(res.data);
+  try {
+    res.sendFile(`${__dirname}/result.pdf`);
+  } catch (e) {
+    console.log(e.stack);
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
 module.exports = router;
