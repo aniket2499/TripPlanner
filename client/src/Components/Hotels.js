@@ -34,6 +34,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Maps from "./Maps";
+import { useParams } from "react-router";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
@@ -42,9 +43,15 @@ const Hotels = () => {
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = React.useState(false);
   const [calendarDate, setCalendarDate] = useState(false);
+  const dispatch = useDispatch();
+  let rangeStartDate = null;
+  let rangeEndDate = null;
+
+  // const rangeStartDate = allState.trips[0].tripDate.startDate;
+  // const rangeEndDate = allState.trips[0].tripDate.endDate;
 
   // const id = useParams().tripid;
-  const id = "63934796bd080530bbdc3111";
+  // const id = "63934796bd080530bbdc3111";
 
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
@@ -76,8 +83,6 @@ const Hotels = () => {
 
         // dispatch(actions.addUser(id));
         // dispatch(actions.deleteUser());
-        console.log(allState);
-        console.log(data);
         setHotels(data);
         // dispatch(
         //   actions.addHotel(
@@ -97,7 +102,18 @@ const Hotels = () => {
     fetchData();
   }, []);
 
-  console.log(hotels);
+  const a = useParams().tripid;
+
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === a) {
+      rangeStartDate = allState.trips[i].tripDate.startDate;
+    }
+  }
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === a) {
+      rangeEndDate = allState.trips[i].tripDate.endDate;
+    }
+  }
 
   if (loading) {
     return (
@@ -333,10 +349,12 @@ const Hotels = () => {
                             <Button
                               id={hotel.dupeId}
                               onClick={(e) => {
-                                if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(id, {
-                                    dupeId: hotel.id,
-                                  });
+                                if (hotel.saved === false) {
+                                  // tripService.addHotelToTrip(a, {
+                                  //   dupeId: hotel.id,
+                                  // });
+                                  console.log("added to trip aniket");
+                                  dispatch(actions.addHotel(hotel));
                                 } else {
                                 }
                                 hotel.saved = !hotel.saved;
@@ -362,6 +380,8 @@ const Hotels = () => {
                               <DesktopDatePicker
                                 label="Select Date"
                                 disablePast
+                                maxDate={rangeEndDate}
+                                minDate={rangeStartDate}
                                 inputFormat="MM/DD/YYYY"
                                 value={hotel.startDate}
                                 onSelect={(event) => {
@@ -477,7 +497,7 @@ const Hotels = () => {
                               id={hotel.dupeId}
                               onClick={(e) => {
                                 if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(id, {
+                                  tripService.addHotelToTrip(a, {
                                     dupeId: hotel.id,
                                   });
                                 } else {
