@@ -69,7 +69,6 @@ const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
   const navigate = useNavigate();
-  console.log("Heelooo123");
 
   useEffect(() => {
     async function verifyTrip(id) {
@@ -82,7 +81,6 @@ const MyTrip = () => {
     }
     verifyTrip(id.id);
     if (currUser && id.id) {
-      console.log("hereefff");
       socket.emit("join_room", id.id);
     }
   }, [id.id]);
