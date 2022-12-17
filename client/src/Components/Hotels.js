@@ -39,6 +39,7 @@ import { useParams } from "react-router";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
+  const trips = useSelector((state) => state.trips);
 
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -56,6 +57,34 @@ const Hotels = () => {
 
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
+  const a = useParams().tripid;
+
+  const addHotelToBin = (tripId, hotelId, hotel) => {
+    // console.log("===========================");
+    // console.log(tripId, hotelId);
+    // console.log(hotel);
+    dispatch(actions.binHotel(tripId, hotelId));
+    // dispatch(actions.addHotel(hotel));
+  };
+
+  const removeHotelFromBin = (tripId, hotelId) => {
+    console.log("jammm");
+    dispatch(actions.unbinHotel(tripId, hotelId));
+    // dispatch(actions.deleteHotel(hotelId));
+  };
+
+  const findHotelInTrip = (hotelId) => {
+    // console.log(trips);
+    // console.log("+++++++++++++++++++++++++++++++++++++++");
+    // console.log(hotelId);
+    let currTrip = trips.find((x) => (x._id = a));
+    // console.log(currTrip);
+    let hotel = currTrip.hotels.find((h) => h == hotelId);
+    console.log(hotel);
+    return hotel ? true : false;
+  };
+
+  // console.log(findHotelInTrip());
 
   const handleOpen = (hotel) => {
     setOpen(true);
@@ -81,20 +110,7 @@ const Hotels = () => {
             "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
           );
         }
-
-        // dispatch(actions.addUser(id));
-        // dispatch(actions.deleteUser());
         setHotels(data);
-        // dispatch(
-        //   actions.addHotel(
-        //     1,
-        //     "SOHO SUITES",
-        //     40,
-        //     -73,
-        //     "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
-        //     3,
-        //   ),
-        // );
         setLoading(false);
       } catch (e) {
         return e;
@@ -102,8 +118,6 @@ const Hotels = () => {
     }
     fetchData();
   }, []);
-
-  const a = useParams().tripid;
 
   for (let i = 0; i < allState.trips.length; i++) {
     if (allState.trips[i]._id === a) {
@@ -347,28 +361,48 @@ const Hotels = () => {
                           </Grid>
 
                           <Grid item xs={12} sm={3} md={4} lg={5}>
-                            <Button
-                              id={hotel.dupeId}
-                              onClick={(e) => {
-                                if (hotel.saved === false) {
-                                  // tripService.addHotelToTrip(a, {
-                                  //   dupeId: hotel.id,
-                                  // });
-                                  console.log("added to trip aniket");
-                                  dispatch(addHotel(a, hotel));
-                                } else {
+                            {!findHotelInTrip(hotel.hotelId) && (
+                              <Button
+                                id={hotel.dupeId}
+                                onClick={() =>
+                                  addHotelToBin(a, hotel.hotelId, hotel)
                                 }
-                                console.log("saved button", savedButton);
-                                hotel.saved = !hotel.saved;
-                                setSavedButton(!savedButton);
+                              >
+                                <Typography variant="body2">
+                                  Add To Bin
+                                </Typography>
+                              </Button>
+                            )}
+                            {findHotelInTrip(hotel.hotelId) && (
+                              <Button
+                                id={hotel.dupeId}
+                                onClick={() =>
+                                  removeHotelFromBin(a, hotel.hotelId)
+                                }
+                              >
+                                <Typography variant="body2">
+                                  Remove From Bin
+                                </Typography>
+                              </Button>
+                            )}
+                            {/* <Button
+                              id={hotel.dupeId}
+                              onclick={(e) => {
+                                if (findHotelInTrip(hotel.id)) {
+                                  addHotelToBin(a, hotel.id);
+                                  addHotel(hotel);
+                                }
                               }}
-                            >
-                              {hotel.saved ? (
+                            > */}
+                            {/* <Typography variant="body2">
+                                Add To Bin
+                              </Typography> */}
+                            {/* {hotel.saved ? (
                                 <TurnedInIcon />
                               ) : (
                                 <TurnedInNotIcon />
-                              )}
-                              {hotel.saved ? (
+                              )} */}
+                            {/* {hotel.saved ? (
                                 <Typography variant="body2">
                                   Remove From Bin
                                 </Typography>
@@ -376,8 +410,8 @@ const Hotels = () => {
                                 <Typography variant="body2">
                                   Add To Bin
                                 </Typography>
-                              )}
-                            </Button>
+                              )} */}
+                            {/* </Button> */}
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DesktopDatePicker
                                 label="Select Date"
@@ -494,7 +528,7 @@ const Hotels = () => {
                         </div>
                         <Grid container sx={{ mt: "0.7rem" }}>
                           <Grid item xs={12} sm={9} md={8} lg={8}>
-                            <Button
+                            {/* <Button
                               variant="contained"
                               id={hotel.dupeId}
                               onClick={(e) => {
@@ -516,7 +550,7 @@ const Hotels = () => {
                               <Typography variant="body2">
                                 {hotel.saved ? "Remove From Bin" : "Add To Bin"}
                               </Typography>
-                            </Button>
+                            </Button> */}
                           </Grid>
                           <Grid item xs={12} sm={9} md={8} lg={4}>
                             <Stack direction="row">

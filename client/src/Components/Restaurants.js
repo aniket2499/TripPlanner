@@ -65,6 +65,7 @@ function Restaurants() {
           return;
         }
         let resData = [];
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
           if (data[i].location_id.length != 8) {
             continue;
@@ -92,7 +93,6 @@ function Restaurants() {
     getResData();
   }, []);
 
-
   if (loading) {
     return (
       <div>
@@ -113,7 +113,6 @@ function Restaurants() {
                 Top Restaurants In Your Area
               </Typography>
             </Box>
-
 
             <Card styles={{ padding: "1.5rem" }}>
               {restaurantData &&

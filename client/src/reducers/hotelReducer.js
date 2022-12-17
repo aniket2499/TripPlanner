@@ -13,7 +13,7 @@ function GGetUserInfo() {
 
 const initialState = [
   {
-    location_id: null,
+    hotelId: null,
     name: null,
     imageUrl: null,
     rating: null,
@@ -23,6 +23,7 @@ const initialState = [
 ];
 
 let copyState = null;
+let index = 0;
 
 const hotelReducer = (state = initialState, action) => {
   const { type, payload } = action;
@@ -35,11 +36,21 @@ const hotelReducer = (state = initialState, action) => {
 
     case "ADD_HOTEL":
       console.log("entered in the add hotel reducer");
-      console.log(payload);
-      return [...state, payload];
+      console.log(payload.obj);
+      const newHotel = {
+        hotelId: payload.obj.hotelId,
+        name: payload.obj.name,
+        imageUrl: payload.obj.image,
+        rating: payload.obj.rating,
+        latitude: payload.obj.geoCode.latitude,
+        longitude: payload.obj.geoCode.longitude,
+      };
+      return [...state, newHotel];
     // return [...state, payload.obj];
 
     case "DELETE_HOTEL":
+      console.log("============here================");
+      console.log(payload);
       copyState = state.filter((x) => x._id !== payload._id);
       return copyState;
 
@@ -66,23 +77,23 @@ const initializeState = (tripId) => {
   };
 };
 
-const addHotel = (tripId, hotelData) => {
-  return async (dispatch, getState) => {
-    let obj = {
-      location_id: hotelData.dupeId,
-      name: hotelData.name,
-      image: hotelData.image,
-      latitude: hotelData.geoCode.latitude,
-      longitude: hotelData.geoCode.longitude,
-      rating: hotelData.rating,
-    };
-    let data = await hotelService.createHotel(tripId, obj);
-    dispatch({
-      type: "ADD_HOTEL",
-      payload: data,
-    });
-  };
-};
+// const addHotel = (tripId, hotelData) => {
+//   return async (dispatch, getState) => {
+//     let obj = {
+//       location_id: hotelData.dupeId,
+//       name: hotelData.name,
+//       image: hotelData.image,
+//       latitude: hotelData.geoCode.latitude,
+//       longitude: hotelData.geoCode.longitude,
+//       rating: hotelData.rating,
+//     };
+//     let data = await hotelService.createHotel(tripId, obj);
+//     dispatch({
+//       type: "ADD_HOTEL",
+//       payload: data,
+//     });
+//   };
+// };
 
 const deleteHotel = (tripId, hotelId, hotel) => {
   return async (dispatch, getState) => {
@@ -93,6 +104,6 @@ const deleteHotel = (tripId, hotelId, hotel) => {
     });
   };
 };
-export { initializeState, addHotel, deleteHotel };
+export { initializeState, deleteHotel };
 
 export default hotelReducer;

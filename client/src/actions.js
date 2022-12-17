@@ -77,6 +77,22 @@ const deleteHotel = (location_id) => ({
   },
 });
 
+const binHotel = (tripId, location_id) => ({
+  type: "BIN_HOTEL",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
+const unbinHotel = (tripId, location_id) => ({
+  type: "UNBIN_HOTEL",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
 const addRest = (
   location_id,
   name,
@@ -158,6 +174,8 @@ let exports = {
   getUser,
   initializeUser,
   initializeTrip,
+  binHotel,
+  unbinHotel,
 };
 
 export default exports;
