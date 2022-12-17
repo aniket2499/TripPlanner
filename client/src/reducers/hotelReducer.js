@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
+import storage from "redux-persist/lib/storage";
 
 function GGetUserInfo() {
   const currUser = useContext(AuthContext);
@@ -24,7 +25,7 @@ const initialState = [
 
 let copyState = null;
 
-const hotelReducer = (state = initialState, action) => {
+const hotelReducer = (state = [], action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -34,12 +35,11 @@ const hotelReducer = (state = initialState, action) => {
       return state;
 
     case "ADD_HOTEL":
-      console.log("entered in the add hotel reducer");
-      console.log(payload);
       return [...state, payload];
     // return [...state, payload.obj];
 
     case "DELETE_HOTEL":
+      // storage.removeItem("persist:root");
       copyState = state.filter((x) => x._id !== payload._id);
       return copyState;
 
@@ -60,9 +60,6 @@ const initializeState = (tripId) => {
       type: "INITIALIZE_HOTEL",
       payload: hotelsData,
     });
-    // console.log("entered in the initalization stat:" + getState().user[0].id);
-    // filtering hotels for the current trip
-    //
   };
 };
 
