@@ -44,6 +44,7 @@ const createTrip = async (userId, tripBody) => {
       startDate: startDate,
       endDate: endDate,
     },
+    notes: "",
   };
 
   let loop = new Date(startDate);
@@ -104,94 +105,21 @@ const updateTripById = async (id, updateTripBody) => {
       status: 404,
     };
   } else {
-    const newTripInfo = updateTripBody;
-    let updatedTrip = { tripDate: {} };
-
+    const newTripInfo = updateTripBody.body;
     id = validation.checkId(id, "TripId");
-    if (newTripInfo.tripName) {
-      newTripInfo.tripName = validation.checkString(
-        newTripInfo.tripName,
-        "TripName",
-      );
-    }
-    if (newTripInfo.cur_location) {
-      newTripInfo.cur_location = validation.checkString(
-        newTripInfo.cur_location,
-        "CurrLocation",
-      );
-    }
-    if (newTripInfo.destination) {
-      newTripInfo.destination = validation.checkString(
-        newTripInfo.destination,
-        "Destination",
-      );
-    }
-    if (newTripInfo.tripDate.startDate) {
-      newTripInfo.tripDate.startDate = validation.checkDate(
-        newTripInfo.tripDate.startDate,
-        "StartDate",
-      );
-    }
-    if (newTripInfo.tripDate.endDate) {
-      newTripInfo.tripDate.endDate = validation.checkDate(
-        newTripInfo.tripDate.endDate,
-        "EndDate",
-      );
-    }
     if (newTripInfo.notes) {
       newTripInfo.notes = validation.checkString(newTripInfo.notes, "Notes");
+      trip.notes = newTripInfo.notes;
     }
-
-    const oldTripInfo = await Trip.findById(id);
-    if (newTripInfo.tripName && newTripInfo.tripName !== oldTripInfo.tripName) {
-      updatedTrip.tripName = newTripInfo.tripName;
-    }
-    if (
-      newTripInfo.cur_location &&
-      newTripInfo.cur_location !== oldTripInfo.cur_location
-    ) {
-      updatedTrip.cur_location = newTripInfo.cur_location;
-    }
-    if (newTripInfo.destination !== oldTripInfo.destination) {
-      updatedTrip.destination = newTripInfo.destination;
-    }
-    if (newTripInfo.tripDate.startDate !== oldTripInfo.tripDate.startDate) {
-      updatedTrip.tripDate.startDate = newTripInfo.tripDate.startDate;
-    }
-    if (newTripInfo.tripDate.endDate !== oldTripInfo.tripDate.endDate) {
-      updatedTrip.tripDate.endDate = newTripInfo.tripDate.endDate;
-    }
-    if (newTripInfo.notes && newTripInfo.notes !== oldTripInfo.notes) {
-      updatedTrip.notes = newTripInfo.notes;
-    }
-
-    if (Object.keys(updatedTrip).length !== 0) {
-      let startDate = new Date(updateTripBody.tripDate.startDate);
-      let endDate = new Date(updateTripBody.tripDate.endDate);
-      let loop = new Date(startDate);
-      const updateTrip = await Trip.findByIdAndUpdate(
+    if (newTripInfo.notes) {
+      const updatedTrip = await Trip.findByIdAndUpdate(
         id,
-        { $set: updateTripBody },
-        { new: true },
+        { $set: trip },
+        { new: true }
       );
 
-      if (updateTrip) {
-        let trip = await Trip.findById(updateTrip._id);
-        trip.itinerary = [];
-        while (loop <= endDate) {
-          let date = loop.toISOString().split("T")[0].split("-");
-          let day = date[2];
-          let month = date[1];
-          let year = date[0];
-          date = `${month}/${day}/${year}`;
-          const itineraryObject = {
-            date: date,
-          };
-          trip.itinerary.push(itineraryObject);
-          loop.setDate(loop.getDate() + 1);
-        }
-        await trip.save();
-        return trip;
+      if (updatedTrip) {
+        return updatedTrip;
       } else {
         throw {
           message: `Trip with ID: ${id} was not updated`,
@@ -200,7 +128,7 @@ const updateTripById = async (id, updateTripBody) => {
       }
     } else {
       throw {
-        message: `No changes were made to Trip with ID: ${id}`,
+        message: `No changes were made to the Trip with ID: ${id}`,
         status: 400,
       };
     }

@@ -125,7 +125,7 @@ const MyTrip = () => {
     }
 
     fetchData(id.id);
-     dispatch(initTrip());
+    dispatch(initTrip());
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
@@ -158,9 +158,14 @@ const MyTrip = () => {
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
-      notes: setNotesValue,
+      notes: notesValue,
     };
-    await tripService.updateTripById(id.id, newObj);
+    console.log(newObj, "Inside handle");
+    try {
+      await tripService.updateTripById(id.id, newObj);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const styles = {
@@ -335,7 +340,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteHotel(
                                                 tripId,
-                                                hotel._id,
+                                                hotel._id
                                               )
                                             }
                                           >
@@ -403,7 +408,6 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-
                     {restaurants.map(
                       (
                         restaurant // hotels is an array of objects}
@@ -479,7 +483,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteRestaurant(
                                                 tripId,
-                                                restaurant._id,
+                                                restaurant._id
                                               )
                                             }
                                           >
@@ -531,7 +535,6 @@ const MyTrip = () => {
                           </div>
                         ))}
                     </Card>
-
                   </Grid>
                 </Paper>
               </AccordionDetails>
@@ -589,7 +592,7 @@ const MyTrip = () => {
                                               handleDeleteAttraction(
                                                 e,
                                                 tripId,
-                                                attraction._id,
+                                                attraction._id
                                               )
                                             }
                                           >

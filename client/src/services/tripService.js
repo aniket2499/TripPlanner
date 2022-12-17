@@ -38,6 +38,7 @@ const deleteTripById = (id) => {
 };
 
 const updateTripById = (id, body) => {
+  console.log(id, body, "inside services");
   return axios
     .patch(DATA_URL + `/trips/update/${id}`, { body: body })
     .then((response) => {
