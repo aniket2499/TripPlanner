@@ -22,7 +22,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 function SignUpInvite() {
   const currUser = useContext(AuthContext);
   const { tripId } = useParams();
-  console.log(tripId, "trip");
   const [pswdMatch, setPswdMatch] = useState("");
   const [finalPswd, setFinalPswd] = useState("");
   const [userDispName, setUserDispName] = useState("");
@@ -102,12 +101,11 @@ function SignUpInvite() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         // alert("User Created Successfully");
         handleOpen();
       } catch (error) {
-        console.log(error.message);
         if (error.message === userAlreadyExists) {
           document.getElementById("error").innerHTML =
             "User already exists. Please Login";
@@ -134,12 +132,6 @@ function SignUpInvite() {
   };
 
   const handleValidFormData = () => {
-    console.log(document.getElementById("pwd1").value);
-    console.log(document.getElementById("pwd2").value);
-    console.log(
-      document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value
-    );
     if (
       document.getElementById("pwd1").value !==
       document.getElementById("pwd2").value
@@ -157,7 +149,6 @@ function SignUpInvite() {
     //   trips: tripsAdded,
     // };
     // console.log(newObj, "====");
-    console.log(tripsAdded, "===");
     addToMongo({
       _id: currUser._delegate.uid,
       displayName: userDispName,

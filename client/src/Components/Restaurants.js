@@ -40,7 +40,6 @@ function Restaurants() {
         if (data.length === 0) {
           return;
         }
-        console.log(data);
         let resData = [];
         for (let i = 0; i < data.length; i++) {
           if (data[i].location_id.length != 8) {
@@ -65,8 +64,6 @@ function Restaurants() {
     }
     getResData();
   }, []);
-
-  console.log("Restaurants.js");
 
   return <div></div>;
 }

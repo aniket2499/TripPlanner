@@ -90,14 +90,12 @@ function InviteToTrip() {
       await tripService
         .inviteUserToTrip(trip_id, newData)
         .then((res) => {
-          console.log(res);
           navigate(`/my-trips/${trip_id}`);
         })
         .catch((err) => {
           document.getElementById("error").innerHTML =
             err.response.data.message;
           document.getElementById("error").style.color = "red";
-          console.log(err);
         });
     } else {
       if (!email) {

@@ -20,6 +20,7 @@ const initialState = [
 ];
 
 let copyState = null;
+let index = 0;
 
 const attractionReducer = (state = initialState, action) => {
   const { type, payload } = action;
@@ -48,13 +49,10 @@ const attractionReducer = (state = initialState, action) => {
           website: payload.website,
         },
       ];
-
     case "DELETE_ATTRACTION":
-      copyState = [...state];
-      copyState = copyState.filter(
-        (x) => x.location_id !== payload.location_id,
-      );
-      return [...copyState];
+      index = state.findIndex((x) => x._id === payload.id);
+      state.splice(index, 1);
+      return state;
 
     default:
       return state;
@@ -62,10 +60,8 @@ const attractionReducer = (state = initialState, action) => {
 };
 
 const initializeState = (tripId) => {
-  console.log("trip id here in attractionreducer:" + tripId);
   return async (dispatch, getState) => {
     let trip = getState().trips.filter((x) => x._id === tripId);
-    console.log("current Trip++++++++++++++" + JSON.stringify(trip));
     let attractionsData = [];
     for (let i = 0; i < trip[0].attractions.length; i++) {
       let attraction = await attractionService.getAttractionById(
@@ -73,15 +69,10 @@ const initializeState = (tripId) => {
       );
       attractionsData.push(attraction);
     }
-    console.log("attractions aniket:" + attractionsData);
     dispatch({
       type: "INITIALIZE_ATTRACTION",
       payload: attractionsData,
     });
-    // console.log("entered in the initalization stat:" + getState().user[0].id);
-    // filtering hotels for the current trip
-
-    //
   };
 };
 
