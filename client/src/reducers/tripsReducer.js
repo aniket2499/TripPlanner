@@ -50,18 +50,17 @@ const tripsReducer = (state = [], action) => {
 
     case "BIN_HOTEL":
       copyState = [...state];
-      // console.log("payload");
-      // console.log(payload);
       index = copyState.find((x) => x._id == payload.tripId);
-      console.log("index");
-      console.log(index);
       index.hotels.push(payload.location_id);
       return [...copyState];
 
     case "UNBIN_HOTEL":
       copyState = [...state];
       index = copyState.find((x) => x._id == payload.tripId);
-      index.hotel = index.hotels.filter((x) => (x = payload.location_id));
+      const elemIndex = index.hotels.indexOf(payload.location_id);
+      if (elemIndex > -1) {
+        index.hotels.splice(elemIndex, 1);
+      }
       return [...copyState];
 
     default:
