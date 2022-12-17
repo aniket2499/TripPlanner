@@ -84,7 +84,6 @@ const addHotel = (tripId, hotelData) => {
     };
     let data = await hotelService.createHotel(tripId, obj);
     console.log("hotel is aniket: " + JSON.stringify(data));
-    await tripservice.addHotelToTrip(tripId, hotelData._id);
 
     console.log("hotel is aniket: " + hotelData);
     dispatch({

@@ -15,7 +15,7 @@ const getHotelById = (id) => {
 const createHotel = (tripId, body) => {
   console.log("hotel is aniket: " + JSON.stringify(body));
   return axios
-    .post(DATA_URL + `/hotels/create/${tripId}`, { body: body })
+    .post(DATA_URL + `/hotels/create/${tripId}`, body)
     .then((response) => {
       console.log("body is aniket: " + JSON.stringify(response.data));
       return response.data;
