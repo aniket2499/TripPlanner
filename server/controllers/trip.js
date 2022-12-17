@@ -218,7 +218,7 @@ const addHotelToTrip = async (req, res) => {
     };
   } else {
     const hotel = await Hotel.findById(req.params.hotelid);
-    if (!attraction) {
+    if (!hotel) {
       throw {
         message: `Hotel not found`,
         status: 404,

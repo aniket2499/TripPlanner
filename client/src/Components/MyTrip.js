@@ -6,6 +6,7 @@ import "./chat.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteHotel } from "../reducers/hotelReducer";
 import {
   Grid,
   Paper,
@@ -85,10 +86,10 @@ const MyTrip = () => {
   const [open, setOpen] = React.useState(false);
   const tripId = useParams().id;
 
-  const handleDeleteHotel = (tripId, hotelId) => {
-    tripService.removeHotelFromTrip(tripId, hotelId).then((res) => {
-      // dispatch(actions.deleteHotel(id));
-    });
+  const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
+    e.preventDefault();
+    console.log("edit hotel");
+    dispatch(deleteHotel(tripId, hotelId, hotel));
   };
 
   const handleDeleteRestaurant = (tripId, restaurantId) => {
@@ -117,6 +118,12 @@ const MyTrip = () => {
     }
   }, [id.id]);
 
+  const hotels = useSelector((state) => state.hotels);
+  const restaurants = useSelector((state) => state.restaurants);
+  const attractions = useSelector((state) => state.attractions);
+  const trips = useSelector((state) => state.trips);
+  const currentTrip = trips.filter((trip) => trip._id == tripId);
+
   useEffect(() => {
     // storage.removeItem("persist:root");
     async function fetchData(id) {
@@ -125,23 +132,18 @@ const MyTrip = () => {
     }
 
     fetchData(id.id);
+
     dispatch(initTrip());
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
-    for (let i = 0; i < hotels.length; i++) {
-      hotels[i].calenderButton = false;
-    }
+    // for (let i = 0; i < hotels.length; i++) {
+    //   hotels[i].calenderButton = false;
+    // }
     setRestaurants(restaurants);
     setAttractions(attractions);
     setHotels(hotels);
-  }, []);
-
-  const hotels = useSelector((state) => state.hotels);
-  const restaurants = useSelector((state) => state.restaurants);
-  const attractions = useSelector((state) => state.attractions);
-  const trips = useSelector((state) => state.trips);
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
+  }, [id]);
 
   // getting start and end date from current trip
 
@@ -176,10 +178,7 @@ const MyTrip = () => {
     },
   };
   // console.log("tripId is " + tripId);
-  useEffect(() => {
-    const getTripData = async () => {};
-    getTripData();
-  }, []);
+
   return (
     <div>
       <Grid container>
@@ -337,10 +336,13 @@ const MyTrip = () => {
                                         >
                                           <Button
                                             color="primary"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                               handleDeleteHotel(
+                                                e,
                                                 tripId,
-                                                hotel._id
+                                                hotel._id,
+                                                hotel,
+
                                               )
                                             }
                                           >
@@ -410,7 +412,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant // hotels is an array of objects}
+                        restaurant, // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -440,7 +442,7 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      )
+                      ),
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
