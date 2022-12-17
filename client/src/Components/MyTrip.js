@@ -160,9 +160,14 @@ const MyTrip = () => {
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
-      notes: setNotesValue,
+      notes: notesValue,
     };
-    await tripService.updateTripById(id.id, newObj);
+    console.log(newObj, "Inside handle");
+    try {
+      await tripService.updateTripById(id.id, newObj);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const styles = {
@@ -337,6 +342,7 @@ const MyTrip = () => {
                                                 tripId,
                                                 hotel._id,
                                                 hotel,
+
                                               )
                                             }
                                           >
@@ -479,7 +485,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteRestaurant(
                                                 tripId,
-                                                restaurant._id,
+                                                restaurant._id
                                               )
                                             }
                                           >
@@ -588,7 +594,7 @@ const MyTrip = () => {
                                               handleDeleteAttraction(
                                                 e,
                                                 tripId,
-                                                attraction._id,
+                                                attraction._id
                                               )
                                             }
                                           >
