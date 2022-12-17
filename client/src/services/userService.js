@@ -13,7 +13,6 @@ const getUserById = async (id) => {
 };
 
 const createUser = (body) => {
-  console.log("==body===", body);
   return axios
     .post(DATA_URL + "/users/create", { body: body })
     .then((response) => {

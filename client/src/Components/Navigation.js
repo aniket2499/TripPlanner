@@ -212,7 +212,6 @@ const Navigation = () => {
   useEffect(() => {
     if (searchTerm) {
       const timer = setTimeout(() => {
-        console.log(searchTerm);
         // navigate(`/search/${searchTerm}`);
         return navigate(`/search/searchTerm`, {
           state: {

@@ -54,9 +54,12 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 import io from "socket.io-client";
 import Chat from "./Chat";
+
 import { initializeState as initHotel } from "../reducers/hotelReducer";
 import { initializeState as initRest } from "../reducers/restReducer";
 import { initializeState as initAttr } from "../reducers/attractionReducer";
+import { initializeState as initTrip } from "../reducers/tripsReducer";
+
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const socket = io.connect("http://localhost:3002");
@@ -83,27 +86,24 @@ const MyTrip = () => {
   const tripId = useParams().id;
 
   const handleDeleteHotel = (tripId, hotelId) => {
-    console.log("delete hotel id is " + hotelId);
     tripService.removeHotelFromTrip(tripId, hotelId).then((res) => {
-      console.log("delete hotel res is " + res);
-      dispatch(actions.deleteHotel(id));
+      // dispatch(actions.deleteHotel(id));
     });
   };
 
   const handleDeleteRestaurant = (tripId, restaurantId) => {
-    console.log("delete restaurant id is " + restaurantId);
-    tripService.removeRestaurantFromTrip(tripId, restaurantId).then((res) => {
-      console.log("delete restaurant res is " + res);
-      dispatch(actions.deleteRestaurant(id));
-    });
+    dispatch(actions.deleteRest(restaurantId));
+    tripService
+      .removeRestaurantFromTrip(tripId, restaurantId)
+      .then((res) => {});
   };
 
-  const handleDeleteAttraction = (tripId, attractionId) => {
-    console.log("delete attraction id is " + attractionId);
-    tripService.removeAttractionFromTrip(tripId, attractionId).then((res) => {
-      console.log("delete attraction res is " + res);
-      dispatch(actions.deleteAttraction(id));
-    });
+  const handleDeleteAttraction = (e, tripId, attractionId) => {
+    e.preventDefault();
+    tripService
+      .removeAttractionFromTrip(tripId, attractionId)
+      .then((res) => {});
+    dispatch(actions.deleteAttratcion(attractionId));
   };
 
   const joinRoom = (id) => {
@@ -125,6 +125,7 @@ const MyTrip = () => {
     }
 
     fetchData(id.id);
+     dispatch(initTrip());
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
@@ -139,22 +140,14 @@ const MyTrip = () => {
   const hotels = useSelector((state) => state.hotels);
   const restaurants = useSelector((state) => state.restaurants);
   const attractions = useSelector((state) => state.attractions);
-  // console.log("attractions for current trip" + JSON.stringify(attractions));
   const trips = useSelector((state) => state.trips);
-  console.log("trips double check aniket:" + JSON.stringify(trips));
   const currentTrip = trips.filter((trip) => trip._id == tripId);
-  console.log("currentTrip" + JSON.stringify(currentTrip));
-  console.log(hotels, "state.hotels");
-  console.log(restaurants, "restaurants");
+
   // getting start and end date from current trip
 
   const startDate = moment(currentTrip[0].tripDate.startDate);
   const endDate = moment(currentTrip[0].tripDate.endDate);
   let day = startDate;
-
-  console.log(startDate, "startDate");
-  // const startDate = moment("2022-07-01");
-  // const endDate = moment("2022-07-05");
   while (day <= endDate) {
     days.push(day.format("YYYY-MM-DD"));
     day = day.clone().add(1, "d");
@@ -177,7 +170,6 @@ const MyTrip = () => {
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
-  console.log("itinerary" + JSON.stringify(itinerary));
   // console.log("tripId is " + tripId);
   useEffect(() => {
     const getTripData = async () => {};
@@ -593,8 +585,9 @@ const MyTrip = () => {
                                         >
                                           <Button
                                             color="primary"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                               handleDeleteAttraction(
+                                                e,
                                                 tripId,
                                                 attraction._id,
                                               )

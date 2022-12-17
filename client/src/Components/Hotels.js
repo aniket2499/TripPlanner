@@ -35,7 +35,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Maps from "./Maps";
 import { useParams } from "react-router";
-import { addHotel } from "../reducers/hotelReducer";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
@@ -77,9 +76,6 @@ const Hotels = () => {
           data[i].saved = false;
           data[i].pickerOpen = false;
           data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
-          console.log(
-            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
-          );
         }
 
         // dispatch(actions.addUser(id));
@@ -354,9 +350,7 @@ const Hotels = () => {
                                   // tripService.addHotelToTrip(a, {
                                   //   dupeId: hotel.id,
                                   // });
-                                  console.log("added to trip aniket");
-                                  dispatch(addHotel(a, hotel));
-                                  // dispatch(actions.addHotel(hotel));
+                                  dispatch(actions.addHotel(hotel));
                                 } else {
                                 }
                                 hotel.saved = !hotel.saved;
@@ -390,15 +384,9 @@ const Hotels = () => {
                                   event.preventDefault();
                                 }}
                                 onChange={(newValue) => {
-                                  console.log(
-                                    "aniket new value" + hotel.startDate,
-                                  );
                                   hotel.startDate =
                                     dayjs(newValue).format("MM/DD/YYYY");
                                   setCalendarDate(!calendarDate);
-                                  console.log(
-                                    "aniket new value after" + hotel.startDate,
-                                  );
                                 }}
                                 id="startDate"
                                 renderInput={(params) => (

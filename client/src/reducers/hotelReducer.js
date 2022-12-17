@@ -6,9 +6,7 @@ import tripservice from "../services/tripService";
 
 function GGetUserInfo() {
   const currUser = useContext(AuthContext);
-  console.log("hehrehrberbej");
   if (currUser) {
-    console.log(currUser);
     return currUser;
   } else return null;
 }
@@ -36,7 +34,6 @@ const hotelReducer = (state = initialState, action) => {
       return state;
 
     case "ADD_HOTEL":
-      console.log("hotel reducer:" + payload.obj);
       return [...state, payload.obj];
     // return [...state, payload.obj];
 
@@ -55,13 +52,11 @@ const hotelReducer = (state = initialState, action) => {
 const initializeState = (tripId) => {
   return async (dispatch, getState) => {
     let trip = getState().trips.filter((x) => x._id === tripId);
-    console.log("hotels aniket trips:" + JSON.stringify(trip[0].hotels));
     let hotelsData = [];
     for (let i = 0; i < trip[0].hotels.length; i++) {
       let hotel = await hotelService.getHotelById(trip[0].hotels[i]);
       hotelsData.push(hotel);
     }
-    console.log("hotels aniket:" + hotelsData);
     dispatch({
       type: "INITIALIZE_HOTEL",
       payload: hotelsData,

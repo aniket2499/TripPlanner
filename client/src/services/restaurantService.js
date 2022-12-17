@@ -7,9 +7,7 @@ const getAllRestaurants = () => {
   });
 };
 const getRestaurantById = (id) => {
-  console.log("id in service shankar:" + id);
   return axios.get(DATA_URL + `/restaurants/${id}`).then((response) => {
-    console.log("response in service shankar:" + response.data);
     return response.data;
   });
 };

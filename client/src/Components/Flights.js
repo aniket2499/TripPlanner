@@ -257,7 +257,6 @@ function Flights(props) {
     fetchFlights();
     setIndex(0);
   };
-  console.log(flights);
 
   return (
     <div style={{ paddingTop: "2rem" }}>
@@ -430,9 +429,7 @@ function Flights(props) {
                                 ? () => {
                                     index = index + 1;
                                   }
-                                : () => {
-                                    console.log(index + 1);
-                                  }}
+                                : () => {}}
                             </div>
                           ))}
                         </List>

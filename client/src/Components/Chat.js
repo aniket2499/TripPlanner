@@ -24,7 +24,6 @@ const Chat = ({ socket, id }) => {
       setMessageList((list) => [...list, newObj]);
     });
   });
-  console.log(messageList);
   const sendMessage = async () => {
     if (currentMessage !== "") {
       // console.log(currentMessage);
@@ -43,7 +42,6 @@ const Chat = ({ socket, id }) => {
     }
   };
   useEffect(() => {
-    console.log("Here");
     socket.on("receive_message", (data) => {
       console.log(data, "==");
       setMessageList((list) => [...list, data]);
