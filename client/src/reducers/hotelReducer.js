@@ -2,6 +2,7 @@
 import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
+import tripservice from "../services/tripService";
 
 function GGetUserInfo() {
   const currUser = useContext(AuthContext);
@@ -35,20 +36,8 @@ const hotelReducer = (state = initialState, action) => {
       return state;
 
     case "ADD_HOTEL":
-      console.log("GetUserInfo");
-      const info = GGetUserInfo();
-      console.log(info);
-      return [
-        ...state,
-        {
-          location_id: payload.location_id,
-          name: payload.name,
-          imageUrl: payload.imageUrl,
-          rating: payload.rating,
-          latitude: payload.latitude,
-          longitude: payload.longitude,
-        },
-      ];
+      console.log("hotel reducer:" + payload.obj);
+      return [...state, payload.obj];
 
     case "DELETE_HOTEL":
       copyState = [...state];
@@ -78,11 +67,22 @@ const initializeState = (tripId) => {
     });
     // console.log("entered in the initalization stat:" + getState().user[0].id);
     // filtering hotels for the current trip
-
     //
   };
 };
 
-export { initializeState };
+const addHotel = (tripId, hotelId) => {
+  return async (dispatch, getState) => {
+    let trip = getState().trips.filter((x) => x._id === tripId);
+    let hotel = await tripservice.addHotelToTrip(tripId, hotelId);
+    trip[0].hotels.push(hotelId);
+    dispatch({
+      type: "ADD_HOTEL",
+      payload: hotel,
+    });
+  };
+};
+
+export { initializeState, addHotel };
 
 export default hotelReducer;

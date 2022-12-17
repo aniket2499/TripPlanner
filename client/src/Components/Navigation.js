@@ -175,11 +175,9 @@ const Navigation = () => {
   const onLoad = (autoC) => setAutocomplete(autoC);
 
   const onPlaceChanged = () => {
-    setDestination(autocomplete.gm_accessors_.place.jj.formattedPrediction);
     const lat = autocomplete.getPlace().geometry.location.lat();
     const lng = autocomplete.getPlace().geometry.location.lng();
-    console.log(lat, lng);
-
+    // console.log(lat, lng);
     setCoords({ lat, lng });
   };
 
@@ -216,10 +214,18 @@ const Navigation = () => {
       const timer = setTimeout(() => {
         console.log(searchTerm);
         // navigate(`/search/${searchTerm}`);
-        return <Search />;
+        return navigate(`/search/searchTerm`, {
+          state: {
+            longitude: coords.lng,
+            latitude: coords.lat,
+          },
+        });
       }, 500);
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        // setSearchTerm("");
+      };
     } else {
       // navigate(`/home`);
     }
@@ -265,22 +271,27 @@ const Navigation = () => {
       <Toolbar style={styles.toolbar} className="toolbar">
         {tripPlanner}
         <div style={{ display: "flex" }}>
-          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <TextField
-              id="search-box"
-              label="Search"
-              variant="outlined"
-              style={{
-                marginTop: "0.5rem",
-                width: "12rem",
-              }}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onSubmit={(e) => {
-                e.preventDefault();
-                // setSearchTerm(e.target.value);
-              }}
-            />
-          </Autocomplete>
+          <form
+            method="POST"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearchTerm(e.target.value);
+            }}
+            name="formName"
+            className="center"
+          >
+            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+              <TextField
+                id="search-box"
+                label="Search"
+                variant="outlined"
+                style={{
+                  marginTop: "0.5rem",
+                  width: "12rem",
+                }}
+              />
+            </Autocomplete>
+          </form>
 
           {getMenuButtons()}
           <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>

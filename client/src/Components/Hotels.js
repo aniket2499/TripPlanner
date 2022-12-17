@@ -29,7 +29,12 @@ import actions from "../actions";
 import hotelsData from "../services/getApiData";
 import { useEffect, useState } from "react";
 import tripService from "../services/tripService";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Maps from "./Maps";
+import { useParams } from "react-router";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
@@ -37,9 +42,16 @@ const Hotels = () => {
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = React.useState(false);
+  const [calendarDate, setCalendarDate] = useState(false);
+  const dispatch = useDispatch();
+  let rangeStartDate = null;
+  let rangeEndDate = null;
+
+  // const rangeStartDate = allState.trips[0].tripDate.startDate;
+  // const rangeEndDate = allState.trips[0].tripDate.endDate;
 
   // const id = useParams().tripid;
-  const id = "63934796bd080530bbdc3111";
+  // const id = "63934796bd080530bbdc3111";
 
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
@@ -62,12 +74,15 @@ const Hotels = () => {
         }
         for (let i = 0; i < data.length; i++) {
           data[i].saved = false;
+          data[i].pickerOpen = false;
+          data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
+          console.log(
+            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+          );
         }
 
         // dispatch(actions.addUser(id));
         // dispatch(actions.deleteUser());
-        console.log(allState);
-        console.log(data);
         setHotels(data);
         // dispatch(
         //   actions.addHotel(
@@ -86,7 +101,20 @@ const Hotels = () => {
     }
     fetchData();
   }, []);
-  console.log(hotels);
+
+  const a = useParams().tripid;
+
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === a) {
+      rangeStartDate = allState.trips[i].tripDate.startDate;
+    }
+  }
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === a) {
+      rangeEndDate = allState.trips[i].tripDate.endDate;
+    }
+  }
+
   if (loading) {
     return (
       <div>
@@ -321,10 +349,12 @@ const Hotels = () => {
                             <Button
                               id={hotel.dupeId}
                               onClick={(e) => {
-                                if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(id, {
-                                    dupeId: hotel.id,
-                                  });
+                                if (hotel.saved === false) {
+                                  // tripService.addHotelToTrip(a, {
+                                  //   dupeId: hotel.id,
+                                  // });
+                                  console.log("added to trip aniket");
+                                  dispatch(actions.addHotel(hotel));
                                 } else {
                                 }
                                 hotel.saved = !hotel.saved;
@@ -346,6 +376,39 @@ const Hotels = () => {
                                 </Typography>
                               )}
                             </Button>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DesktopDatePicker
+                                label="Select Date"
+                                disablePast
+                                maxDate={rangeEndDate}
+                                minDate={rangeStartDate}
+                                inputFormat="MM/DD/YYYY"
+                                value={hotel.startDate}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                }}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + hotel.startDate,
+                                  );
+                                  hotel.startDate =
+                                    dayjs(newValue).format("MM/DD/YYYY");
+                                  setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" + hotel.startDate,
+                                  );
+                                }}
+                                id="startDate"
+                                renderInput={(params) => (
+                                  <TextField
+                                    sx={{ width: "16rem" }}
+                                    margin="normal"
+                                    {...params}
+                                    // onChange={handleStartDateChange}
+                                  />
+                                )}
+                              />
+                            </LocalizationProvider>
 
                             <CardMedia
                               component="img"
@@ -434,7 +497,7 @@ const Hotels = () => {
                               id={hotel.dupeId}
                               onClick={(e) => {
                                 if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(id, {
+                                  tripService.addHotelToTrip(a, {
                                     dupeId: hotel.id,
                                   });
                                 } else {

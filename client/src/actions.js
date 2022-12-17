@@ -63,22 +63,10 @@ const deleteAttratcion = (location_id) => ({
   },
 });
 
-const addHotel = (
-  location_id,
-  name,
-  latitude,
-  longitude,
-  imageUrl,
-  rating,
-) => ({
+const addHotel = (obj) => ({
   type: "ADD_HOTEL",
   payload: {
-    location_id: location_id,
-    name: name,
-    latitude: latitude,
-    longitude: longitude,
-    rating: rating,
-    imageUrl: imageUrl,
+    obj: obj,
   },
 });
 
