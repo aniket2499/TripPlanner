@@ -20,6 +20,14 @@ const createUser = (body) => {
     });
 };
 
+const createUserFirebase = (body) => {
+  return axios
+    .post(DATA_URL + "/users/create/firebase", { body: body })
+    .then((response) => {
+      return response.data;
+    });
+};
+
 const deleteUserById = (id) => {
   return axios.delete(DATA_URL + `/users/delete/${id}`).then((response) => {
     return response.data;
@@ -40,6 +48,7 @@ const exports = {
   createUser,
   deleteUserById,
   updateUserById,
+  createUserFirebase,
 };
 
 export default exports;
