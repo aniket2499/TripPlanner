@@ -189,3 +189,20 @@
   .hide {
     opacity: 0 !important;
   }
+
+.note{
+    width: 750px;
+    height: 115px;
+    resize: none;
+    margin:20px 0 ;
+    font-family: 'Poppins', sans-serif;
+    background-color: #F3F4F5;
+	  border-radius: 8px;
+	  padding: 1rem;
+	
+}
+
+#task textarea:focus{
+    outline: none; 
+
+}

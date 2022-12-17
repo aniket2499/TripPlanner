@@ -1,6 +1,8 @@
+const bcrypt = require("bcrypt");
 const User = require("../model/User");
 const validation = require("../validation/routesValidation");
 const valid = require("../validation/dataValidation");
+const saltRounds = 8;
 
 const getUserById = async (id) => {
   let parsedId = validation.checkString(id, "UserId");
@@ -42,6 +44,7 @@ const createUser = async (userBody) => {
   if (newUserInfo.password) {
     newUserInfo.password = valid.checkPassword(newUserInfo.password);
   }
+  newUserInfo.password = await bcrypt.hash(newUserInfo.password, saltRounds);
 
   const savedUser = await newUserInfo.save();
 
