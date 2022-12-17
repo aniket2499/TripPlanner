@@ -24,7 +24,7 @@ const pReducer = persistReducer(persistConfig, rootReducer);
 
 const store = createStore(
   pReducer,
-  composeEnhancer(compose, applyMiddleware(ThunkMiddleware)),
+  composeEnhancer(compose, applyMiddleware(ThunkMiddleware))
   // applyMiddleware(ThunkMiddleware),
 );
 

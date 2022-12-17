@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
+import "./chat.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -72,12 +73,12 @@ const MyTrip = () => {
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
-  const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
   const [hotelState, setHotels] = useState([]);
   const [restaurantState, setRestaurants] = useState([]);
   const [attractionState, setAttractions] = useState([]);
   const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
+  const [notesValue, setNotesValue] = useState("hello");
 
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
@@ -118,7 +119,13 @@ const MyTrip = () => {
 
   useEffect(() => {
     // storage.removeItem("persist:root");
-    dispatch(initTrip());
+    async function fetchData(id) {
+      let data = await tripService.getTripById(id);
+      setNotesValue(data.notes);
+    }
+
+    fetchData(id.id);
+     dispatch(initTrip());
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
@@ -147,6 +154,14 @@ const MyTrip = () => {
   }
 
   const navigate = useNavigate();
+
+  const handleNotesSubmit = async (e) => {
+    e.preventDefault();
+    let newObj = {
+      notes: setNotesValue,
+    };
+    await tripService.updateTripById(id.id, newObj);
+  };
 
   const styles = {
     paperContainer: {
@@ -388,6 +403,42 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
+
+                    {restaurants.map(
+                      (
+                        restaurant // hotels is an array of objects}
+                      ) => (
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
+                          <Card
+                            sx={{ mt: 2 }}
+                            backgroundColor="primary.main"
+                            style={{ backgroundColor: "" }}
+                          >
+                            <CardContent>
+                              <Stack direction="column" justifyContent="Center">
+                                <Typography
+                                  variant="h5"
+                                  component="h2"
+                                  fontWeight="fontWeightBold"
+                                  sx={{ mt: 2, ml: 2 }}
+                                >
+                                  {restaurant.name}
+                                </Typography>
+                                <Typography
+                                  variant="body1"
+                                  fontWeight="fontWeightBold"
+                                  sx={{ mt: 2, ml: 2 }}
+                                  color="text.hint"
+                                >
+                                  Address
+                                </Typography>
+                              </Stack>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      )
+                    )}
+
                     <Card styles={{ padding: "1.5rem" }}>
                       {restaurantState &&
                         restaurantState.map((restaurant, index) => (
@@ -480,6 +531,7 @@ const MyTrip = () => {
                           </div>
                         ))}
                     </Card>
+
                   </Grid>
                 </Paper>
               </AccordionDetails>
@@ -689,38 +741,23 @@ const MyTrip = () => {
                 <Typography fontWeight="fontWeightBold">Notes</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Paper className="greyPaper" elevation={0}>
-                  <Grid containter>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                      <Card
-                        sx={{ mt: 2 }}
-                        backgroundColor="primary.main"
-                        style={{ backgroundColor: "" }}
-                      >
-                        <CardContent>
-                          <Stack direction="column" justifyContent="Center">
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                              fontWeight="fontWeightBold"
-                              sx={{ mt: 2, ml: 2 }}
-                            >
-                              Hotel Name
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              fontWeight="fontWeightBold"
-                              sx={{ mt: 2, ml: 2 }}
-                              color="text.hint"
-                            >
-                              Hotel Address
-                            </Typography>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                </Paper>
+                <form onSubmit={handleNotesSubmit}>
+                  <textarea
+                    class="note"
+                    type="text"
+                    name="notes"
+                    placeholder="Notes.."
+                    value={notesValue}
+                    id="notes"
+                    onChange={(e) => {
+                      setNotesValue(e.target.value);
+                    }}
+                  ></textarea>
+
+                  <Button id="submitButton" type="submit">
+                    Add Notes
+                  </Button>
+                </form>
               </AccordionDetails>
             </Accordion>
           </Stack>

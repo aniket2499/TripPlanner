@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-index":"nodemon index.js",
-    "start-app":"nodemon app.js",
-    "dev":"npm run start-index & npm run start-app",
+    "start-index": "nodemon index.js",
+    "start-app": "nodemon app.js",
+    "dev": "npm run start-index & npm run start-app",
     "start": "nodemon run dev"
   },
   "author": "Avengers",
@@ -16,6 +16,7 @@
     "amadeus": "^7.1.0",
     "aws-sdk": "^2.1268.0",
     "axios": "^0.27.2",
+    "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "blueimp-md5": "^2.19.0",
     "cookie-parser": "^1.4.6",

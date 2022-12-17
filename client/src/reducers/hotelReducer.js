@@ -35,6 +35,7 @@ const hotelReducer = (state = initialState, action) => {
 
     case "ADD_HOTEL":
       return [...state, payload.obj];
+    // return [...state, payload.obj];
 
     case "DELETE_HOTEL":
       copyState = [...state];
@@ -66,14 +67,24 @@ const initializeState = (tripId) => {
   };
 };
 
-const addHotel = (tripId, hotelId) => {
+const addHotel = (tripId, hotelData) => {
   return async (dispatch, getState) => {
-    let trip = getState().trips.filter((x) => x._id === tripId);
-    let hotel = await tripservice.addHotelToTrip(tripId, hotelId);
-    trip[0].hotels.push(hotelId);
+    let obj = {
+      location_id: hotelData.dupeId,
+      name: hotelData.name,
+      image: hotelData.image,
+      latitude: hotelData.geoCode.latitude,
+      longitude: hotelData.geoCode.longitude,
+      rating: hotelData.rating,
+    };
+    let data = await hotelService.createHotel(tripId, obj);
+    console.log("hotel is aniket: " + JSON.stringify(data));
+    await tripservice.addHotelToTrip(tripId, hotelData._id);
+
+    console.log("hotel is aniket: " + hotelData);
     dispatch({
       type: "ADD_HOTEL",
-      payload: hotel,
+      payload: hotelData,
     });
   };
 };
