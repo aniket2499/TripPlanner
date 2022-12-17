@@ -16,7 +16,7 @@ const TripSchema = new Schema({
       name: { type: String },
     },
   ],
-  notes: { type: String },
+  notes: "",
   explore: [
     {
       id: { type: String },

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
+import "./chat.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import {
@@ -68,10 +69,10 @@ const MyTrip = () => {
   const days = [];
   const [loading, setLoading] = useState(false);
   const [flights, setFlights] = useState([]);
-  const [notes, setNotes] = useState([]);
   const [trip, setTrip] = useState([]);
   const [hotelState, setHotels] = useState([]);
   const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
+  const [notesValue, setNotesValue] = useState("hello");
 
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
@@ -94,7 +95,12 @@ const MyTrip = () => {
 
   useEffect(() => {
     // storage.removeItem("persist:root");
+    async function fetchData(id) {
+      let data = await tripService.getTripById(id);
+      setNotesValue(data.notes);
+    }
 
+    fetchData(id.id);
     dispatch(initHotel(tripId));
     dispatch(initRest(tripId));
     dispatch(initAttr(tripId));
@@ -120,6 +126,13 @@ const MyTrip = () => {
   }
 
   const navigate = useNavigate();
+  const handleNotesSubmit = async (e) => {
+    e.preventDefault();
+    let newObj = {
+      notes: setNotesValue,
+    };
+    await tripService.updateTripById(id.id, newObj);
+  };
   const styles = {
     paperContainer: {
       backgroundSize: "cover",
@@ -335,7 +348,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant, // hotels is an array of objects}
+                        restaurant // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -365,7 +378,7 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      ),
+                      )
                     )}
                   </Grid>
                 </Paper>
@@ -514,7 +527,26 @@ const MyTrip = () => {
                 <Typography fontWeight="fontWeightBold">Notes</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Paper className="greyPaper" elevation={0}>
+                <form onSubmit={handleNotesSubmit}>
+                  <textarea
+                    class="note"
+                    type="text"
+                    name="notes"
+                    placeholder="Notes.."
+                    value={notesValue}
+                    id="notes"
+                    onChange={(e) => {
+                      setNotesValue(e.target.value);
+                    }}
+                  ></textarea>
+
+                  <Button id="submitButton" type="submit">
+                    Add Notes
+                  </Button>
+                </form>
+
+                {/* </div> */}
+                {/* <Paper className="greyPaper" elevation={0}>
                   <Grid containter>
                     <Grid item xs={12} sm={12} md={6} lg={6}>
                       <Card
@@ -545,7 +577,7 @@ const MyTrip = () => {
                       </Card>
                     </Grid>
                   </Grid>
-                </Paper>
+                </Paper> */}
               </AccordionDetails>
             </Accordion>
           </Stack>

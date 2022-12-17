@@ -221,7 +221,7 @@ const Navigation = () => {
 
       return () => clearTimeout(timer);
     } else {
-      navigate(`/home`);
+      // navigate(`/home`);
     }
   }, [searchTerm]);
 
@@ -238,7 +238,7 @@ const Navigation = () => {
       await doChangePassword(
         currentUser.email,
         currentPassword.value,
-        newPasswordOne.value,
+        newPasswordOne.value
       );
       // alert("Password has been changed, you will now be logged out");
       setOpen(false);
@@ -288,7 +288,7 @@ const Navigation = () => {
               {...stringAvatar(
                 currentUser._delegate.displayName
                   ? currentUser._delegate.displayName
-                  : "Unknown",
+                  : "Unknown"
               )}
             />
           </Button>
