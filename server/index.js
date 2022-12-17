@@ -18,18 +18,14 @@ const io = new Server(server, {
 });
 
 async function sendMessage(socket, data) {
-  console.log("inside function");
   const messages = await client.lRange(`${data}messages`, "0", "-1");
   if (messages.length != 0) {
-    console.log(messages, "messages");
-    console.log(data, "data");
     try {
       socket.emit("fromApi", messages);
     } catch (err) {
       console.log(err);
     }
   } else {
-    console.log("here");
     return;
   }
 }
@@ -43,7 +39,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("send_message", async (data) => {
-    console.log(data, "dtaa");
     await client.rPush(
       `${data.room.id}messages`,
       `${data.author}:${data.message}`

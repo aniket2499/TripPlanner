@@ -68,6 +68,24 @@ const socket = io.connect("http://localhost:3002");
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
+  const navigate = useNavigate();
+  console.log("Heelooo123");
+
+  useEffect(() => {
+    async function verifyTrip(id) {
+      const getTrip = await userService.getUserById(currUser._delegate.uid);
+      const bool = getTrip.trips.includes(id);
+      if (!bool) {
+        alert("You cannot access this trip");
+        navigate("/home");
+      }
+    }
+    verifyTrip(id.id);
+    if (currUser && id.id) {
+      console.log("hereefff");
+      socket.emit("join_room", id.id);
+    }
+  }, [id.id]);
 
   const [itinerary, setItinerary] = useState([]);
 
@@ -107,17 +125,6 @@ const MyTrip = () => {
     dispatch(actions.deleteAttratcion(attractionId));
   };
 
-  const joinRoom = (id) => {
-    if (currUser && id) {
-      socket.emit("join_room", id);
-    }
-  };
-  useEffect(() => {
-    if (currUser && id.id) {
-      socket.emit("join_room", id.id);
-    }
-  }, [id.id]);
-
   const hotels = useSelector((state) => state.hotels);
   const restaurants = useSelector((state) => state.restaurants);
   const attractions = useSelector((state) => state.attractions);
@@ -154,8 +161,6 @@ const MyTrip = () => {
     days.push(day.format("YYYY-MM-DD"));
     day = day.clone().add(1, "d");
   }
-
-  const navigate = useNavigate();
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
