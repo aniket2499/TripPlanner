@@ -17,7 +17,7 @@ const initialState = [
     destination_long: null,
     userId: null,
     tripName: null,
-    hotel: [],
+    hotels: [],
     attractions: [],
     explore: [],
     invites: [],
@@ -28,6 +28,7 @@ const initialState = [
 ];
 
 let copyState = null;
+let index = 0;
 
 const tripsReducer = (state = [], action) => {
   const { type, payload } = action;
@@ -39,11 +40,27 @@ const tripsReducer = (state = [], action) => {
       return state;
 
     case "ADD_TRIP":
+      console.log(payload);
       return [...state, payload.obj];
 
     case "DELETE_TRIP":
       copyState = [...state];
       copyState = copyState.filter((x) => x.name !== payload.name);
+      return [...copyState];
+
+    case "BIN_HOTEL":
+      copyState = [...state];
+      index = copyState.find((x) => x._id == payload.tripId);
+      index.hotels.push(payload.location_id);
+      return [...copyState];
+
+    case "UNBIN_HOTEL":
+      copyState = [...state];
+      index = copyState.find((x) => x._id == payload.tripId);
+      const elemIndex = index.hotels.indexOf(payload.location_id);
+      if (elemIndex > -1) {
+        index.hotels.splice(elemIndex, 1);
+      }
       return [...copyState];
 
     default:

@@ -5,16 +5,9 @@ import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
 import storage from "redux-persist/lib/storage";
 
-function GGetUserInfo() {
-  const currUser = useContext(AuthContext);
-  if (currUser) {
-    return currUser;
-  } else return null;
-}
-
 const initialState = [
   {
-    location_id: null,
+    hotelId: null,
     name: null,
     imageUrl: null,
     rating: null,
@@ -24,6 +17,7 @@ const initialState = [
 ];
 
 let copyState = null;
+let index = 0;
 
 const hotelReducer = (state = [], action) => {
   const { type, payload } = action;
@@ -35,12 +29,28 @@ const hotelReducer = (state = [], action) => {
       return state;
 
     case "ADD_HOTEL":
-      return [...state, payload];
-    // return [...state, payload.obj];
+      const newHotel = {
+        hotelId: payload.obj.dupeId,
+        name: payload.obj.name,
+        imageUrl: payload.obj.image,
+        rating: payload.obj.rating,
+        latitude: payload.obj.geoCode.latitude,
+        longitude: payload.obj.geoCode.longitude,
+      };
+      return [...state, newHotel];
 
     case "DELETE_HOTEL":
-      // storage.removeItem("persist:root");
-      copyState = state.filter((x) => x._id !== payload._id);
+      copyState = [...state];
+      let elemIndex = -1;
+      for (let i = 0; i < copyState.length; i++) {
+        if (copyState[i].hotelId == payload.location_id) {
+          elemIndex = i;
+          break;
+        }
+      }
+      if (elemIndex > -1) {
+        copyState.splice(elemIndex, 1);
+      }
       return copyState;
 
     default:
@@ -90,6 +100,6 @@ const deleteHotel = (tripId, hotelId, hotel) => {
     });
   };
 };
-export { initializeState, addHotel, deleteHotel };
+export { initializeState, deleteHotel };
 
 export default hotelReducer;

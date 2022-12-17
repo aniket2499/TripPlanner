@@ -39,23 +39,35 @@ import { useParams } from "react-router";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
+  const trips = useSelector((state) => state.trips);
 
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [savedButton, setSavedButton] = React.useState(false);
   const [calendarDate, setCalendarDate] = useState(false);
   const dispatch = useDispatch();
   let rangeStartDate = null;
   let rangeEndDate = null;
 
-  // const rangeStartDate = allState.trips[0].tripDate.startDate;
-  // const rangeEndDate = allState.trips[0].tripDate.endDate;
-
-  // const id = useParams().tripid;
-  // const id = "63934796bd080530bbdc3111";
-
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
+  const a = useParams().tripid;
+
+  const addHotelToBin = (tripId, hotelId, hotel) => {
+    dispatch(actions.binHotel(tripId, hotelId));
+    dispatch(actions.addHotel(hotel));
+  };
+
+  const removeHotelFromBin = (tripId, hotelId) => {
+    dispatch(actions.unbinHotel(tripId, hotelId));
+    dispatch(actions.deleteHotel(hotelId));
+  };
+
+  const findHotelInTrip = (hotelId) => {
+    let currTrip = trips.find((x) => (x._id = a));
+    let hotel = currTrip.hotels.find((h) => h == hotelId);
+    console.log(hotel);
+    return hotel ? true : false;
+  };
 
   const handleOpen = (hotel) => {
     setOpen(true);
@@ -81,20 +93,7 @@ const Hotels = () => {
             "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
           );
         }
-
-        // dispatch(actions.addUser(id));
-        // dispatch(actions.deleteUser());
         setHotels(data);
-        // dispatch(
-        //   actions.addHotel(
-        //     1,
-        //     "SOHO SUITES",
-        //     40,
-        //     -73,
-        //     "https://tripplannercs554.s3.amazonaws.com/HotelImages/43.jpg",
-        //     3,
-        //   ),
-        // );
         setLoading(false);
       } catch (e) {
         return e;
@@ -102,8 +101,6 @@ const Hotels = () => {
     }
     fetchData();
   }, []);
-
-  const a = useParams().tripid;
 
   for (let i = 0; i < allState.trips.length; i++) {
     if (allState.trips[i]._id === a) {
@@ -347,37 +344,32 @@ const Hotels = () => {
                           </Grid>
 
                           <Grid item xs={12} sm={3} md={4} lg={5}>
-                            <Button
-                              id={hotel.dupeId}
-                              onClick={(e) => {
-                                if (hotel.saved === false) {
-                                  // tripService.addHotelToTrip(a, {
-                                  //   dupeId: hotel.id,
-                                  // });
-                                  console.log("added to trip aniket");
-                                  dispatch(addHotel(a, hotel));
-                                } else {
+                            {!findHotelInTrip(hotel.dupeId) && (
+                              <Button
+                                id={hotel.dupeId}
+                                onClick={() =>
+                                  addHotelToBin(a, hotel.dupeId, hotel)
                                 }
-                                console.log("saved button", savedButton);
-                                hotel.saved = !hotel.saved;
-                                setSavedButton(!savedButton);
-                              }}
-                            >
-                              {hotel.saved ? (
-                                <TurnedInIcon />
-                              ) : (
+                              >
+                                <Typography variant="body2">
+                                  Add Hotel
+                                </Typography>
                                 <TurnedInNotIcon />
-                              )}
-                              {hotel.saved ? (
+                              </Button>
+                            )}
+                            {findHotelInTrip(hotel.dupeId) && (
+                              <Button
+                                id={hotel.dupeId}
+                                onClick={() =>
+                                  removeHotelFromBin(a, hotel.dupeId)
+                                }
+                              >
                                 <Typography variant="body2">
-                                  Remove From Bin
+                                  Remove Hotel
                                 </Typography>
-                              ) : (
-                                <Typography variant="body2">
-                                  Add To Bin
-                                </Typography>
-                              )}
-                            </Button>
+                                <TurnedInIcon />
+                              </Button>
+                            )}
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DesktopDatePicker
                                 label="Select Date"
@@ -427,18 +419,6 @@ const Hotels = () => {
                           </Grid>
                         </Grid>
                       </div>
-                      {/* <div style={{ marginTop: "1rem" }}>
-                      <Typography variant="body2" fontWeight="fontWeightLight">
-                        {" "}
-                        Situated at the tip of Apollo’s Blunder in South Mumbai,
-                        the Gateway of India is a great place to start your
-                        sightseeing in Mumbai. The gateway was built in 1924, in
-                        memorial to King George V of England, who landed in
-                        India at the same place in 1911. The last British troops
-                        also departed through this gateway after Indian
-                        Independence in 1948.
-                      </Typography>
-                    </div> */}
                     </Box>
                   </div>
                 ))}
@@ -493,31 +473,6 @@ const Hotels = () => {
                           </Typography>
                         </div>
                         <Grid container sx={{ mt: "0.7rem" }}>
-                          <Grid item xs={12} sm={9} md={8} lg={8}>
-                            <Button
-                              variant="contained"
-                              id={hotel.dupeId}
-                              onClick={(e) => {
-                                if (hotel.saved === true) {
-                                  tripService.addHotelToTrip(a, {
-                                    dupeId: hotel.id,
-                                  });
-                                } else {
-                                }
-                                hotel.saved = !hotel.saved;
-                                setSavedButton(!savedButton);
-                              }}
-                            >
-                              {hotel.saved ? (
-                                <TurnedInIcon />
-                              ) : (
-                                <TurnedInNotIcon />
-                              )}
-                              <Typography variant="body2">
-                                {hotel.saved ? "Remove From Bin" : "Add To Bin"}
-                              </Typography>
-                            </Button>
-                          </Grid>
                           <Grid item xs={12} sm={9} md={8} lg={4}>
                             <Stack direction="row">
                               {hotel.rating === 1 ? (
