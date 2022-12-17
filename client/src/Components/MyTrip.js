@@ -79,7 +79,7 @@ const MyTrip = () => {
   const [restaurantState, setRestaurants] = useState([]);
   const [attractionState, setAttractions] = useState([]);
   const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
-  const [notesValue, setNotesValue] = useState("hello");
+  const [notesValue, setNotesValue] = useState("");
 
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
@@ -341,8 +341,7 @@ const MyTrip = () => {
                                                 e,
                                                 tripId,
                                                 hotel._id,
-                                                hotel,
-
+                                                hotel
                                               )
                                             }
                                           >
@@ -412,7 +411,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant, // hotels is an array of objects}
+                        restaurant // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -442,7 +441,7 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      ),
+                      )
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
@@ -751,7 +750,7 @@ const MyTrip = () => {
                     class="note"
                     type="text"
                     name="notes"
-                    placeholder="Notes.."
+                    placeholder="Write or paste anything here:how to get around, tips and tricks"
                     value={notesValue}
                     id="notes"
                     onChange={(e) => {
