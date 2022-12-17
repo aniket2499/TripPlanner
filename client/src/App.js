@@ -220,7 +220,6 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme);
 
 function App() {
-  console.log("App.js");
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

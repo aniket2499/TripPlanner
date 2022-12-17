@@ -56,10 +56,10 @@ const addAttraction = (
   },
 });
 
-const deleteAttratcion = (location_id) => ({
+const deleteAttratcion = (id) => ({
   type: "DELETE_ATTRACTION",
   payload: {
-    location_id: location_id,
+    id: id,
   },
 });
 
@@ -114,10 +114,10 @@ const addRest = (
   },
 });
 
-const deleteRest = (location_id) => ({
+const deleteRest = (id) => ({
   type: "DELETE_RESTAURANT",
   payload: {
-    location_id: location_id,
+    id: id,
   },
 });
 

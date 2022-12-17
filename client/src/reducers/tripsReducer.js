@@ -34,7 +34,6 @@ const tripsReducer = (state = [], action) => {
 
   switch (type) {
     case "INITIALIZE_TRIP":
-      console.log("payload is aniket: ", payload);
       state = [];
       state = payload;
       return state;
@@ -54,11 +53,9 @@ const tripsReducer = (state = [], action) => {
 
 const initializeState = () => {
   return async (dispatch, getState) => {
-    console.log("entered in the initalization stat:" + getState().user[0].id);
     const trips = await tripService.getAllTripsForCurrentUser(
       getState().user[0].id,
     );
-    console.log("trips are aniket:" + trips);
     dispatch({
       type: "INITIALIZE_TRIP",
       payload: trips,

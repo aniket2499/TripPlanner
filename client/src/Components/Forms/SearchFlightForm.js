@@ -125,10 +125,6 @@ function SearchFlightForm({ handleSearch }) {
       !localDepartureDateerror &&
       !localReturnDateerror
     ) {
-      console.log(FromError);
-      console.log(ToError);
-      console.log(DepartureDateError);
-      console.log(ReturnDateError);
       handleSearch(searchObject);
     }
   };
@@ -185,7 +181,6 @@ function SearchFlightForm({ handleSearch }) {
               event.preventDefault();
               setFromError(false);
               setFromErrorMessage("");
-              console.log(event.target.value);
             }}
             id="originTextField"
             options={originDropdown}
@@ -208,7 +203,6 @@ function SearchFlightForm({ handleSearch }) {
               event.preventDefault();
               setToError(false);
               setToErrorMessage("");
-              console.log(event.target.value);
             }}
             id="destinationTextField"
             options={destinationDropdown}
@@ -235,7 +229,6 @@ function SearchFlightForm({ handleSearch }) {
                 event.preventDefault();
                 DepartureDateError(false);
                 setDepartureDateError("");
-                console.log(event.target.value);
               }}
               onChange={(newValue) => {
                 setDepartureDateError(false);

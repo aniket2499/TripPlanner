@@ -33,9 +33,9 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { addHotel } from "../reducers/hotelReducer";
 import Maps from "./Maps";
 import { useParams } from "react-router";
-import { addHotel } from "../reducers/hotelReducer";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
@@ -356,9 +356,9 @@ const Hotels = () => {
                                   // });
                                   console.log("added to trip aniket");
                                   dispatch(addHotel(a, hotel));
-                                  // dispatch(actions.addHotel(hotel));
                                 } else {
                                 }
+                                console.log("saved button", savedButton);
                                 hotel.saved = !hotel.saved;
                                 setSavedButton(!savedButton);
                               }}

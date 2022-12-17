@@ -54,7 +54,6 @@ function Login() {
     try {
       await doSignInWithEmailAndPassword(email.value, password.value);
     } catch (error) {
-      console.log(error.message);
       if (error.message === userNotFound || error.message === invalidPassword) {
         document.getElementById("error").innerHTML =
           "User not Found or Invalid Password!";

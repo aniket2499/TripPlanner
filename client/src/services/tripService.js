@@ -10,24 +10,19 @@ const DATA_URL = "http://localhost:3001/api";
 // };
 
 const getAllTripsForCurrentUser = (id) => {
-  console.log("enterd in the get all trips for current user");
   return axios.get(DATA_URL + `/trips`).then((response) => {
     const temp = response.data.filter((x) => x.users[0] === id);
-    console.log("temp is aniket: " + temp);
     return temp;
   });
 };
 
 const getTripById = (id) => {
-  console.log("getTripById");
   return axios.get(DATA_URL + `/trips/${id}`).then((response) => {
-    console.log(response.data);
     return response.data;
   });
 };
 
 const createTrip = (body) => {
-  // console.log(body);
   const userId = body.id;
   return axios
     .post(DATA_URL + `/trips/create/${userId}`, { body: body })
@@ -37,10 +32,7 @@ const createTrip = (body) => {
 };
 
 const deleteTripById = (id) => {
-  console.log("deleteTripById" + id);
   return axios.delete(DATA_URL + `/trips/delete/${id}`).then((response) => {
-    console.log("deleteTripById" + id);
-
     return response.data;
   });
 };
@@ -78,6 +70,7 @@ const addHotelToTrip = (id, body) => {
   return axios
     .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`)
     .then((response) => {
+      console.log(response.data);
       return response.data;
     });
 };
@@ -104,11 +97,9 @@ const addRestaurantToTrip = (id, body) => {
 
 const removeRestaurantFromTrip = (id, body) => {
   const restaurantId = body;
-  console.log("here at remove restaurant from trip");
   return axios
     .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`)
     .then((response) => {
-      console.log(response.data);
       return response.data;
     });
 };
@@ -127,8 +118,7 @@ const inviteUserToTrip = (id, body) => {
 const acceptTripInvite = (trip, user) => {
   const tripId = trip.tripId;
   const userId = user.userId;
-  console.log(userId, "-user");
-  console.log(tripId, "=kjdbcjkb");
+
   // const currUser = useContext(AuthContext);
   // const userId = currUser.uid;
   // console.log(userId);

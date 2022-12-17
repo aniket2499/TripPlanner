@@ -152,7 +152,6 @@ const CreateTrip = () => {
       await tripService
         .createTrip(newValues)
         .then((data) => {
-          console.log("data" + JSON.stringify(data));
           const trip_id = data._id;
           dispatch(
             actions.addTrip({
@@ -206,7 +205,6 @@ const CreateTrip = () => {
   };
 
   const trips = useSelector((state) => state.trips);
-  console.log("trips after hitting create trip" + trips);
   return (
     <div>
       <form autoComplete="off" onSubmit={submitForm}>
@@ -267,7 +265,6 @@ const CreateTrip = () => {
               value={startDate}
               onSelect={(event) => {
                 event.preventDefault();
-                console.log(event.target.value);
               }}
               onChange={(newValue) => {
                 setStartDateError(false);
@@ -327,127 +324,6 @@ const CreateTrip = () => {
           </Button>
         </Box>
       </form>
-
-      {/* <Stack
-        spacing={10}
-        direction="row"
-        justifyContent="center"
-        sx={{ mt: 10 }}
-      >
-        <Autocomplete
-          onLoad={onOriginLoad}
-          onPlaceChanged={onPlaceOriginChanged}
-        >
-          <TextField
-            sx={{ width: 400, ml: 6, mt: 3 }}
-            label="Origin"
-            name="cur_location"
-            // onChange={handleChange}
-          />
-        </Autocomplete>
-
-        <Autocomplete
-          onLoad={onDestinationLoad}
-          onPlaceChanged={onPlaceDestinationChanged}
-        >
-          <TextField
-            sx={{ width: 400, ml: 6, mt: 3 }}
-            label="Destination"
-            name="destination"
-            // onChange={handleChange}
-          />
-        </Autocomplete>
-      </Stack>
-      <Stack direction="row" justifyContent="center">
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DesktopDatePicker
-            label="Start Date"
-            disablePast
-            inputFormat="MM/DD/YYYY"
-            value={startDate}
-            onSelect={(event) => {
-              event.preventDefault();
-              console.log(event.target.value);
-            }}
-            onChange={(newValue) => {
-              if (
-                dayjs(returnDate).isBefore(dayjs(newValue)) &&
-                showReturnDate
-              ) {
-                setStartDateError(true);
-                setStartDateErrorMessage(
-                  "Return date cannot be before departure date",
-                );
-                setReturnDateError(true);
-                setReturnDateErrorMessage(
-                  "Return date cannot be before departure date",
-                );
-              } else {
-                setStartDateError(false);
-                setStartDateErrorMessage("");
-                setReturnDateError(false);
-                setReturnDateErrorMessage("");
-                setStartDate(newValue);
-              }
-            }}
-            id="startDate"
-            renderInput={(params) => (
-              <TextField
-                sx={{ width: 400, mr: 6, mt: 3 }}
-                {...params}
-                error={StartDateError}
-                helperText={StartDateErrorMessage}
-                // onChange={handleStartDateChange}
-              />
-            )}
-          />
-          <DesktopDatePicker
-            disabled={!showReturnDate}
-            disablePast
-            label="Return Date"
-            inputFormat="MM/DD/YYYY"
-            sx={{ width: 400, mr: 6 }}
-            value={returnDate}
-            onChange={(newValue) => {
-              if (
-                dayjs(newValue).isBefore(dayjs(startDate)) &&
-                showReturnDate
-              ) {
-                setStartDateError(true);
-                setStartDateErrorMessage(
-                  "Return date cannot be before departure date",
-                );
-                setReturnDateError(true);
-                setReturnDateErrorMessage(
-                  "Return date cannot be before departure date",
-                );
-              } else {
-                setReturnDateError(false);
-                setReturnDateErrorMessage("");
-                setStartDateError(false);
-                setStartDateErrorMessage("");
-                setReturnDate(newValue);
-              }
-            }}
-            id="returnDate"
-            renderInput={(params) => (
-              <TextField
-                sx={{ width: 400, ml: 6, mt: 3 }}
-                {...params}
-                error={ReturnDateError}
-                helperText={ReturnDateErrorMessage}
-                // onChange={handleEndDateChange}
-              />
-            )}
-          />
-        </LocalizationProvider>
-      </Stack>
-      <Stack direction="row" justifyContent="center" sx={{ mt: 6, mb: 10 }}>
-        <Button color="primary" variant="contained" onClick={submitForm}>
-          <AddIcon sx={{ mr: 1 }} />
-          Add Trip
-        </Button>
-      </Stack> */}
     </div>
   );
 };

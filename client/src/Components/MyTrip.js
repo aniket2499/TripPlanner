@@ -2,9 +2,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
+import "./chat.css";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { deleteHotel } from "../reducers/hotelReducer";
 import {
   Grid,
   Paper,
@@ -53,9 +55,12 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 import io from "socket.io-client";
 import Chat from "./Chat";
+
 import { initializeState as initHotel } from "../reducers/hotelReducer";
 import { initializeState as initRest } from "../reducers/restReducer";
 import { initializeState as initAttr } from "../reducers/attractionReducer";
+import { initializeState as initTrip } from "../reducers/tripsReducer";
+
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const socket = io.connect("http://localhost:3002");
@@ -64,45 +69,90 @@ const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
 
-  const [itinerary, setItinerary] = useState([]);
-
   const days = [];
-  const [loading, setLoading] = useState(false);
-  const [flights, setFlights] = useState([]);
-  const [notes, setNotes] = useState([]);
-  const [trip, setTrip] = useState([]);
   const [hotelState, setHotels] = useState([]);
   const [restaurantState, setRestaurants] = useState([]);
   const [attractionState, setAttractions] = useState([]);
-  const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
+  const [notesValue, setNotesValue] = useState("hello");
 
   const dispatch = useDispatch();
-  const [value, setValue] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
   const tripId = useParams().id;
 
-  const handleDeleteHotel = (tripId, hotelId) => {
-    console.log("delete hotel id is " + hotelId);
-    tripService.removeHotelFromTrip(tripId, hotelId).then((res) => {
-      console.log("delete hotel res is " + res);
-      dispatch(actions.deleteHotel(id));
-    });
+  const trips = useSelector((state) => state.trips);
+
+  const hotels = useSelector((state) => state.hotels);
+
+  const restaurants = useSelector((state) => state.restaurants);
+  const attractions = useSelector((state) => state.attractions);
+
+  let currentTrip = [];
+  let startDate = "";
+  let endDate = "";
+  // console.log("trips are: " + JSON.stringify(trips));
+  if (trips.length !== 0) {
+    currentTrip = trips.filter((trip) => trip._id === tripId);
+    startDate = moment(currentTrip[0].tripDate.startDate);
+    endDate = moment(currentTrip[0].tripDate.endDate);
+    let day = startDate;
+    while (day <= endDate) {
+      days.push(day.format("YYYY-MM-DD"));
+      day = day.clone().add(1, "d");
+    }
+  }
+
+  useEffect(() => {
+    async function verifyTrip(id) {
+      const getTrip = await userService.getUserById(currUser._delegate.uid);
+      const bool = getTrip.trips.includes(id);
+      if (!bool) {
+        alert("You cannot access this trip");
+        navigate("/home");
+      }
+    }
+    verifyTrip(id.id);
+    if (currUser && id.id) {
+      socket.emit("join_room", id.id);
+    }
+  }, [id.id]);
+
+  useEffect(() => {
+    console.log("event fired");
+
+    async function fetchData(id) {
+      await dispatch(actions.initializeUser(currUser._delegate.uid));
+      await dispatch(initTrip());
+      await dispatch(initHotel(tripId));
+      await dispatch(initRest(tripId));
+      await dispatch(initAttr(tripId));
+      // for (let i = 0; i < hotels.length; i++) {
+      //   hotels[i].calenderButton = false;
+      // }
+      let data = await tripService.getTripById(id);
+      setNotesValue(data.notes);
+    }
+
+    fetchData(id.id);
+  }, []);
+
+  const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
+    e.preventDefault();
+    console.log("edit hotel");
+    dispatch(deleteHotel(tripId, hotelId, hotel));
   };
 
   const handleDeleteRestaurant = (tripId, restaurantId) => {
-    console.log("delete restaurant id is " + restaurantId);
-    tripService.removeRestaurantFromTrip(tripId, restaurantId).then((res) => {
-      console.log("delete restaurant res is " + res);
-      dispatch(actions.deleteRestaurant(id));
-    });
+    dispatch(actions.deleteRest(restaurantId));
+    tripService
+      .removeRestaurantFromTrip(tripId, restaurantId)
+      .then((res) => {});
   };
 
-  const handleDeleteAttraction = (tripId, attractionId) => {
-    console.log("delete attraction id is " + attractionId);
-    tripService.removeAttractionFromTrip(tripId, attractionId).then((res) => {
-      console.log("delete attraction res is " + res);
-      dispatch(actions.deleteAttraction(id));
-    });
+  const handleDeleteAttraction = (e, tripId, attractionId) => {
+    e.preventDefault();
+    tripService
+      .removeAttractionFromTrip(tripId, attractionId)
+      .then((res) => {});
+    dispatch(actions.deleteAttratcion(attractionId));
   };
 
   const joinRoom = (id) => {
@@ -110,51 +160,16 @@ const MyTrip = () => {
       socket.emit("join_room", id);
     }
   };
-  useEffect(() => {
-    if (currUser && id.id) {
-      socket.emit("join_room", id.id);
-    }
-  }, [id.id]);
-
-  useEffect(() => {
-    // storage.removeItem("persist:root");
-
-    dispatch(initHotel(tripId));
-    dispatch(initRest(tripId));
-    dispatch(initAttr(tripId));
-    for (let i = 0; i < hotels.length; i++) {
-      hotels[i].calenderButton = false;
-    }
-    setRestaurants(restaurants);
-    setAttractions(attractions);
-    setHotels(hotels);
-  }, []);
-
-  const hotels = useSelector((state) => state.hotels);
-  const restaurants = useSelector((state) => state.restaurants);
-  const attractions = useSelector((state) => state.attractions);
-  // console.log("attractions for current trip" + JSON.stringify(attractions));
-  const trips = useSelector((state) => state.trips);
-  console.log("trips double check aniket:" + JSON.stringify(trips));
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
-  console.log("currentTrip" + JSON.stringify(currentTrip));
-  console.log(hotels, "state.hotels");
-  console.log(restaurants, "restaurants");
-  // getting start and end date from current trip
-
-  const startDate = moment(currentTrip[0].tripDate.startDate);
-  const endDate = moment(currentTrip[0].tripDate.endDate);
-  let day = startDate;
-
-  console.log(startDate, "startDate");
-  // const startDate = moment("2022-07-01");
-  // const endDate = moment("2022-07-05");
-  while (day <= endDate) {
-    days.push(day.format("YYYY-MM-DD"));
-    day = day.clone().add(1, "d");
-  }
 
   const navigate = useNavigate();
+
+  const handleNotesSubmit = async (e) => {
+    e.preventDefault();
+    let newObj = {
+      notes: setNotesValue,
+    };
+    await tripService.updateTripById(id.id, newObj);
+  };
 
   const styles = {
     paperContainer: {
@@ -163,12 +178,8 @@ const MyTrip = () => {
       backgroundImage: `url(${"https://st.depositphotos.com/2288675/2455/i/950/depositphotos_24553989-stock-photo-hotel.jpg"})`,
     },
   };
-  console.log("itinerary" + JSON.stringify(itinerary));
   // console.log("tripId is " + tripId);
-  useEffect(() => {
-    const getTripData = async () => {};
-    getTripData();
-  }, []);
+
   return (
     <div>
       <Grid container>
@@ -248,30 +259,33 @@ const MyTrip = () => {
                   justifyContent="center"
                   style={{ paddingBottom: 0 }}
                 >
-                  <Grid item xs={12} sm={12} md={8} lg={8}>
-                    <Card sx={{ mt: 40 }}>
-                      <CardContent>
-                        <Stack direction="column" justifyContent="Center">
-                          <Typography
-                            variant="h5"
-                            component="h1"
-                            fontWeight="fontWeightBold"
-                            sx={{ mt: 2, ml: 2 }}
-                          >
-                            {`Trip to ${currentTrip[0].destination}`}
-                          </Typography>
-                          <Typography
-                            variant="body1"
-                            fontWeight="fontWeightBold"
-                            sx={{ mt: 2, ml: 2 }}
-                            color="text.hint"
-                          >
-                            {`${currentTrip[0].tripDate.startDate} - ${currentTrip[0].tripDate.endDate}`}
-                          </Typography>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  {currentTrip &&
+                    currentTrip.map((trip) => (
+                      <Grid item xs={12} sm={12} md={8} lg={8}>
+                        <Card sx={{ mt: 40 }}>
+                          <CardContent>
+                            <Stack direction="column" justifyContent="Center">
+                              <Typography
+                                variant="h5"
+                                component="h1"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                              >
+                                {`Trip to ${trip.destination}`}
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                                color="text.hint"
+                              >
+                                {`${trip.tripDate.startDate} - ${trip.tripDate.endDate}`}
+                              </Typography>
+                            </Stack>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </Paper>
             </Box>
@@ -290,8 +304,8 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {hotelState &&
-                        hotelState.map((hotel, index) => (
+                      {hotels &&
+                        hotels.map((hotel, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
@@ -326,10 +340,12 @@ const MyTrip = () => {
                                         >
                                           <Button
                                             color="primary"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                               handleDeleteHotel(
+                                                e,
                                                 tripId,
                                                 hotel._id,
+                                                hotel,
                                               )
                                             }
                                           >
@@ -397,6 +413,41 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
+                    {restaurants.map(
+                      (
+                        restaurant, // hotels is an array of objects}
+                      ) => (
+                        <Grid item xs={12} sm={12} md={6} lg={6}>
+                          <Card
+                            sx={{ mt: 2 }}
+                            backgroundColor="primary.main"
+                            style={{ backgroundColor: "" }}
+                          >
+                            <CardContent>
+                              <Stack direction="column" justifyContent="Center">
+                                <Typography
+                                  variant="h5"
+                                  component="h2"
+                                  fontWeight="fontWeightBold"
+                                  sx={{ mt: 2, ml: 2 }}
+                                >
+                                  {restaurant.name}
+                                </Typography>
+                                <Typography
+                                  variant="body1"
+                                  fontWeight="fontWeightBold"
+                                  sx={{ mt: 2, ml: 2 }}
+                                  color="text.hint"
+                                >
+                                  Address
+                                </Typography>
+                              </Stack>
+                            </CardContent>
+                          </Card>
+                        </Grid>
+                      ),
+                    )}
+
                     <Card styles={{ padding: "1.5rem" }}>
                       {restaurantState &&
                         restaurantState.map((restaurant, index) => (
@@ -542,8 +593,9 @@ const MyTrip = () => {
                                         >
                                           <Button
                                             color="primary"
-                                            onClick={() =>
+                                            onClick={(e) =>
                                               handleDeleteAttraction(
+                                                e,
                                                 tripId,
                                                 attraction._id,
                                               )
@@ -697,38 +749,23 @@ const MyTrip = () => {
                 <Typography fontWeight="fontWeightBold">Notes</Typography>
               </AccordionSummary>
               <AccordionDetails>
-                <Paper className="greyPaper" elevation={0}>
-                  <Grid containter>
-                    <Grid item xs={12} sm={12} md={6} lg={6}>
-                      <Card
-                        sx={{ mt: 2 }}
-                        backgroundColor="primary.main"
-                        style={{ backgroundColor: "" }}
-                      >
-                        <CardContent>
-                          <Stack direction="column" justifyContent="Center">
-                            <Typography
-                              variant="h5"
-                              component="h2"
-                              fontWeight="fontWeightBold"
-                              sx={{ mt: 2, ml: 2 }}
-                            >
-                              Hotel Name
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              fontWeight="fontWeightBold"
-                              sx={{ mt: 2, ml: 2 }}
-                              color="text.hint"
-                            >
-                              Hotel Address
-                            </Typography>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  </Grid>
-                </Paper>
+                <form onSubmit={handleNotesSubmit}>
+                  <textarea
+                    class="note"
+                    type="text"
+                    name="notes"
+                    placeholder="Notes.."
+                    value={notesValue}
+                    id="notes"
+                    onChange={(e) => {
+                      setNotesValue(e.target.value);
+                    }}
+                  ></textarea>
+
+                  <Button id="submitButton" type="submit">
+                    Add Notes
+                  </Button>
+                </form>
               </AccordionDetails>
             </Accordion>
           </Stack>

@@ -29,20 +29,10 @@ function Home() {
   const currUser = useContext(AuthContext);
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-  console.log(store.getState());
   useEffect(() => {
-    // storage.removeItem("persist:root");
-
     dispatch(actions.initializeUser(currUser._delegate.uid));
-
     dispatch(initializeState());
   }, []);
-
-  const userId = currUser._delegate.uid;
-  let newObj = null;
-
-  console.log("trips for aniket is:" + JSON.stringify(trips));
-
   return (
     <div style={{ paddingTop: "2rem" }}>
       <Container>
@@ -76,58 +66,53 @@ function Home() {
           </Grid>
           <Grid container spacing={5}>
             {trips &&
-              trips.map(
-                (item) => (
-                  console.log(item.tripDate),
-                  (
-                    <Grid item xs={6} sm={6} md={4} lg={3}>
-                      <CardActionArea
-                        onClick={() => navigate(`/my-trips/${item._id}`)}
-                      >
-                        <Card
+              trips.map((item) => (
+                <Grid item xs={6} sm={6} md={4} lg={3}>
+                  <CardActionArea
+                    onClick={() => navigate(`/my-trips/${item._id}`)}
+                  >
+                    <Card
+                      sx={{
+                        width: "100%",
+                        height: "auto",
+                        borderRadius: "1rem",
+                        mt: "1rem",
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        height="150"
+                        image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
+                        alt="random"
+                      />
+                      <Card>
+                        <Typography
+                          variant="body1"
                           sx={{
-                            width: "100%",
-                            height: "auto",
-                            borderRadius: "1rem",
-                            mt: "1rem",
+                            color: "black",
+                            ml: "0.5rem",
+                            mt: "0.2rem",
+                            mb: "0.2rem",
                           }}
                         >
-                          <CardMedia
-                            component="img"
-                            height="150"
-                            image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
-                            alt="random"
-                          />
-                          <Card>
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                color: "black",
-                                ml: "0.5rem",
-                                mt: "0.2rem",
-                                mb: "0.2rem",
-                              }}
-                            >
-                              {`Trip to ${item.destination.split(",")[0]}`}
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              sx={{
-                                color: "black",
-                                ml: "0.6rem",
-                                mt: "0.2rem",
-                                mb: "0.2rem",
-                              }}
-                            >
-                              {`${item.tripDate.startDate} - ${item.tripDate.endDate}`}
-                            </Typography>
-                          </Card>
-                        </Card>
-                      </CardActionArea>
-                    </Grid>
-                  )
-                ),
-              )}
+                          {`Trip to ${item.destination.split(",")[0]}`}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "black",
+                            ml: "0.6rem",
+                            mt: "0.2rem",
+                            mb: "0.2rem",
+                          }}
+                        >
+                          {`${item.tripDate.startDate} - ${item.tripDate.endDate}`}
+                        </Typography>
+                      </Card>
+                    </Card>
+                  </CardActionArea>
+                </Grid>
+              ))}
           </Grid>
         </Grid>
       </Container>

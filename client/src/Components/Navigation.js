@@ -212,7 +212,6 @@ const Navigation = () => {
   useEffect(() => {
     if (searchTerm) {
       const timer = setTimeout(() => {
-        console.log(searchTerm);
         // navigate(`/search/${searchTerm}`);
         return navigate(`/search/searchTerm`, {
           state: {
@@ -244,7 +243,7 @@ const Navigation = () => {
       await doChangePassword(
         currentUser.email,
         currentPassword.value,
-        newPasswordOne.value,
+        newPasswordOne.value
       );
       // alert("Password has been changed, you will now be logged out");
       setOpen(false);
@@ -299,7 +298,7 @@ const Navigation = () => {
               {...stringAvatar(
                 currentUser._delegate.displayName
                   ? currentUser._delegate.displayName
-                  : "Unknown",
+                  : "Unknown"
               )}
             />
           </Button>
