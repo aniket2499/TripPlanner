@@ -31,7 +31,6 @@ async function sendMessage(socket, data) {
 }
 
 io.on("connection", (socket) => {
-  console.log("Inside socket");
   console.log(`User Connected: ${socket.id}`);
   socket.on("join_room", (data) => {
     sendMessage(socket, data);
