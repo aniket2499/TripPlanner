@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
+import storage from "redux-persist/lib/storage";
 
 const initialState = [
   {
@@ -18,7 +19,7 @@ const initialState = [
 let copyState = null;
 let index = 0;
 
-const hotelReducer = (state = initialState, action) => {
+const hotelReducer = (state = [], action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -68,6 +69,24 @@ const initializeState = (tripId) => {
     dispatch({
       type: "INITIALIZE_HOTEL",
       payload: hotelsData,
+    });
+  };
+};
+
+const addHotel = (tripId, hotelData) => {
+  return async (dispatch, getState) => {
+    let obj = {
+      location_id: hotelData.dupeId,
+      name: hotelData.name,
+      image: hotelData.image,
+      latitude: hotelData.geoCode.latitude,
+      longitude: hotelData.geoCode.longitude,
+      rating: hotelData.rating,
+    };
+    let data = await hotelService.createHotel(tripId, obj);
+    dispatch({
+      type: "ADD_HOTEL",
+      payload: data,
     });
   };
 };

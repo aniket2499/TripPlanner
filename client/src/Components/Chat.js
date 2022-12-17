@@ -4,26 +4,27 @@ import { AuthContext } from "../firebase/Auth";
 import ScrollToBottom from "react-scroll-to-bottom";
 import "./chat.css";
 
-const socket = io.connect("http://localhost:3002");
+// const socket = io.connect("http://localhost:3002");
 
 const Chat = ({ socket, id }) => {
   const currUser = useContext(AuthContext);
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
-  socket.on("fromApi", function (data) {
-    console.log("123");
-    data.map((x) => {
-      const usernameMessage = x.split(":");
-      const redisUsername = usernameMessage[0];
-      const redisMessage = usernameMessage[1];
-      const newObj = {
-        room: id,
-        author: redisUsername,
-        message: redisMessage,
-      };
-      setMessageList((list) => [...list, newObj]);
+  useEffect(() => {
+    socket.on("fromApi", function (data) {
+      data.map((x) => {
+        const usernameMessage = x.split(":");
+        const redisUsername = usernameMessage[0];
+        const redisMessage = usernameMessage[1];
+        const newObj = {
+          room: id,
+          author: redisUsername,
+          message: redisMessage,
+        };
+        setMessageList((list) => [...list, newObj]);
+      });
     });
-  });
+  }, []);
   const sendMessage = async () => {
     if (currentMessage !== "") {
       // console.log(currentMessage);

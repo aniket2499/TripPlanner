@@ -19,16 +19,50 @@ import { Container } from "@mui/system";
 import storage from "redux-persist/lib/storage";
 import store from "../store";
 import { initializeState } from "../reducers/tripsReducer";
+import { ExportStaticData } from "../ExploreStaticData";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-const array = [1, 2, 3, 4];
-const array1 = [1, 2, 3];
 
 function Home() {
-  const navigate = useNavigate();
   const currUser = useContext(AuthContext);
+  const userId = currUser._delegate.uid;
+  let array1 = [1, 2, 3];
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+  console.log(trips, "==");
+  let min = 0;
+  let max = 25;
+  const one = Math.floor(Math.random() * (max - min) + min);
+  const two = Math.floor(Math.random() * (max - min) + min);
+  const three = Math.floor(Math.random() * (max - min) + min);
+
+  let arr = [
+    ExportStaticData[one],
+    ExportStaticData[two],
+    ExportStaticData[three],
+  ];
+
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      return;
+    } catch (e) {
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUserFirebase({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "passwordFirebase",
+      });
+    }
+  };
+  getData(userId);
   useEffect(() => {
     dispatch(actions.initializeUser(currUser._delegate.uid));
     dispatch(initializeState());
@@ -206,7 +240,7 @@ function Home() {
           </Grid>
 
           <Grid container spacing={7}>
-            {array1.map((item) => (
+            {arr.map((item) => (
               <Grid item xs={6} sm={6} md={4} lg={3}>
                 <Card
                   sx={{
@@ -219,7 +253,7 @@ function Home() {
                   <CardMedia
                     component="img"
                     height="150"
-                    image="https://www.prettywildworld.com/wp-content/uploads/2017/11/TOP-TOURIST-ATTRACTIONS-IN-THE-USA-FEATURED-PHOTO.jpg"
+                    image={item.image}
                     alt="random"
                   />
                   <Card>
@@ -232,7 +266,7 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Golden Gate Bridge
+                      {item.name}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -243,12 +277,7 @@ function Home() {
                         mb: "0.2rem",
                       }}
                     >
-                      Acclaimed as one of the world's most beautiful bridges,
-                      there are many different elements to the Golden Gate
-                      Bridge that make it unique. With its tremendous towers,
-                      sweeping cables, and great span, the Bridge is a sensory
-                      beauty and engineering wonder featuring color, sound and
-                      light.
+                      {item.description.slice(0, 320)}
                     </Typography>
                   </Card>
                 </Card>
