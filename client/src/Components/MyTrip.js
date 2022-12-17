@@ -68,12 +68,29 @@ const socket = io.connect("http://localhost:3002");
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function verifyTrip(id) {
+      const getTrip = await userService.getUserById(currUser._delegate.uid);
+      const bool = getTrip.trips.includes(id);
+      if (!bool) {
+        alert("You cannot access this trip");
+        navigate("/home");
+      }
+    }
+    verifyTrip(id.id);
+    if (currUser && id.id) {
+      socket.emit("join_room", id.id);
+    }
+  }, [id.id]);
 
   const days = [];
   const [hotelState, setHotels] = useState([]);
   const [restaurantState, setRestaurants] = useState([]);
   const [attractionState, setAttractions] = useState([]);
-  const [notesValue, setNotesValue] = useState("hello");
+
+  const [notesValue, setNotesValue] = useState("");
 
   const dispatch = useDispatch();
   const tripId = useParams().id;
@@ -101,21 +118,6 @@ const MyTrip = () => {
   }
 
   useEffect(() => {
-    async function verifyTrip(id) {
-      const getTrip = await userService.getUserById(currUser._delegate.uid);
-      const bool = getTrip.trips.includes(id);
-      if (!bool) {
-        alert("You cannot access this trip");
-        navigate("/home");
-      }
-    }
-    verifyTrip(id.id);
-    if (currUser && id.id) {
-      socket.emit("join_room", id.id);
-    }
-  }, [id.id]);
-
-  useEffect(() => {
     console.log("event fired");
 
     async function fetchData(id) {
@@ -124,16 +126,20 @@ const MyTrip = () => {
       await dispatch(initHotel(tripId));
       await dispatch(initRest(tripId));
       await dispatch(initAttr(tripId));
-      // for (let i = 0; i < hotels.length; i++) {
-      //   hotels[i].calenderButton = false;
-      // }
+    }
+
+    fetchData(id.id);
+  }, []);
+  
+   useEffect(()=>{
+    async function fetchData(id) {
       let data = await tripService.getTripById(id);
       setNotesValue(data.notes);
     }
 
     fetchData(id.id);
-  }, []);
-
+   },[id])
+  
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
     console.log("edit hotel");
@@ -155,20 +161,19 @@ const MyTrip = () => {
     dispatch(actions.deleteAttratcion(attractionId));
   };
 
-  const joinRoom = (id) => {
-    if (currUser && id) {
-      socket.emit("join_room", id);
-    }
-  };
-
-  const navigate = useNavigate();
+  // getting start and end date from current trip
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
-      notes: setNotesValue,
+      notes: notesValue,
     };
-    await tripService.updateTripById(id.id, newObj);
+    console.log(newObj, "Inside handle");
+    try {
+      await tripService.updateTripById(id.id, newObj);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const styles = {
@@ -345,7 +350,7 @@ const MyTrip = () => {
                                                 e,
                                                 tripId,
                                                 hotel._id,
-                                                hotel,
+                                                hotel
                                               )
                                             }
                                           >
@@ -415,7 +420,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant, // hotels is an array of objects}
+                        restaurant // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -445,7 +450,7 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      ),
+                      )
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
@@ -488,7 +493,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteRestaurant(
                                                 tripId,
-                                                restaurant._id,
+                                                restaurant._id
                                               )
                                             }
                                           >
@@ -597,7 +602,7 @@ const MyTrip = () => {
                                               handleDeleteAttraction(
                                                 e,
                                                 tripId,
-                                                attraction._id,
+                                                attraction._id
                                               )
                                             }
                                           >
@@ -754,7 +759,7 @@ const MyTrip = () => {
                     class="note"
                     type="text"
                     name="notes"
-                    placeholder="Notes.."
+                    placeholder="Write or paste anything here:how to get around, tips and tricks"
                     value={notesValue}
                     id="notes"
                     onChange={(e) => {
