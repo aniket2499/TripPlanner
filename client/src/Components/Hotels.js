@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { addHotel } from "../reducers/hotelReducer";
 import Maps from "./Maps";
 import { useParams } from "react-router";
 
@@ -76,6 +77,9 @@ const Hotels = () => {
           data[i].saved = false;
           data[i].pickerOpen = false;
           data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
+          console.log(
+            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+          );
         }
 
         // dispatch(actions.addUser(id));
@@ -350,9 +354,11 @@ const Hotels = () => {
                                   // tripService.addHotelToTrip(a, {
                                   //   dupeId: hotel.id,
                                   // });
-                                  dispatch(actions.addHotel(hotel));
+                                  console.log("added to trip aniket");
+                                  dispatch(addHotel(a, hotel));
                                 } else {
                                 }
+                                console.log("saved button", savedButton);
                                 hotel.saved = !hotel.saved;
                                 setSavedButton(!savedButton);
                               }}
@@ -384,9 +390,15 @@ const Hotels = () => {
                                   event.preventDefault();
                                 }}
                                 onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + hotel.startDate,
+                                  );
                                   hotel.startDate =
                                     dayjs(newValue).format("MM/DD/YYYY");
                                   setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" + hotel.startDate,
+                                  );
                                 }}
                                 id="startDate"
                                 renderInput={(params) => (

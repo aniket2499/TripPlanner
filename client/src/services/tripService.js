@@ -70,6 +70,7 @@ const addHotelToTrip = (id, body) => {
   return axios
     .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`)
     .then((response) => {
+      console.log(response.data);
       return response.data;
     });
 };
