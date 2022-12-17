@@ -74,9 +74,9 @@ const removeAttractionFromTrip = (id, body) => {
 };
 
 const addHotelToTrip = (id, body) => {
-  const hotelId = body.hotelId;
+  const hotelId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`)
     .then((response) => {
       return response.data;
     });
