@@ -31,6 +31,7 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+  console.log(trips, "==");
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
@@ -46,16 +47,13 @@ function Home() {
   const getData = async (id) => {
     try {
       await userService.getUserById(id);
-      console.log("Inside Try");
       return;
     } catch (e) {
-      console.log("Inside catch");
       let newObj = {
         _id: currUser._delegate.uid,
         displayName: currUser._delegate.displayName,
         email: currUser._delegate.email,
       };
-      console.log(newObj, "==kdsnkjn");
       await userService.createUserFirebase({
         _id: newObj._id,
         displayName: newObj.displayName,
