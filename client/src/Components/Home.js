@@ -24,12 +24,14 @@ import { ExportStaticData } from "../ExploreStaticData";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 function Home() {
-  // const imageArray = require("../exploreStaticData.js");
+  const currUser = useContext(AuthContext);
+  const userId = currUser._delegate.uid;
   let array1 = [1, 2, 3];
   const navigate = useNavigate();
-  const currUser = useContext(AuthContext);
+
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+  console.log(trips, "==");
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
@@ -41,10 +43,26 @@ function Home() {
     ExportStaticData[two],
     ExportStaticData[three],
   ];
-  console.log(arr, "===");
 
-  console.log(ExportStaticData);
-
+  const getData = async (id) => {
+    try {
+      await userService.getUserById(id);
+      return;
+    } catch (e) {
+      let newObj = {
+        _id: currUser._delegate.uid,
+        displayName: currUser._delegate.displayName,
+        email: currUser._delegate.email,
+      };
+      await userService.createUserFirebase({
+        _id: newObj._id,
+        displayName: newObj.displayName,
+        email: newObj.email,
+        password: "passwordFirebase",
+      });
+    }
+  };
+  getData(userId);
   useEffect(() => {
     dispatch(actions.initializeUser(currUser._delegate.uid));
     dispatch(initializeState());

@@ -363,7 +363,6 @@ const inviteUserToTrip = async (req, res) => {
       trip.users.filter((user) => user.email === obj.email).length === 0
     ) {
       trip.invites.push(obj);
-      console.log(trip.invites);
       await trip.save();
 
       const userData = await User.findById(trip.users[0]);
@@ -389,7 +388,7 @@ const inviteUserToTrip = async (req, res) => {
       });
 
       let details = {
-        from: "wanderlog8@gmail.com",
+        from: "tripplanner057@gmail.com",
         to: `${req.body.body.email}`,
         subject: `Invitation to Trip to ${trip.destination} by ${userData.displayName}`,
         html: output,

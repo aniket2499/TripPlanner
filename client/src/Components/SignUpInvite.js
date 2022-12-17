@@ -101,7 +101,7 @@ function SignUpInvite() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value,
+          displayName.value
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -233,14 +233,14 @@ function SignUpInvite() {
           >
             Sign Up
           </Button>
-          <Button
+          {/* <Button
             style={styles.button}
             onClick={() => {
               navigate("/login");
             }}
           >
             Change to Log in
-          </Button>
+          </Button> */}
         </Box>
       </form>
       <Modal

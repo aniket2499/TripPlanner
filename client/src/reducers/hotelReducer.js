@@ -3,17 +3,11 @@ import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
-
-function GGetUserInfo() {
-  const currUser = useContext(AuthContext);
-  if (currUser) {
-    return currUser;
-  } else return null;
-}
+import storage from "redux-persist/lib/storage";
 
 const initialState = [
   {
-    location_id: null,
+    hotelId: null,
     name: null,
     imageUrl: null,
     rating: null,
@@ -23,8 +17,9 @@ const initialState = [
 ];
 
 let copyState = null;
+let index = 0;
 
-const hotelReducer = (state = initialState, action) => {
+const hotelReducer = (state = [], action) => {
   const { type, payload } = action;
 
   switch (type) {
@@ -34,13 +29,28 @@ const hotelReducer = (state = initialState, action) => {
       return state;
 
     case "ADD_HOTEL":
-      console.log("entered in the add hotel reducer");
-      console.log(payload);
-      return [...state, payload];
-    // return [...state, payload.obj];
+      const newHotel = {
+        hotelId: payload.obj.dupeId,
+        name: payload.obj.name,
+        imageUrl: payload.obj.image,
+        rating: payload.obj.rating,
+        latitude: payload.obj.geoCode.latitude,
+        longitude: payload.obj.geoCode.longitude,
+      };
+      return [...state, newHotel];
 
     case "DELETE_HOTEL":
-      copyState = state.filter((x) => x._id !== payload._id);
+      copyState = [...state];
+      let elemIndex = -1;
+      for (let i = 0; i < copyState.length; i++) {
+        if (copyState[i].hotelId == payload.location_id) {
+          elemIndex = i;
+          break;
+        }
+      }
+      if (elemIndex > -1) {
+        copyState.splice(elemIndex, 1);
+      }
       return copyState;
 
     default:
@@ -60,9 +70,6 @@ const initializeState = (tripId) => {
       type: "INITIALIZE_HOTEL",
       payload: hotelsData,
     });
-    // console.log("entered in the initalization stat:" + getState().user[0].id);
-    // filtering hotels for the current trip
-    //
   };
 };
 
@@ -93,6 +100,6 @@ const deleteHotel = (tripId, hotelId, hotel) => {
     });
   };
 };
-export { initializeState, addHotel, deleteHotel };
+export { initializeState, deleteHotel };
 
 export default hotelReducer;

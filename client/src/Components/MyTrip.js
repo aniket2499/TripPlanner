@@ -71,24 +71,37 @@ const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
   const [itinerary, setItinerary] = useState([]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function verifyTrip(id) {
+      const getTrip = await userService.getUserById(currUser._delegate.uid);
+      const bool = getTrip.trips.includes(id);
+      if (!bool) {
+        alert("You cannot access this trip");
+        navigate("/home");
+      }
+    }
+    verifyTrip(id.id);
+    if (currUser && id.id) {
+      socket.emit("join_room", id.id);
+    }
+  }, [id.id]);
+
   const days = [];
-  const [loading, setLoading] = useState(false);
-  const [flights, setFlights] = useState([]);
-  const [trip, setTrip] = useState([]);
   const [hotelState, setHotels] = useState([]);
   const [restaurantState, setRestaurants] = useState([]);
   const [attractionState, setAttractions] = useState([]);
-  const [openCalenderButton, setOpenCalenderButton] = React.useState(false);
+
   const [notesValue, setNotesValue] = useState("");
   const dispatch = useDispatch();
-  const [value, setValue] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
   const tripId = useParams().id;
   const hotels = useSelector((state) => state.hotels);
   const restaurants = useSelector((state) => state.restaurants);
   const attractions = useSelector((state) => state.attractions);
   const trips = useSelector((state) => state.trips);
-  const currentTrip = trips.filter((trip) => trip._id == tripId);
+  let currentTrip = trips.filter((trip) => trip._id == tripId);
 
   const handleDownload = (e) => {
     e.preventDefault();
@@ -107,6 +120,43 @@ const MyTrip = () => {
     });
   };
 
+  
+  let startDate = "";
+  let endDate = "";
+  // console.log("trips are: " + JSON.stringify(trips));
+  if (trips.length !== 0) {
+    startDate = moment(currentTrip[0].tripDate.startDate);
+    endDate = moment(currentTrip[0].tripDate.endDate);
+    let day = startDate;
+    while (day <= endDate) {
+      days.push(day.format("YYYY-MM-DD"));
+      day = day.clone().add(1, "d");
+    }
+  }
+
+  useEffect(() => {
+    console.log("event fired");
+
+    async function fetchData(id) {
+      await dispatch(actions.initializeUser(currUser._delegate.uid));
+      await dispatch(initTrip());
+      await dispatch(initHotel(tripId));
+      await dispatch(initRest(tripId));
+      await dispatch(initAttr(tripId));
+    }
+
+    fetchData(id.id);
+  }, []);
+  
+   useEffect(()=>{
+    async function fetchData(id) {
+      let data = await tripService.getTripById(id);
+      setNotesValue(data.notes);
+    }
+
+    fetchData(id.id);
+   },[id])
+  
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
     console.log("edit hotel");
@@ -128,49 +178,6 @@ const MyTrip = () => {
     dispatch(actions.deleteAttratcion(attractionId));
   };
 
-  const joinRoom = (id) => {
-    if (currUser && id) {
-      socket.emit("join_room", id);
-    }
-  };
-  useEffect(() => {
-    if (currUser && id.id) {
-      socket.emit("join_room", id.id);
-    }
-  }, [id.id]);
-
-  useEffect(() => {
-    // storage.removeItem("persist:root");
-    async function fetchData(id) {
-      let data = await tripService.getTripById(id);
-      setNotesValue(data.notes);
-    }
-
-    fetchData(id.id);
-
-    dispatch(initTrip());
-    dispatch(initHotel(tripId));
-    dispatch(initRest(tripId));
-    dispatch(initAttr(tripId));
-    // for (let i = 0; i < hotels.length; i++) {
-    //   hotels[i].calenderButton = false;
-    // }
-    setRestaurants(restaurants);
-    setAttractions(attractions);
-    setHotels(hotels);
-  }, [id]);
-
-  // getting start and end date from current trip
-
-  const startDate = moment(currentTrip[0].tripDate.startDate);
-  const endDate = moment(currentTrip[0].tripDate.endDate);
-  let day = startDate;
-  while (day <= endDate) {
-    days.push(day.format("YYYY-MM-DD"));
-    day = day.clone().add(1, "d");
-  }
-
-  const navigate = useNavigate();
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
@@ -273,31 +280,33 @@ const MyTrip = () => {
                   justifyContent="center"
                   style={{ paddingBottom: 0 }}
                 >
-                  <Grid item xs={12} sm={12} md={8} lg={8}>
-                    <Card sx={{ mt: 40 }}>
-                      <CardContent>
-                        <Stack direction="column" justifyContent="Center">
-                          <Typography
-                            variant="h5"
-                            component="h1"
-                            fontWeight="fontWeightBold"
-                            sx={{ mt: 2, ml: 2 }}
-                          >
-                            {`Trip to ${currentTrip[0].destination}`}
-                          </Typography>
-
-                          <Typography
-                            variant="body1"
-                            fontWeight="fontWeightBold"
-                            sx={{ mt: 2, ml: 2 }}
-                            color="text.hint"
-                          >
-                            {`${currentTrip[0].tripDate.startDate} - ${currentTrip[0].tripDate.endDate}`}
-                          </Typography>
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Grid>
+                  {currentTrip &&
+                    currentTrip.map((trip) => (
+                      <Grid item xs={12} sm={12} md={8} lg={8}>
+                        <Card sx={{ mt: 40 }}>
+                          <CardContent>
+                            <Stack direction="column" justifyContent="Center">
+                              <Typography
+                                variant="h5"
+                                component="h1"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                              >
+                                {`Trip to ${trip.destination}`}
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                fontWeight="fontWeightBold"
+                                sx={{ mt: 2, ml: 2 }}
+                                color="text.hint"
+                              >
+                                {`${trip.tripDate.startDate} - ${trip.tripDate.endDate}`}
+                              </Typography>
+                            </Stack>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
                 </Grid>
               </Paper>
             </Box>
@@ -325,8 +334,10 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {hotelState.length > 0 &&
-                        hotelState.map((hotel, index) => (
+
+                      {hotels &&
+                        hotels.map((hotel, index) => (
+
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
