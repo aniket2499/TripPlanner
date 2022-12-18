@@ -5,8 +5,8 @@ const newValidation = require("../validation/dataValidation.js");
 const Trip = require("../model/Trip");
 
 const getHotelById = async (id) => {
-  let parsedId = validation.toObjectId(id, "HotelId");
-  const hotel = await Hotel.findById(id);
+  // let parsedId = validation.toObjectId(id, "HotelId");
+  const hotel = await Hotel.find({ location_id: id });
   if (hotel) {
     return hotel;
   } else {
@@ -73,13 +73,9 @@ const createHotel = async (hotelBody, id) => {
 
   const savedHotel = await newHotelInfo.save();
 
-  console.log("a");
   console.log(typeof savedHotel.location_id);
   trip.hotels.push(savedHotel.location_id);
   await trip.save();
-  console.log("b");
-
-  console.log("backend trip: " + JSON.stringify(trip));
 
   if (savedHotel) {
     return savedHotel;

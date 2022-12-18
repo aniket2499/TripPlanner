@@ -4,29 +4,6 @@ import actions from "../actions";
 import store from "../store";
 // import GetUserInfo from "../Components/getUserInfo";
 
-const initialState = [
-  {
-    _id: null,
-    cur_location: null,
-    destination: null,
-    tripDate: {
-      startDate: null,
-      endDate: null,
-    },
-    destination_lat: null,
-    destination_long: null,
-    userId: null,
-    tripName: null,
-    hotels: [],
-    attractions: [],
-    explore: [],
-    invites: [],
-    itinerary: [],
-    placesToVisit: [],
-    restaurants: [],
-  },
-];
-
 let copyState = null;
 let index = 0;
 
