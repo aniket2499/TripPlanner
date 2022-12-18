@@ -39,7 +39,7 @@ const TripSchema = new Schema({
       placesToVisit: [{ type: String }],
     },
   ],
-  hotels: [{ type: Schema.Types.ObjectId, ref: "Hotels" }],
+  hotels: [{ type: String, ref: "Hotels" }],
   restaurants: [{ type: Schema.Types.ObjectId, ref: "Restaurants" }],
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
 });
