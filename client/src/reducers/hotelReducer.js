@@ -5,24 +5,6 @@ import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
 import storage from "redux-persist/lib/storage";
 
-function GGetUserInfo() {
-  const currUser = useContext(AuthContext);
-  if (currUser) {
-    return currUser;
-  } else return null;
-}
-
-const initialState = [
-  {
-    location_id: null,
-    name: null,
-    imageUrl: null,
-    rating: null,
-    latitude: null,
-    longitude: null,
-  },
-];
-
 let copyState = null;
 
 const hotelReducer = (state = [], action) => {

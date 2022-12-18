@@ -92,8 +92,6 @@ const MyTrip = () => {
 
   const [notesValue, setNotesValue] = useState("");
 
-  const [notesValue, setNotesValue] = useState("");
-
   const dispatch = useDispatch();
   const tripId = useParams().id;
 
@@ -164,20 +162,12 @@ const MyTrip = () => {
   };
 
   // getting start and end date from current trip
-  // getting start and end date from current trip
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
       notes: notesValue,
-      notes: notesValue,
     };
-    console.log(newObj, "Inside handle");
-    try {
-      await tripService.updateTripById(id.id, newObj);
-    } catch (e) {
-      console.log(e);
-    }
     console.log(newObj, "Inside handle");
     try {
       await tripService.updateTripById(id.id, newObj);
