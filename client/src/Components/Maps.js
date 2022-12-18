@@ -29,7 +29,7 @@ const Maps = () => {
   };
 
   const coords = { lat: 40.7127753, lng: -74.0059728 };
-  console.log(process.env.GOOGLE_API_KEY, "==");
+  // console.log(process.env.GOOGLE_API_KEY, "==");
   return (
     <div id="mapContainer" style={styles.mapContainer}>
       <GoogleMapReact

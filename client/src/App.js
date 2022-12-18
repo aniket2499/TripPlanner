@@ -220,7 +220,6 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme);
 
 function App() {
-  console.log("App.js");
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -248,7 +247,6 @@ function App() {
                   path="/:tripId/accept/signup"
                   element={<SignUpInvite />}
                 />
-                <Route path="/restaurants" element={<PrivateRoute />}></Route>
 
                 <Route path="/signout" element={<PrivateRoute />}>
                   <Route path="/signout" element={<SignOut />} />
@@ -261,7 +259,7 @@ function App() {
                 </Route>
 
                 <Route path="/restaurants" element={<PrivateRoute />}>
-                  <Route path="/restaurants" element={<Restaurants />} />
+                  <Route exact path="/restaurants" element={<Restaurants />} />
                 </Route>
 
                 <Route path="/hotels/:tripid" element={<PrivateRoute />}>

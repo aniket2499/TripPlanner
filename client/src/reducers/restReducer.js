@@ -24,16 +24,14 @@ const initialState = [
 
 let copyState = null;
 
-const restReducer = (state = initialState, action) => {
+const restReducer = (state = [], action) => {
   const { type, payload } = action;
 
   switch (type) {
     case "INITIALIZE_RESTAURANT":
-      state = [];
       state = payload;
       return state;
     case "ADD_RESTAURANT":
-      console.log("add rest action");
       return [
         ...state,
         {
@@ -56,11 +54,9 @@ const restReducer = (state = initialState, action) => {
       ];
 
     case "DELETE_RESTAURANT":
-      copyState = [...state];
-      copyState = copyState.filter(
-        (x) => x.location_id !== payload.location_id,
-      );
-      return [...copyState];
+      // delete restaurant
+      copyState = state.filter((x) => x._id !== payload.id);
+      return copyState;
 
     default:
       return state;
@@ -68,9 +64,9 @@ const restReducer = (state = initialState, action) => {
 };
 
 const initializeState = (tripId) => {
-  console.log("trip id here in restreducer:" + tripId);
   return async (dispatch, getState) => {
     let trip = getState().trips.filter((x) => x._id === tripId);
+
     let restaurantsData = [];
     for (let i = 0; i < trip[0].restaurants.length; i++) {
       let restaurant = await restaurantService.getRestaurantById(
@@ -78,7 +74,7 @@ const initializeState = (tripId) => {
       );
       restaurantsData.push(restaurant);
     }
-    console.log("restaurants aniket:" + restaurantsData);
+
     dispatch({
       type: "INITIALIZE_RESTAURANT",
       payload: restaurantsData,

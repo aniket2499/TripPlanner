@@ -18,7 +18,6 @@ const AcceptInvite = () => {
     await tripService
       .acceptTripInvite(tripId, userId)
       .then((res) => {
-        console.log(res);
         if (currUser) {
           navigate("/home");
         } else {

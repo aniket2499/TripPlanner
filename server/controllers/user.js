@@ -1,6 +1,8 @@
+const bcrypt = require("bcrypt");
 const User = require("../model/User");
 const validation = require("../validation/routesValidation");
 const valid = require("../validation/dataValidation");
+const saltRounds = 8;
 
 const getUserById = async (id) => {
   let parsedId = validation.checkString(id, "UserId");
@@ -27,9 +29,27 @@ const getAllUsers = async () => {
   }
 };
 
-const createUser = async (userBody) => {
-  // console.log(userBody.body);
+const createUserFirebase = async (userBody) => {
   const newUserInfo = new User(userBody.body);
+  let savedUser = null;
+  try {
+    savedUser = await newUserInfo.save();
+  } catch (e) {
+    console.log(e);
+  }
+  if (savedUser) {
+    return savedUser;
+  } else {
+    throw {
+      message: `User not created`,
+      status: 400,
+    };
+  }
+};
+
+const createUser = async (userBody) => {
+  const newUserInfo = new User(userBody.body);
+  let savedUser = null;
   if (newUserInfo.displayName) {
     newUserInfo.displayName = validation.checkString(
       newUserInfo.displayName,
@@ -42,8 +62,13 @@ const createUser = async (userBody) => {
   if (newUserInfo.password) {
     newUserInfo.password = valid.checkPassword(newUserInfo.password);
   }
+  newUserInfo.password = await bcrypt.hash(newUserInfo.password, saltRounds);
 
-  const savedUser = await newUserInfo.save();
+  try {
+    savedUser = await newUserInfo.save();
+  } catch (e) {
+    console.log(e);
+  }
 
   if (savedUser) {
     return savedUser;
@@ -176,4 +201,5 @@ module.exports = {
   createUser,
   updateUserById,
   deleteUserById,
+  createUserFirebase,
 };

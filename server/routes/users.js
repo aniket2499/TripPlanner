@@ -7,6 +7,7 @@ const {
   createUser,
   deleteUserById,
   updateUserById,
+  createUserFirebase,
 } = require("../controllers/user");
 
 router.get("/", async (req, res) => {
@@ -28,8 +29,6 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/create", async (req, res) => {
-  // console.log("entered route");
-  // console.log(req.body);
   try {
     const newUser = await createUser(req.body);
     res.status(200).json(newUser);
@@ -37,7 +36,14 @@ router.post("/create", async (req, res) => {
     res.status(e.status ? e.status : 500).json(e);
   }
 });
-
+router.post("/create/firebase", async (req, res) => {
+  try {
+    const newUser = await createUserFirebase(req.body);
+    res.status(200).json(newUser);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
 router.delete("/delete/:id", async (req, res) => {
   try {
     const deletedUser = await deleteUserById(req.params.id);

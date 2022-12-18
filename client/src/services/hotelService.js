@@ -12,9 +12,9 @@ const getHotelById = (id) => {
   });
 };
 
-const createHotel = (body) => {
+const createHotel = (tripId, body) => {
   return axios
-    .post(DATA_URL + "/hotels/create", { body: body })
+    .post(DATA_URL + `/hotels/create/${tripId}`, body)
     .then((response) => {
       return response.data;
     });

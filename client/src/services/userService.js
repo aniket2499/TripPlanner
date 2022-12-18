@@ -13,9 +13,16 @@ const getUserById = async (id) => {
 };
 
 const createUser = (body) => {
-  console.log("==body===", body);
   return axios
     .post(DATA_URL + "/users/create", { body: body })
+    .then((response) => {
+      return response.data;
+    });
+};
+
+const createUserFirebase = (body) => {
+  return axios
+    .post(DATA_URL + "/users/create/firebase", { body: body })
     .then((response) => {
       return response.data;
     });
@@ -41,6 +48,7 @@ const exports = {
   createUser,
   deleteUserById,
   updateUserById,
+  createUserFirebase,
 };
 
 export default exports;

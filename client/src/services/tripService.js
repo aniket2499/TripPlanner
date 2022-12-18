@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 import React, { useContext } from "react";
 import { AuthContext } from "../firebase/Auth";
 const DATA_URL = "http://localhost:3001/api";
@@ -10,24 +11,19 @@ const DATA_URL = "http://localhost:3001/api";
 // };
 
 const getAllTripsForCurrentUser = (id) => {
-  console.log("enterd in the get all trips for current user");
   return axios.get(DATA_URL + `/trips`).then((response) => {
     const temp = response.data.filter((x) => x.users[0] === id);
-    console.log("temp is aniket: " + temp);
     return temp;
   });
 };
 
 const getTripById = (id) => {
-  console.log("getTripById");
   return axios.get(DATA_URL + `/trips/${id}`).then((response) => {
-    console.log(response.data);
     return response.data;
   });
 };
 
 const createTrip = (body) => {
-  // console.log(body);
   const userId = body.id;
   return axios
     .post(DATA_URL + `/trips/create/${userId}`, { body: body })
@@ -43,6 +39,7 @@ const deleteTripById = (id) => {
 };
 
 const updateTripById = (id, body) => {
+  console.log(id, body, "inside services");
   return axios
     .patch(DATA_URL + `/trips/update/${id}`, { body: body })
     .then((response) => {
@@ -62,29 +59,28 @@ const addAttractionToTrip = (id, body) => {
 };
 
 const removeAttractionFromTrip = (id, body) => {
-  const attractionid = body.attractionId;
+  const attractionid = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`, {
-      body: body,
-    })
+    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`)
     .then((response) => {
       return response.data;
     });
 };
 
 const addHotelToTrip = (id, body) => {
-  const hotelId = body.hotelId;
+  const hotelId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/add/${hotelId}`)
     .then((response) => {
+      console.log(response.data);
       return response.data;
     });
 };
 
 const removeHotelFromTrip = (id, body) => {
-  const hotelId = body.hotelId;
+  const hotelId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`, { body: body })
+    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`)
     .then((response) => {
       return response.data;
     });
@@ -102,11 +98,9 @@ const addRestaurantToTrip = (id, body) => {
 };
 
 const removeRestaurantFromTrip = (id, body) => {
-  const restaurantId = body.restaurantId;
+  const restaurantId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`, {
-      body: body,
-    })
+    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`)
     .then((response) => {
       return response.data;
     });
@@ -126,8 +120,7 @@ const inviteUserToTrip = (id, body) => {
 const acceptTripInvite = (trip, user) => {
   const tripId = trip.tripId;
   const userId = user.userId;
-  console.log(userId, "-user");
-  console.log(tripId, "=kjdbcjkb");
+
   // const currUser = useContext(AuthContext);
   // const userId = currUser.uid;
   // console.log(userId);
@@ -138,9 +131,23 @@ const acceptTripInvite = (trip, user) => {
     });
 };
 
-const exports = {
-  // getAllTrips,
+const createPDF = (body) => {
+  console.log(body, "inside services");
+  return axios.post(DATA_URL + `/trips/trips/pdf`, body).then((response) => {
+    return response.data;
+  });
+};
+const fetchPDF = () => {
+  return axios
+    .get(DATA_URL + `/trips/fetch/pdf`, { responseType: "blob" })
+    .then((response) => {
+      console.log(response.data, "response.data");
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      saveAs(pdfBlob, "newPdf.pdf");
+    });
+};
 
+const exports = {
   getTripById,
   createTrip,
   deleteTripById,
@@ -154,6 +161,8 @@ const exports = {
   inviteUserToTrip,
   acceptTripInvite,
   getAllTripsForCurrentUser,
+  createPDF,
+  fetchPDF,
 };
 
 export default exports;

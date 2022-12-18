@@ -8,7 +8,6 @@ import {
   persistReducer,
   PURGE,
   REGISTER,
-  REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import attractionReducer from "./attractionReducer";

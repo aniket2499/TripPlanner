@@ -140,12 +140,6 @@ function SignUp() {
   };
 
   const handleValidFormData = () => {
-    console.log(document.getElementById("pwd1").value);
-    console.log(document.getElementById("pwd2").value);
-    console.log(
-      document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value,
-    );
     if (
       document.getElementById("pwd1").value !==
       document.getElementById("pwd2").value
@@ -155,8 +149,6 @@ function SignUp() {
   };
 
   if (currUser) {
-    console.log(currUser, "====");
-    console.log(finalPswd, "===");
     try {
       addToMongo({
         _id: currUser._delegate.uid,
@@ -166,7 +158,6 @@ function SignUp() {
       });
       doSignOut();
     } catch (e) {
-      console.log(e);
       alert(e);
     }
     // navigate("/login");

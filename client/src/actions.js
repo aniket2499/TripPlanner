@@ -56,35 +56,39 @@ const addAttraction = (
   },
 });
 
-const deleteAttratcion = (location_id) => ({
+const deleteAttratcion = (id) => ({
   type: "DELETE_ATTRACTION",
   payload: {
-    location_id: location_id,
+    id: id,
   },
 });
 
-const addHotel = (
-  location_id,
-  name,
-  latitude,
-  longitude,
-  imageUrl,
-  rating,
-) => ({
+const addHotel = (obj) => ({
   type: "ADD_HOTEL",
   payload: {
-    location_id: location_id,
-    name: name,
-    latitude: latitude,
-    longitude: longitude,
-    rating: rating,
-    imageUrl: imageUrl,
+    obj: obj,
   },
 });
 
 const deleteHotel = (location_id) => ({
   type: "DELETE_HOTEL",
   payload: {
+    location_id: location_id,
+  },
+});
+
+const binHotel = (tripId, location_id) => ({
+  type: "BIN_HOTEL",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
+const unbinHotel = (tripId, location_id) => ({
+  type: "UNBIN_HOTEL",
+  payload: {
+    tripId: tripId,
     location_id: location_id,
   },
 });
@@ -126,10 +130,10 @@ const addRest = (
   },
 });
 
-const deleteRest = (location_id) => ({
+const deleteRest = (id) => ({
   type: "DELETE_RESTAURANT",
   payload: {
-    location_id: location_id,
+    id: id,
   },
 });
 
@@ -170,6 +174,8 @@ let exports = {
   getUser,
   initializeUser,
   initializeTrip,
+  binHotel,
+  unbinHotel,
 };
 
 export default exports;

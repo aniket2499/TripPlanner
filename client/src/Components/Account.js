@@ -6,7 +6,6 @@ import "../App.css";
 
 function Account() {
   const { currUser } = useContext(AuthContext);
-  console.log(currUser);
 
   return (
     <div style={{ paddingTop: "5rem" }}>

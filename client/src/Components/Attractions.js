@@ -55,7 +55,6 @@ const Attractions = () => {
     }
     fetchData();
   }, []);
-  console.log(attractions);
 
   if (loading) return <div>Loading...</div>;
   else {

@@ -8,12 +8,14 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const ThunkMiddleware = require("redux-thunk").default;
 
 // remove all the data from the storage
-//  storage.removeItem("persist:root");
-const persistConfig = {
-  key: "root",
-  storage,
-};
-const pReducer = persistReducer(persistConfig, rootReducer);
+//storage.removeItem("persist:root");
+
+
+// const persistConfig = {
+//   key: "root",
+//   storage,
+// };
+// const pReducer = persistReducer(rootReducer);
 
 // const store = createStore(
 //   pReducer,
@@ -22,7 +24,7 @@ const pReducer = persistReducer(persistConfig, rootReducer);
 // );
 
 const store = createStore(
-  pReducer,
+  rootReducer,
   composeEnhancer(compose, applyMiddleware(ThunkMiddleware)),
   // applyMiddleware(ThunkMiddleware),
 );
@@ -30,4 +32,4 @@ const store = createStore(
 const persistor = persistStore(store);
 
 export default store;
-export { persistor };
+// export { persistor };
