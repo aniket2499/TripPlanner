@@ -9,6 +9,7 @@ const TripSchema = new Schema({
     endDate: { type: String, required: true },
   },
   users: [{ type: String, ref: "User" }],
+  image: { type: String },
 
   invites: [
     {
