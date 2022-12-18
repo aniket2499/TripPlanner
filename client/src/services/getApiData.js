@@ -25,11 +25,19 @@ const getAttractionsData = (location, page, rating) => {
     });
 };
 
+const getWeatherData = (date, lat, lng) => {
+  return axios
+    .get(DATA_URL + `/trips/weather/data/${date}/${lat}/${lng}`)
+    .then((response) => {
+      return response.data;
+    });
+};
 
 const exports = {
   getHotelData,
   getRestaurantData,
   getAttractionsData,
+  getWeatherData,
 };
 
 export default exports;

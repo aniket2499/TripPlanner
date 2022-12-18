@@ -17,11 +17,12 @@ const getWeatherForCity = async (city) => {
   }
 };
 
-const getWeatherForeCastForLocation = async (date) => {
+const getWeatherForeCastForLocation = async (date, lat, lng) => {
   try {
+    date = date.split("-").join("/");
     const weatherOnDay = [];
     const { data } = await axios.get(
-      `https://pro.openweathermap.org/data/2.5/forecast/climate?lat=32.7668&lon=-96.7836&appid=987ab96b5c3ce295c905c2521ad75d17`,
+      `https://pro.openweathermap.org/data/2.5/forecast/climate?lat=${lat}&lon=${lng}&appid=987ab96b5c3ce295c905c2521ad75d17`,
     );
     //Converting the date to the format that is come from database
     function convertingDateFromAPI(date) {
@@ -62,7 +63,7 @@ const getWeatherForeCastForLocation = async (date) => {
     console.error(e);
   }
 };
-getWeatherForeCastForLocation("12/03/2022");
+// getWeatherForeCastForLocation();
 module.exports = {
   getWeatherForCity,
   getWeatherForeCastForLocation,

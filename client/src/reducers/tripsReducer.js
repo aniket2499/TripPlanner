@@ -5,6 +5,7 @@ import store from "../store";
 // import GetUserInfo from "../Components/getUserInfo";
 
 let copyState = null;
+let index = 0;
 
 const tripsReducer = (state = [], action) => {
   const { type, payload } = action;
@@ -16,11 +17,30 @@ const tripsReducer = (state = [], action) => {
       return state;
 
     case "ADD_TRIP":
+      console.log(payload);
       return [...state, payload.obj];
 
     case "DELETE_TRIP":
       copyState = [...state];
       copyState = copyState.filter((x) => x.name !== payload.name);
+      return [...copyState];
+
+    case "BIN_HOTEL":
+      copyState = [...state];
+      console.log("inside bin");
+      console.log(payload);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      index.hotels.push(payload.location_id.toString());
+      return [...copyState];
+
+    case "UNBIN_HOTEL":
+      console.log("inside unbin");
+      copyState = [...state];
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      const elemIndex = index.hotels.indexOf(payload.location_id.toString());
+      if (elemIndex > -1) {
+        index.hotels.splice(elemIndex, 1);
+      }
       return [...copyState];
 
     default:

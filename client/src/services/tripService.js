@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 import React, { useContext } from "react";
 import { AuthContext } from "../firebase/Auth";
 const DATA_URL = "http://localhost:3001/api";
@@ -130,9 +131,23 @@ const acceptTripInvite = (trip, user) => {
     });
 };
 
-const exports = {
-  // getAllTrips,
+const createPDF = (body) => {
+  console.log(body, "inside services");
+  return axios.post(DATA_URL + `/trips/trips/pdf`, body).then((response) => {
+    return response.data;
+  });
+};
+const fetchPDF = () => {
+  return axios
+    .get(DATA_URL + `/trips/fetch/pdf`, { responseType: "blob" })
+    .then((response) => {
+      console.log(response.data, "response.data");
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      saveAs(pdfBlob, "newPdf.pdf");
+    });
+};
 
+const exports = {
   getTripById,
   createTrip,
   deleteTripById,
@@ -146,6 +161,8 @@ const exports = {
   inviteUserToTrip,
   acceptTripInvite,
   getAllTripsForCurrentUser,
+  createPDF,
+  fetchPDF,
 };
 
 export default exports;

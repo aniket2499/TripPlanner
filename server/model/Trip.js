@@ -9,6 +9,7 @@ const TripSchema = new Schema({
     endDate: { type: String, required: true },
   },
   users: [{ type: String, ref: "User" }],
+  image: { type: String },
 
   invites: [
     {
@@ -38,7 +39,7 @@ const TripSchema = new Schema({
       placesToVisit: [{ type: String }],
     },
   ],
-  hotels: [{ type: Schema.Types.ObjectId, ref: "Hotels" }],
+  hotels: [{ type: String, ref: "Hotels" }],
   restaurants: [{ type: Schema.Types.ObjectId, ref: "Restaurants" }],
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
 });
