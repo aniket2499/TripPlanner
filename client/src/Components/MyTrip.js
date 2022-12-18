@@ -130,16 +130,16 @@ const MyTrip = () => {
 
     fetchData(id.id);
   }, []);
-  
-   useEffect(()=>{
+
+  useEffect(() => {
     async function fetchData(id) {
       let data = await tripService.getTripById(id);
       setNotesValue(data.notes);
     }
 
     fetchData(id.id);
-   },[id])
-  
+  }, [id]);
+
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
     console.log("edit hotel");
@@ -162,12 +162,20 @@ const MyTrip = () => {
   };
 
   // getting start and end date from current trip
+  // getting start and end date from current trip
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
       notes: notesValue,
+      notes: notesValue,
     };
+    console.log(newObj, "Inside handle");
+    try {
+      await tripService.updateTripById(id.id, newObj);
+    } catch (e) {
+      console.log(e);
+    }
     console.log(newObj, "Inside handle");
     try {
       await tripService.updateTripById(id.id, newObj);
@@ -350,7 +358,7 @@ const MyTrip = () => {
                                                 e,
                                                 tripId,
                                                 hotel._id,
-                                                hotel
+                                                hotel,
                                               )
                                             }
                                           >
@@ -420,7 +428,7 @@ const MyTrip = () => {
                   <Grid container>
                     {restaurants.map(
                       (
-                        restaurant // hotels is an array of objects}
+                        restaurant, // hotels is an array of objects}
                       ) => (
                         <Grid item xs={12} sm={12} md={6} lg={6}>
                           <Card
@@ -450,7 +458,7 @@ const MyTrip = () => {
                             </CardContent>
                           </Card>
                         </Grid>
-                      )
+                      ),
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
@@ -493,7 +501,7 @@ const MyTrip = () => {
                                             onClick={() =>
                                               handleDeleteRestaurant(
                                                 tripId,
-                                                restaurant._id
+                                                restaurant._id,
                                               )
                                             }
                                           >
@@ -602,7 +610,7 @@ const MyTrip = () => {
                                               handleDeleteAttraction(
                                                 e,
                                                 tripId,
-                                                attraction._id
+                                                attraction._id,
                                               )
                                             }
                                           >

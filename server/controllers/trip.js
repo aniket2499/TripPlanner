@@ -115,7 +115,7 @@ const updateTripById = async (id, updateTripBody) => {
       const updatedTrip = await Trip.findByIdAndUpdate(
         id,
         { $set: trip },
-        { new: true }
+        { new: true },
       );
 
       if (updatedTrip) {
@@ -224,8 +224,8 @@ const addHotelToTrip = async (req, res) => {
         status: 404,
       };
     }
-    if (!trip.hotels.includes(hotel._id)) {
-      trip.hotels.push(hotel._id);
+    if (!trip.hotels.includes(hotel.location_id)) {
+      trip.hotels.push(hotel.location_id);
       await trip.save();
       return trip;
     } else {
@@ -238,17 +238,25 @@ const addHotelToTrip = async (req, res) => {
 };
 
 const removeHotelFromTrip = async (req, res) => {
-  const trip = await Trip.findById(req.params.tripid);
+  console.log("entered remove hotel from trip");
+  const trip = await Trip.find({ _id: req.params.tripid });
+
+  //console.log(trip);
   if (!trip) {
     throw {
       message: `Trip not found`,
       status: 404,
     };
   } else {
-    if (trip.hotels.includes(req.params.hotelid)) {
-      trip.hotels.pull(req.params.hotelid);
-      await trip.save();
-      return trip;
+    console.log("trip found");
+    console.log(JSON.stringify(trip[0].hotels));
+    console.log(req.params.hotelid);
+    console.log(trip);
+    if (trip[0].hotels.includes(req.params.hotelid)) {
+      console.log("trueeee");
+      trip[0].hotels.pull(req.params.hotelid);
+      await trip[0].save();
+      return trip[0];
     } else {
       throw {
         message: `Hotel not in trip`,

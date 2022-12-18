@@ -30,17 +30,21 @@ const hotelReducer = (state = [], action) => {
 
     case "ADD_HOTEL":
       const newHotel = {
-        hotelId: payload.obj.dupeId,
-        name: payload.obj.name,
-        imageUrl: payload.obj.image,
-        rating: payload.obj.rating,
-        latitude: payload.obj.geoCode.latitude,
-        longitude: payload.obj.geoCode.longitude,
+        _id: payload.id,
+        location_id: payload.location_id,
+        name: payload.name,
+        imageUrl: payload.image,
+        rating: payload.rating,
+        latitude: payload.latitude,
+        longitude: payload.longitude,
       };
+      console.log("newHotel is aniket:" + newHotel);
       return [...state, newHotel];
 
     case "DELETE_HOTEL":
       copyState = [...state];
+      console.log("inside delete hotel");
+      console.log(payload);
       let elemIndex = -1;
       for (let i = 0; i < copyState.length; i++) {
         if (copyState[i].hotelId == payload.location_id) {
@@ -75,6 +79,7 @@ const initializeState = (tripId) => {
 
 const addHotel = (tripId, hotelData) => {
   return async (dispatch, getState) => {
+    console.log(hotelData);
     let obj = {
       location_id: hotelData.dupeId,
       name: hotelData.name,
@@ -84,6 +89,7 @@ const addHotel = (tripId, hotelData) => {
       rating: hotelData.rating,
     };
     let data = await hotelService.createHotel(tripId, obj);
+    console.log("data is aniket: " + JSON.stringify(data));
     dispatch({
       type: "ADD_HOTEL",
       payload: data,
@@ -93,13 +99,21 @@ const addHotel = (tripId, hotelData) => {
 
 const deleteHotel = (tripId, hotelId, hotel) => {
   return async (dispatch, getState) => {
-    let data = await tripservice.removeHotelFromTrip(tripId, hotelId);
-    dispatch({
-      type: "DELETE_HOTEL",
-      payload: hotel,
-    });
+    console.log("inside here ********************************");
+    console.log(tripId, hotelId);
+    console.log(hotel);
+    console.log("anike id is: " + hotelId);
+    console.log(hotel);
+    let data = await tripservice.removeHotelFromTrip(
+      tripId,
+      hotelId.toString(),
+    );
+    // dispatch({
+    //   type: "DELETE_HOTEL",
+    //   payload: hotel,
+    // });
   };
 };
-export { initializeState, deleteHotel };
+export { initializeState, addHotel, deleteHotel };
 
 export default hotelReducer;
