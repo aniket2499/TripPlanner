@@ -96,9 +96,14 @@ const addHotel = (tripId, hotelData) => {
       rating: hotelData.rating,
     };
     let data = await hotelService.createHotel(tripId, obj);
+    let tripData = await tripservice.addHotelToTrip(tripId, data.id);
     console.log("data is aniket: " + JSON.stringify(data));
     dispatch({
       type: "ADD_HOTEL",
+      payload: data,
+    });
+    dispatch({
+      type: "ADD_HOTEL_ITINERARY",
       payload: data,
     });
   };
@@ -121,6 +126,7 @@ const deleteHotel = (tripId, hotelId, hotel) => {
     // });
   };
 };
+
 export { initializeState, addHotel, deleteHotel };
 
 export default hotelReducer;
