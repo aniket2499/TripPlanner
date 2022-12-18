@@ -29,7 +29,7 @@ function Home() {
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
   useEffect(() => {
-    // storage.removeItem("persist:root");
+    storage.removeItem("persist:root");
 
     dispatch(actions.initializeUser(currUser._delegate.uid));
 

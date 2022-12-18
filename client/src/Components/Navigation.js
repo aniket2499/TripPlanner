@@ -175,10 +175,15 @@ const Navigation = () => {
   const onLoad = (autoC) => setAutocomplete(autoC);
 
   const onPlaceChanged = () => {
+    const destination = autocomplete.getPlace().formatted_address;
     const lat = autocomplete.getPlace().geometry.location.lat();
     const lng = autocomplete.getPlace().geometry.location.lng();
     // console.log(lat, lng);
     setCoords({ lat, lng });
+    navigate(`/search/${searchTerm}`, {
+      state: { destination: destination, longitude: lng, lattitude: lat },
+    });
+    document.getElementById("search-box").value = "";
   };
 
   const handleOpenUserMenu = (event) => {
@@ -188,6 +193,14 @@ const Navigation = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  useEffect(() => {
+    if (window.location.href.split("/")[3] === "search") {
+      document.getElementById("app-bar").style.display = "none";
+    } else {
+      document.getElementById("app-bar").style.display = "block";
+    }
+  }, []);
 
   useEffect(() => {
     const setResponsiveness = () => {
@@ -209,27 +222,27 @@ const Navigation = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const timer = setTimeout(() => {
-        console.log(searchTerm);
-        // navigate(`/search/${searchTerm}`);
-        return navigate(`/search/searchTerm`, {
-          state: {
-            longitude: coords.lng,
-            latitude: coords.lat,
-          },
-        });
-      }, 500);
+  // useEffect(() => {
+  //   if (searchTerm) {
+  //     const timer = setTimeout(() => {
+  //       console.log(searchTerm);
+  //       // navigate(`/search/${searchTerm}`);
+  //       return navigate(`/search/searchTerm`, {
+  //         state: {
+  //           longitude: coords.lng,
+  //           latitude: coords.lat,
+  //         },
+  //       });
+  //     }, 500);
 
-      return () => {
-        clearTimeout(timer);
-        // setSearchTerm("");
-      };
-    } else {
-      // navigate(`/home`);
-    }
-  }, [searchTerm]);
+  //     return () => {
+  //       clearTimeout(timer);
+  //       // setSearchTerm("");
+  //     };
+  //   } else {
+  //     // navigate(`/home`);
+  //   }
+  // }, [searchTerm]);
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -271,7 +284,7 @@ const Navigation = () => {
       <Toolbar style={styles.toolbar} className="toolbar">
         {tripPlanner}
         <div style={{ display: "flex" }}>
-          <form
+          {/* <form
             method="POST"
             onSubmit={(e) => {
               e.preventDefault();
@@ -279,19 +292,28 @@ const Navigation = () => {
             }}
             name="formName"
             className="center"
-          >
-            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-              <TextField
-                id="search-box"
-                label="Search"
-                variant="outlined"
-                style={{
-                  marginTop: "0.5rem",
-                  width: "12rem",
-                }}
-              />
-            </Autocomplete>
-          </form>
+          > */}
+          <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+            <TextField
+              id="search-box"
+              // label="Search"
+              placeholder="Search"
+              variant="outlined"
+              style={{
+                marginTop: "0.5rem",
+                marginBottom: "0.5rem",
+                width: "12rem",
+              }}
+              onChange={(e) => {
+                if (e.target.value === 0) {
+                  return navigate("/home");
+                }
+                setSearchTerm(e.target.value);
+                navigate("/home");
+              }}
+            />
+          </Autocomplete>
+          {/* </form> */}
 
           {getMenuButtons()}
           <Button onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -463,7 +485,8 @@ const Navigation = () => {
         <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
           <TextField
             id="search-box"
-            label="Search"
+            // label="Search"
+            placeholder="Search"
             variant="outlined"
             style={{
               marginTop: "0.5rem",

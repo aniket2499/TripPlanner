@@ -306,7 +306,8 @@ const MyTrip = () => {
                                   renderInput={(params) => (
                                     <TextField
                                       {...params}
-                                      label="Date"
+                                      // label="Date"
+                                      placeholder="Date"
                                       margin="normal"
                                     />
                                   )}

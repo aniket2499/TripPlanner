@@ -109,7 +109,7 @@ function SignUp() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -144,7 +144,7 @@ function SignUp() {
     console.log(document.getElementById("pwd2").value);
     console.log(
       document.getElementById("pwd1").value ===
-        document.getElementById("pwd2").value
+        document.getElementById("pwd2").value,
     );
     if (
       document.getElementById("pwd1").value !==
@@ -194,7 +194,8 @@ function SignUp() {
           <TextField
             margin="dense"
             id="displayName"
-            label="Name"
+            // label="Name"
+            placeholder="Name"
             type={"text"}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
@@ -204,7 +205,8 @@ function SignUp() {
           <TextField
             margin="dense"
             id="email"
-            label="Email"
+            // label="Email"
+            placeholder="Email"
             type={"email"}
             autoComplete="new-password"
             style={styles.textField}
@@ -216,7 +218,8 @@ function SignUp() {
           <TextField
             margin="dense"
             id="pwd1"
-            label="Password"
+            // label="Password"
+            placeholder="Password"
             type={"password"}
             autoComplete="new-password"
             style={styles.textField}
@@ -229,7 +232,8 @@ function SignUp() {
           <TextField
             margin="dense"
             id="pwd2"
-            label="Comfirm Password"
+            // label="Comfirm Password"
+            placeholder="Confirm Password"
             type={"password"}
             autoComplete="off"
             style={styles.textField}

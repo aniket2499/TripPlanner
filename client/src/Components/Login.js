@@ -106,10 +106,12 @@ function Login() {
           <Typography variant="h3" component="h1" style={styles.header}>
             Login
           </Typography>
+          <label htmlFor="email"></label>
           <TextField
             margin="normal"
             id="email"
-            label="Email"
+            // label="Email"
+            placeholder="Email"
             type={"email"}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
@@ -119,7 +121,7 @@ function Login() {
           <TextField
             margin="normal"
             id="password"
-            label="Password"
+            placeholder="Password"
             type={"password"}
             autoComplete="off"
             onChange={() => {

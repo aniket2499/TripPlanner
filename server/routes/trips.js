@@ -15,6 +15,7 @@ const {
   inviteUserToTrip,
   acceptInviteToTrip,
 } = require("../controllers/trip");
+const { getWeatherForeCastForLocation } = require("../data/weather");
 
 router.post("/:tripId/accept/:userId", async (req, res) => {
   console.log(req.params.tripId, "Hello", req.params.userId);
@@ -133,6 +134,21 @@ router.post("/:id/invite", async (req, res) => {
   try {
     const trip = await inviteUserToTrip(req, res);
     res.status(200).json(trip);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.get(`/weather/data/:date/:lat/:lng`, async (req, res) => {
+  try {
+    console.log(req.params);
+    const weatherData = await getWeatherForeCastForLocation(
+      //sending today's date as default
+      req.params.date,
+      req.params.lat,
+      req.params.lng,
+    );
+    res.status(200).json(weatherData);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);
   }

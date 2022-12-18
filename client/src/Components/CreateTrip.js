@@ -136,7 +136,7 @@ const CreateTrip = () => {
 
     if (
       dayjs(newValues.tripDate.endDate).isBefore(
-        dayjs(newValues.tripDate.startDate)
+        dayjs(newValues.tripDate.startDate),
       ) &&
       showReturnDate
     ) {
@@ -174,7 +174,7 @@ const CreateTrip = () => {
               itinerary: ["1111"],
               placesToVisit: ["1111"],
               restaurants: ["1111"],
-            })
+            }),
           );
           navigate(`/${trip_id}/invite`);
 
@@ -232,7 +232,8 @@ const CreateTrip = () => {
             <TextField
               sx={{ width: "16rem" }}
               margin="normal"
-              label="Origin"
+              // label="Origin"
+              placeholder="Origin"
               name="cur_location"
               id="cur_location"
               type={"text"}
@@ -249,7 +250,8 @@ const CreateTrip = () => {
             <TextField
               sx={{ width: "16rem" }}
               margin="normal"
-              label="Destination"
+              // label="Destination"
+              placeholder="Destination"
               name="destination"
               id="destination"
               type={"text"}
@@ -261,7 +263,8 @@ const CreateTrip = () => {
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DesktopDatePicker
-              label="Start Date"
+              // label="Start Date"
+              placeholder="Start Date"
               disablePast
               inputFormat="MM/DD/YYYY"
               value={startDate}
@@ -291,7 +294,8 @@ const CreateTrip = () => {
             <DesktopDatePicker
               disabled={!showReturnDate}
               disablePast
-              label="Return Date"
+              // label="Return Date"
+              placeholder="Return Date"
               inputFormat="MM/DD/YYYY"
               value={returnDate}
               onChange={(newValue) => {

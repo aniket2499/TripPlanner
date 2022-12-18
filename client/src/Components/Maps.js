@@ -14,7 +14,7 @@ const Maps = () => {
       borderRadius: "100",
     },
     mapContainer: {
-      height: "90vh",
+      height: "100vh",
       width: "100%",
     },
     markerContainer: {

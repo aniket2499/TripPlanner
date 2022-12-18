@@ -63,7 +63,7 @@ html, body{
   }
   
   /* jquery class */
-  .searchbtn.bg-green{
+  /* .searchbtn.bg-green{
   background: #d14000;
   transition: all 0.2s linear;
   }
@@ -75,10 +75,26 @@ html, body{
   
   .searchbox .input.active-width{
   width: 355px;
-  } */
+  }  */
 
-  
+.block1{
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000;
+  z-index: 0;
+}
 
+.block2{
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  z-index: 0;
+}
+
+
+/* ::-webkit-scrollbar {
+  display: none;
+} */
 
 /* input{
   position: absolute;
