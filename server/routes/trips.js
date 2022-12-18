@@ -1,4 +1,7 @@
 const express = require("express");
+const pdf = require("html-pdf");
+const pdfTemplate = require("../documents");
+
 const router = express.Router();
 const {
   getAllTrips,
@@ -15,6 +18,7 @@ const {
   inviteUserToTrip,
   acceptInviteToTrip,
 } = require("../controllers/trip");
+const { getWeatherForeCastForLocation } = require("../data/weather");
 
 router.post("/:tripId/accept/:userId", async (req, res) => {
   try {
@@ -131,6 +135,48 @@ router.post("/:id/invite", async (req, res) => {
     const trip = await inviteUserToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.get(`/weather/data/:date/:lat/:lng`, async (req, res) => {
+  try {
+    console.log(req.params);
+    const weatherData = await getWeatherForeCastForLocation(
+      //sending today's date as default
+      req.params.date,
+      req.params.lat,
+      req.params.lng,
+    );
+    res.status(200).json(weatherData);
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.post("/trips/pdf", async (req, res) => {
+  console.log("creating pdf");
+
+  try {
+    pdf.create(pdfTemplate(req.body), {}).toFile("result.pdf", (err) => {
+      if (err) {
+        console.log(err);
+        res.send(Promise.reject());
+      }
+      res.send(Promise.resolve());
+    });
+  } catch (e) {
+    res.status(e.status ? e.status : 500).json(e);
+  }
+});
+
+router.get("/fetch/pdf", (req, res) => {
+  console.log("fetching pdf");
+  console.log(res.data);
+  try {
+    res.sendFile(`${__dirname}/result.pdf`);
+  } catch (e) {
+    console.log(e.stack);
     res.status(e.status ? e.status : 500).json(e);
   }
 });

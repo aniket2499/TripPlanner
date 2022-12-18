@@ -31,7 +31,7 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-  console.log(trips, "==");
+
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
@@ -164,6 +164,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",

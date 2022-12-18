@@ -132,7 +132,8 @@ function InviteToTrip() {
             id="email"
             margin="normal"
             sx={{ width: "16rem" }}
-            label="Email"
+            // label="Email"
+            placeholder="Email"
             type={"email"}
             // value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +144,8 @@ function InviteToTrip() {
             margin="normal"
             type={"text"}
             id="name"
-            label="Name"
+            // label="Name"
+            placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -153,7 +155,8 @@ function InviteToTrip() {
             margin="normal"
             type={"text"}
             id="message"
-            label="Message"
+            // label="Message"
+            placeholder="Message"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />

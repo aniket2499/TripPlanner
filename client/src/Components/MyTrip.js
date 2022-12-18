@@ -7,6 +7,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteHotel } from "../reducers/hotelReducer";
+import { saveAs } from "file-saver";
 import {
   Grid,
   Paper,
@@ -55,19 +56,22 @@ import { AuthContext } from "../firebase/Auth";
 import Maps from "./Maps";
 import io from "socket.io-client";
 import Chat from "./Chat";
-
 import { initializeState as initHotel } from "../reducers/hotelReducer";
 import { initializeState as initRest } from "../reducers/restReducer";
 import { initializeState as initAttr } from "../reducers/attractionReducer";
 import { initializeState as initTrip } from "../reducers/tripsReducer";
+import axios from "axios";
+import { jsPDF } from "jspdf";
+// import { Base64 } from "js-base64";
 
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-
+// const base64 = new Base64();
 const socket = io.connect("http://localhost:3002");
 
 const MyTrip = () => {
   const currUser = useContext(AuthContext);
   const id = useParams();
+  const [itinerary, setItinerary] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,23 +95,36 @@ const MyTrip = () => {
   const [attractionState, setAttractions] = useState([]);
 
   const [notesValue, setNotesValue] = useState("");
-
   const dispatch = useDispatch();
   const tripId = useParams().id;
-
-  const trips = useSelector((state) => state.trips);
-
   const hotels = useSelector((state) => state.hotels);
-
   const restaurants = useSelector((state) => state.restaurants);
   const attractions = useSelector((state) => state.attractions);
+  const trips = useSelector((state) => state.trips);
+  let currentTrip = trips.filter((trip) => trip._id == tripId);
 
-  let currentTrip = [];
+  const handleDownload = (e) => {
+    e.preventDefault();
+    const objectForPDF = {
+      trip: currentTrip,
+      hotels: hotels,
+      restaurants: restaurants,
+      attractions: attractions,
+    };
+    console.log("objectForPDF", objectForPDF);
+    tripService.createPDF(objectForPDF).then((res) => {
+      tripService.fetchPDF().then((res) => {
+        const file = new Blob([res.data], { type: "application/pdf" });
+        saveAs(file, "trip.pdf");
+      });
+    });
+  };
+
+  
   let startDate = "";
   let endDate = "";
   // console.log("trips are: " + JSON.stringify(trips));
   if (trips.length !== 0) {
-    currentTrip = trips.filter((trip) => trip._id === tripId);
     startDate = moment(currentTrip[0].tripDate.startDate);
     endDate = moment(currentTrip[0].tripDate.endDate);
     let day = startDate;
@@ -160,9 +177,6 @@ const MyTrip = () => {
       .then((res) => {});
     dispatch(actions.deleteAttratcion(attractionId));
   };
-
-  // getting start and end date from current trip
-  // getting start and end date from current trip
 
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
@@ -302,6 +316,15 @@ const MyTrip = () => {
                 </Grid>
               </Paper>
             </Box>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleDownload}
+              sx={{ mt: 2, ml: 2 }}
+            >
+              Download PDF
+            </Button>
             <Accordion>
               <AccordionSummary
                 style={{ flexDirection: "row-reverse" }}
@@ -317,8 +340,10 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
+
                       {hotels &&
                         hotels.map((hotel, index) => (
+
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
@@ -462,7 +487,7 @@ const MyTrip = () => {
                     )}
 
                     <Card styles={{ padding: "1.5rem" }}>
-                      {restaurantState &&
+                      {restaurantState.length > 0 &&
                         restaurantState.map((restaurant, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -570,7 +595,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {attractionState &&
+                      {attractionState.length > 0 &&
                         attractionState.map((attraction, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
