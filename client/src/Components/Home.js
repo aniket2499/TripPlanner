@@ -31,12 +31,15 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
+
+  useEffect(() => {
   console.log(trips, "==");
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
   const two = Math.floor(Math.random() * (max - min) + min);
   const three = Math.floor(Math.random() * (max - min) + min);
+
 
   let arr = [
     ExportStaticData[one],

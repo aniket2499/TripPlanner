@@ -101,7 +101,7 @@ function SignUpInvite() {
         await doCreateUserWithEmailAndPassword(
           email.value,
           pwd1.value,
-          displayName.value
+          displayName.value,
         );
         // alert("User Created Successfully");
         handleOpen();
@@ -181,7 +181,8 @@ function SignUpInvite() {
           <TextField
             margin="normal"
             id="displayName"
-            label="Name"
+            // label="Name"
+            placeholder="Name"
             type={"text"}
             onChange={() => {
               document.getElementById("error").innerHTML = "";
@@ -191,7 +192,8 @@ function SignUpInvite() {
           <TextField
             margin="normal"
             id="email"
-            label="Email"
+            // label="Email"
+            placeholder="Email"
             type={"email"}
             autoComplete="new-password"
             onChange={() => {
@@ -202,7 +204,8 @@ function SignUpInvite() {
           <TextField
             margin="normal"
             id="pwd1"
-            label="Password"
+            // label="Password"
+            placeholder="Password"
             type={"password"}
             autoComplete="new-password"
             onChange={() => {
@@ -214,7 +217,8 @@ function SignUpInvite() {
           <TextField
             margin="normal"
             id="pwd2"
-            label="Comfirm Password"
+            // label="Comfirm Password"
+            placeholder="Confirm Password"
             type={"password"}
             autoComplete="off"
             onChange={() => {

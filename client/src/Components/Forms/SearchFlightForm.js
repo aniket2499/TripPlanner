@@ -163,11 +163,13 @@ function SearchFlightForm({ handleSearch }) {
                   value="RoundTrip"
                   control={<Radio />}
                   label="Round Trip"
+                  placeholder="Round Trip"
                 />
                 <FormControlLabel
                   value="male"
                   control={<Radio />}
                   label="OneWay"
+                  placeholder="One Way"
                 />
               </RadioGroup>
             </Stack>
@@ -190,7 +192,8 @@ function SearchFlightForm({ handleSearch }) {
                 error={FromError}
                 helperText={FromErrorMessage}
                 {...params}
-                label="From"
+                // label="From"
+                placeholder="From"
                 onChange={handleOriginChange}
               />
             )}
@@ -212,7 +215,8 @@ function SearchFlightForm({ handleSearch }) {
                 error={ToError}
                 helperText={ToErrorMessage}
                 {...params}
-                label="To"
+                // label="To"
+                placeholder="To"
                 onChange={handleDestinationChange}
               />
             )}
