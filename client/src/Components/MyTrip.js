@@ -147,16 +147,16 @@ const MyTrip = () => {
 
     fetchData(id.id);
   }, []);
-  
-   useEffect(()=>{
+
+  useEffect(() => {
     async function fetchData(id) {
       let data = await tripService.getTripById(id);
       setNotesValue(data.notes);
     }
 
     fetchData(id.id);
-   },[id])
-  
+  }, [id]);
+
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
     console.log("edit hotel");
@@ -178,12 +178,18 @@ const MyTrip = () => {
     dispatch(actions.deleteAttratcion(attractionId));
   };
 
-
   const handleNotesSubmit = async (e) => {
     e.preventDefault();
     let newObj = {
       notes: notesValue,
+      notes: notesValue,
     };
+    console.log(newObj, "Inside handle");
+    try {
+      await tripService.updateTripById(id.id, newObj);
+    } catch (e) {
+      console.log(e);
+    }
     console.log(newObj, "Inside handle");
     try {
       await tripService.updateTripById(id.id, newObj);

@@ -31,7 +31,7 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-  console.log(trips, "==");
+
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);

@@ -42,7 +42,6 @@ const getLocationsCoordinates = async (location) => {
 
 const getLocationDetails = async (location) => {
   try {
-    location = dataValidation.checkLocation(location);
     const data = await axios.get(
       GOOGLE_URL +
         `?input=${location}` +
@@ -67,14 +66,14 @@ const getLocationDetails = async (location) => {
 
 const getPhotos = async (location) => {
   try {
-    location = dataValidation.checkLocation(location);
     const data = await getLocationDetails(location);
+
     if (!data.photo_reference) {
       throw new Error("No photos available for this location");
     }
     const photo_reference = data.photo_reference;
+
     try {
-      location = dataValidation.checkLocation(location);
       const data = await axios.get(
         GOOGLE_PHOTO_URL +
           `?photoreference=${photo_reference}` +
