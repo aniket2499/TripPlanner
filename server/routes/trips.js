@@ -105,6 +105,7 @@ router.patch("/:tripid/hotels/add/:hotelid", async (req, res) => {
 router.patch("/:tripid/hotels/remove/:hotelid/:visitDate", async (req, res) => {
   try {
     const trip = await removeHotelFromTrip(req, res);
+    console.log("trip at the backend is: " + trip);
     res.status(200).json(trip);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);

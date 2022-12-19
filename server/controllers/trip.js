@@ -249,7 +249,6 @@ const addHotelToTrip = async (req, res) => {
 
 const removeHotelFromTrip = async (req, res) => {
   const trip = await Trip.find({ _id: req.params.tripid });
-  console.log(trip);
   const visitDate = req.params.visitDate.split("-").join("/");
   if (trip[0].itinerary.length > 0) {
     trip[0].itinerary.forEach((day) => {
@@ -260,8 +259,7 @@ const removeHotelFromTrip = async (req, res) => {
           if (day.placesToVisit[i].id == req.params.hotelid) {
             console.log("hotel found");
             day.placesToVisit.splice(i, 1);
-            trip[0].save();
-            return trip[0];
+            // trip[0].save();
           }
         }
       }
@@ -273,11 +271,9 @@ const removeHotelFromTrip = async (req, res) => {
       };
     } else {
       if (trip[0].hotels.includes(req.params.hotelid)) {
-        console.log("req.params.hotelid" + req.params.hotelid);
-
         trip[0].hotels.pull(req.params.hotelid.toString());
+        console.log("trip is : " + trip[0]);
         await trip[0].save();
-
         return trip[0];
       } else {
         throw {

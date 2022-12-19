@@ -677,65 +677,70 @@ const MyTrip = () => {
                       >
                         <CardContent>
                           <Stack direction="column" justifyContent="Center">
-                            {days.map((date) => (
-                              <Accordion fontWeight="fontWeightBold">
-                                <Accordion>
-                                  <AccordionSummary
-                                    style={{ flexDirection: "row-reverse" }}
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                  >
-                                    <Button fontWeight="fontWeightBold">
-                                      {date}
-                                    </Button>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                    <Paper className="greyPaper" elevation={0}>
-                                      <Grid container>
-                                        <Grid
-                                          item
-                                          xs={12}
-                                          sm={12}
-                                          md={6}
-                                          lg={6}
-                                        >
-                                          <Card
-                                            sx={{ mt: 2 }}
-                                            backgroundColor="primary.main"
-                                            style={{ backgroundColor: "" }}
+                            {trips.itinerary}
+                            {trips.itinerary &&
+                              trips.itinerary.map((day) => (
+                                <Accordion fontWeight="fontWeightBold">
+                                  <Accordion>
+                                    <AccordionSummary
+                                      style={{ flexDirection: "row-reverse" }}
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls="panel1a-content"
+                                      id="panel1a-header"
+                                    >
+                                      <Button fontWeight="fontWeightBold">
+                                        {day.date}
+                                      </Button>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      <Paper
+                                        className="greyPaper"
+                                        elevation={0}
+                                      >
+                                        <Grid container>
+                                          <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={6}
+                                            lg={6}
                                           >
-                                            <CardContent>
-                                              <Stack
-                                                direction="column"
-                                                justifyContent="Center"
-                                              >
-                                                <Typography
-                                                  variant="h5"
-                                                  component="h2"
-                                                  fontWeight="fontWeightBold"
-                                                  sx={{ mt: 2, ml: 2 }}
+                                            <Card
+                                              sx={{ mt: 2 }}
+                                              backgroundColor="primary.main"
+                                              style={{ backgroundColor: "" }}
+                                            >
+                                              <CardContent>
+                                                <Stack
+                                                  direction="column"
+                                                  justifyContent="Center"
                                                 >
-                                                  Hotel Name
-                                                </Typography>
-                                                <Typography
-                                                  variant="body1"
-                                                  fontWeight="fontWeightBold"
-                                                  sx={{ mt: 2, ml: 2 }}
-                                                  color="text.hint"
-                                                >
-                                                  Hotel Address
-                                                </Typography>
-                                              </Stack>
-                                            </CardContent>
-                                          </Card>
+                                                  <Typography
+                                                    variant="h5"
+                                                    component="h2"
+                                                    fontWeight="fontWeightBold"
+                                                    sx={{ mt: 2, ml: 2 }}
+                                                  >
+                                                    Hotel Name
+                                                  </Typography>
+                                                  <Typography
+                                                    variant="body1"
+                                                    fontWeight="fontWeightBold"
+                                                    sx={{ mt: 2, ml: 2 }}
+                                                    color="text.hint"
+                                                  >
+                                                    Hotel Address
+                                                  </Typography>
+                                                </Stack>
+                                              </CardContent>
+                                            </Card>
+                                          </Grid>
                                         </Grid>
-                                      </Grid>
-                                    </Paper>
-                                  </AccordionDetails>
+                                      </Paper>
+                                    </AccordionDetails>
+                                  </Accordion>
                                 </Accordion>
-                              </Accordion>
-                            ))}
+                              ))}
                           </Stack>
                         </CardContent>
                       </Card>
