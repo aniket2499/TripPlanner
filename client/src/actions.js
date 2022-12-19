@@ -160,6 +160,24 @@ const deleteTrip = (location_id) => ({
   },
 });
 
+const addHotelToTripItinerary = (tripId, data, visitDate) => ({
+  type: "ADD_HOTEL_TO_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    hotel: data,
+    visitDate: visitDate,
+  },
+});
+
+const deleteHotelFromTripItinerary = (tripId, hotelId, visitDate) => ({
+  type: "DELETE_HOTEL_FROM_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    hotelId: hotelId,
+    visitDate: visitDate,
+  },
+});
+
 let exports = {
   addUser,
   deleteUser,
@@ -176,6 +194,8 @@ let exports = {
   initializeTrip,
   binHotel,
   unbinHotel,
+  addHotelToTripItinerary,
+  deleteHotelFromTripItinerary,
 };
 
 export default exports;

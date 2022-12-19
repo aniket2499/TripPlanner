@@ -36,10 +36,16 @@ const TripSchema = new Schema({
         icon: { type: String },
         weather: { type: String },
       },
-      placesToVisit: [{ type: String }],
+      placesToVisit: [
+        {
+          id: { type: String },
+          name: { type: String },
+          image: { type: String },
+        },
+      ],
     },
   ],
-  hotels: [{ type: Schema.Types.ObjectId, ref: "Hotels" }],
+  hotels: [{ type: String, ref: "Hotels" }],
   restaurants: [{ type: Schema.Types.ObjectId, ref: "Restaurants" }],
   attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
 });
