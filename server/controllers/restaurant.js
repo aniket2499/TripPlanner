@@ -122,6 +122,7 @@ const createRestaurant = async (restaurantBody, id, visitDate) => {
     id: savedRestaurant._id,
     name: savedRestaurant.name,
     image: savedRestaurant.image,
+    type: "restaurant",
   };
 
   trip.itinerary.forEach((day) => {

@@ -89,9 +89,9 @@ const styles = {
     flexDirection: "column",
     maxWidth: 450,
     alignItems: "center",
-    margin: "2rem",
+    margin: "0.5rem",
     marginTop: "1.5rem",
-    padding: "2rem",
+    padding: "1.5rem",
     border: "1px solid #c0c0c0",
     borderRadius: "15px",
   },
@@ -137,8 +137,8 @@ const drawersData = [
     href: "/flights",
   },
   {
-    label: "My Account",
-    href: "/account",
+    label: "Log Out",
+    href: "/login",
   },
   {
     label: "Change Password",
@@ -195,6 +195,12 @@ const Navigation = () => {
   };
 
   useEffect(() => {
+    if (window.location.pathname === "/signout") {
+      doSignOut();
+    }
+  }, [window.location.pathname]);
+
+  useEffect(() => {
     if (window.location.href.split("/")[3] === "search") {
       document.getElementById("app-bar").style.display = "none";
     } else {
@@ -244,7 +250,6 @@ const Navigation = () => {
   //   }
   // }, [searchTerm]);
 
-
   const submitForm = async (e) => {
     e.preventDefault();
     const { currentPassword, newPasswordOne, newPasswordTwo } =
@@ -258,7 +263,7 @@ const Navigation = () => {
       await doChangePassword(
         currentUser.email,
         currentPassword.value,
-        newPasswordOne.value
+        newPasswordOne.value,
       );
       // alert("Password has been changed, you will now be logged out");
       setOpen(false);
@@ -322,7 +327,7 @@ const Navigation = () => {
               {...stringAvatar(
                 currentUser._delegate.displayName
                   ? currentUser._delegate.displayName
-                  : "Unknown"
+                  : "Unknown",
               )}
             />
           </Button>

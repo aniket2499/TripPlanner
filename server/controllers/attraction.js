@@ -119,6 +119,7 @@ const createAttraction = async (attractionBody, id, visitDate) => {
     id: attraction._id,
     name: attraction.name,
     image: attraction.image,
+    type: "attraction",
   };
   trip.itinerary.forEach((day) => {
     if (day.date === convertDate) {
