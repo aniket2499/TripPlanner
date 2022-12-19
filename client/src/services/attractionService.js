@@ -13,9 +13,10 @@ const getAttractionById = (id) => {
   });
 };
 
-const createAttraction = (body) => {
+const createAttraction = (tripId, visitDate, body) => {
+  visitDate = visitDate.split("/").join("-");
   return axios
-    .post(DATA_URL + "/attractions/create", { body: body })
+    .post(DATA_URL + `/attractions/create${tripId}/${visitDate}`, body)
     .then((response) => {
       return response.data;
     });
