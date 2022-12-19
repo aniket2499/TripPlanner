@@ -35,12 +35,9 @@ const getAllTrips = async () => {
 };
 
 const createTrip = async (userId, tripBody) => {
-  console.log("Trip Body: ", JSON.stringify(tripBody));
   let parsedId = validation.checkString(userId, "UserId");
   let startDate = tripBody.body.tripDate.startDate.split("T")[0];
   let endDate = tripBody.body.tripDate.endDate.split("T")[0];
-  let apiData = await apiImage.getPhotos(tripBody.body.destination);
-
   const newObj = {
     cur_location: tripBody.body.cur_location,
     destination: tripBody.body.destination,
@@ -49,7 +46,6 @@ const createTrip = async (userId, tripBody) => {
       endDate: endDate,
     },
     notes: "",
-    image: apiData,
   };
 
   let loop = new Date(startDate);
@@ -91,7 +87,6 @@ const createTrip = async (userId, tripBody) => {
       loop.setDate(loop.getDate() + 1);
     }
     await trip.save();
-    console.log("Backend Trip: ", JSON.stringify(trip));
     return trip;
   } else {
     throw {
@@ -253,24 +248,43 @@ const addHotelToTrip = async (req, res) => {
 };
 
 const removeHotelFromTrip = async (req, res) => {
-  console.log("entered remove hotel from trip");
   const trip = await Trip.find({ _id: req.params.tripid });
-
-  if (!trip) {
-    throw {
-      message: `Trip not found`,
-      status: 404,
-    };
-  } else {
-    if (trip[0].hotels.includes(req.params.hotelid)) {
-      trip[0].hotels.pull(req.params.hotelid);
-      await trip[0].save();
-      return trip[0];
-    } else {
+  console.log(trip);
+  const visitDate = req.params.visitDate.split("-").join("/");
+  if (trip[0].itinerary.length > 0) {
+    trip[0].itinerary.forEach((day) => {
+      console.log(day.date);
+      if (day.date == visitDate) {
+        for (let i = 0; i < day.placesToVisit.length; i++) {
+          console.log(day.placesToVisit[i]);
+          if (day.placesToVisit[i].id == req.params.hotelid) {
+            console.log("hotel found");
+            day.placesToVisit.splice(i, 1);
+            trip[0].save();
+            return trip[0];
+          }
+        }
+      }
+    });
+    if (!trip) {
       throw {
-        message: `Hotel not in trip`,
-        status: 400,
+        message: `Trip not found`,
+        status: 404,
       };
+    } else {
+      if (trip[0].hotels.includes(req.params.hotelid)) {
+        console.log("req.params.hotelid" + req.params.hotelid);
+
+        trip[0].hotels.pull(req.params.hotelid.toString());
+        await trip[0].save();
+
+        return trip[0];
+      } else {
+        throw {
+          message: `Hotel not in trip`,
+          status: 400,
+        };
+      }
     }
   }
 };

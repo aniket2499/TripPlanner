@@ -3,25 +3,8 @@ import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
+import actions from "../actions";
 import storage from "redux-persist/lib/storage";
-
-function GGetUserInfo() {
-  const currUser = useContext(AuthContext);
-  if (currUser) {
-    return currUser;
-  } else return null;
-}
-
-const initialState = [
-  {
-    location_id: null,
-    name: null,
-    imageUrl: null,
-    rating: null,
-    latitude: null,
-    longitude: null,
-  },
-];
 
 let copyState = null;
 let index = 0;
@@ -36,32 +19,11 @@ const hotelReducer = (state = [], action) => {
       return state;
 
     case "ADD_HOTEL":
-      const newHotel = {
-        _id: payload.id,
-        location_id: payload.location_id,
-        name: payload.name,
-        imageUrl: payload.image,
-        rating: payload.rating,
-        latitude: payload.latitude,
-        longitude: payload.longitude,
-      };
-      console.log("newHotel is aniket:" + newHotel);
-      return [...state, newHotel];
+      return [...state, payload];
 
     case "DELETE_HOTEL":
-      copyState = [...state];
-      console.log("inside delete hotel");
-      console.log(payload);
-      let elemIndex = -1;
-      for (let i = 0; i < copyState.length; i++) {
-        if (copyState[i].hotelId == payload.location_id) {
-          elemIndex = i;
-          break;
-        }
-      }
-      if (elemIndex > -1) {
-        copyState.splice(elemIndex, 1);
-      }
+      // storage.removeItem("persist:root");
+      copyState = state.filter((x) => x._id !== payload._id);
       return copyState;
 
     default:
@@ -86,7 +48,6 @@ const initializeState = (tripId) => {
 
 const addHotel = (tripId, hotelData) => {
   return async (dispatch, getState) => {
-    console.log(hotelData);
     let obj = {
       location_id: hotelData.dupeId,
       name: hotelData.name,
@@ -95,35 +56,33 @@ const addHotel = (tripId, hotelData) => {
       longitude: hotelData.geoCode.longitude,
       rating: hotelData.rating,
     };
-    let data = await hotelService.createHotel(tripId, obj);
-    let tripData = await tripservice.addHotelToTrip(tripId, data.id);
-    console.log("data is aniket: " + JSON.stringify(data));
+    let data = await hotelService.createHotel(tripId, hotelData.startDate, obj);
     dispatch({
       type: "ADD_HOTEL",
-      payload: data,
+      payload: hotelData,
     });
-    dispatch({
-      type: "ADD_HOTEL_ITINERARY",
-      payload: data,
-    });
+    dispatch(
+      actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate),
+    );
   };
 };
 
 const deleteHotel = (tripId, hotelId, hotel) => {
   return async (dispatch, getState) => {
-    console.log("inside here ********************************");
-    console.log(tripId, hotelId);
-    console.log(hotel);
-    console.log("anike id is: " + hotelId);
-    console.log(hotel);
     let data = await tripservice.removeHotelFromTrip(
       tripId,
-      hotelId.toString(),
+      hotelId,
+      hotel.startDate.split("/").join("-"),
     );
-    // dispatch({
-    //   type: "DELETE_HOTEL",
-    //   payload: hotel,
-    // });
+    console.log("data after delete" + JSON.stringify(data));
+    dispatch({
+      type: "DELETE_HOTEL",
+      payload: hotel,
+    });
+    hotel.startDate = console.log(hotel.startDate);
+    dispatch(
+      actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
+    );
   };
 };
 

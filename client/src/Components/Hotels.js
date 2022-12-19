@@ -72,9 +72,9 @@ const Hotels = () => {
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
 
-  const addHotelToBin = (tripId, hotelId, hotel) => {
+  const addHotelToBin = (tripId, hotelId, hotel, visitDate) => {
     dispatch(actions.binHotel(tripId, hotelId));
-    dispatch(addHotel(tripId, hotel));
+    dispatch(addHotel(tripId, hotel, visitDate));
   };
 
   const removeHotelFromBin = (tripId, hotelId, hotel) => {

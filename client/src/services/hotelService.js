@@ -12,10 +12,11 @@ const getHotelById = (id) => {
   });
 };
 
-const createHotel = (tripId, body) => {
+const createHotel = (tripId, visitDate, body) => {
   console.log("body in service is: " + JSON.stringify(body));
+  visitDate = visitDate.split("/").join("-");
   return axios
-    .post(DATA_URL + `/hotels/create/${tripId}`, body)
+    .post(DATA_URL + `/hotels/create/${tripId}/${visitDate}`, body)
     .then((response) => {
       return response.data;
     });
