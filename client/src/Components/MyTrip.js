@@ -182,14 +182,7 @@ const MyTrip = () => {
     e.preventDefault();
     let newObj = {
       notes: notesValue,
-      notes: notesValue,
     };
-    console.log(newObj, "Inside handle");
-    try {
-      await tripService.updateTripById(id.id, newObj);
-    } catch (e) {
-      console.log(e);
-    }
     console.log(newObj, "Inside handle");
     try {
       await tripService.updateTripById(id.id, newObj);
@@ -317,14 +310,32 @@ const MyTrip = () => {
               </Paper>
             </Box>
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleDownload}
-              sx={{ mt: 2, ml: 2 }}
-            >
-              Download PDF
-            </Button>
+
+            <Grid container sx={{ mb: "1rem" }}>
+              <Grid item xs={6} sx={{ textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    navigate(`${tripId}/invite`);
+                  }}
+                  sx={{ mt: 2, ml: 2 }}
+                >
+                  invite
+                </Button>
+              </Grid>
+              <Grid>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleDownload}
+                  sx={{ mt: 2, ml: 2 }}
+                >
+                  Download PDF
+                </Button>
+              </Grid>
+            </Grid>
+
             <Accordion>
               <AccordionSummary
                 style={{ flexDirection: "row-reverse" }}

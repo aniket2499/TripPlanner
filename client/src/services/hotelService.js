@@ -13,7 +13,6 @@ const getHotelById = (id) => {
 };
 
 const createHotel = (tripId, body) => {
-  console.log("body in service is: " + JSON.stringify(body));
   return axios
     .post(DATA_URL + `/hotels/create/${tripId}`, body)
     .then((response) => {
