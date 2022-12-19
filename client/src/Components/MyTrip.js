@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { json, useNavigate, useParams } from "react-router";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import "./chat.css";
@@ -105,8 +105,26 @@ const MyTrip = () => {
   let currentTrip = [];
   let startDate = "";
   let endDate = "";
-  // console.log("trips are: " + JSON.stringify(trips));
+
+  let addHotels = [];
+
+  if (trips.length !== 0 && hotels.length !== 0) {
+    let index = trips.filter((x) => x._id.toString() === tripId);
+    index = index[0];
+    if (index.hotels) {
+      for (let i = 0; i < index.hotels.length; i++) {
+        for (let j = 0; j < hotels.length; j++) {
+          if (index.hotels[i] === hotels[j][0].location_id) {
+            addHotels.push(hotels[j]);
+          }
+        }
+      }
+    }
+    console.log("addHotels: " + JSON.stringify(addHotels));
+  }
+
   if (trips.length !== 0) {
+    // console.log("trips are: " + JSON.stringify(trips));
     currentTrip = trips.filter((trip) => trip._id === tripId);
     startDate = moment(currentTrip[0].tripDate.startDate);
     endDate = moment(currentTrip[0].tripDate.endDate);
@@ -142,7 +160,6 @@ const MyTrip = () => {
 
   const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
     e.preventDefault();
-    console.log("edit hotel");
     dispatch(deleteHotel(tripId, hotelId, hotel));
   };
 
@@ -168,7 +185,6 @@ const MyTrip = () => {
     let newObj = {
       notes: notesValue,
     };
-    console.log(newObj, "Inside handle");
     try {
       await tripService.updateTripById(id.id, newObj);
     } catch (e) {
@@ -309,8 +325,8 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {hotels &&
-                        hotels.map((hotel, index) => (
+                      {addHotels &&
+                        addHotels.map((hotel, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
@@ -349,8 +365,8 @@ const MyTrip = () => {
                                               handleDeleteHotel(
                                                 e,
                                                 tripId,
-                                                hotel._id,
-                                                hotel,
+                                                hotel[0]._id,
+                                                hotel[0],
                                               )
                                             }
                                           >
@@ -365,7 +381,7 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {hotel.name}
+                                        {hotel[0].name}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -386,7 +402,7 @@ const MyTrip = () => {
                                         component="img"
                                         height="150"
                                         width="50"
-                                        image={hotel.image}
+                                        image={hotel[0].image}
                                         alt="green iguana"
                                         style={{
                                           borderRadius: 11,

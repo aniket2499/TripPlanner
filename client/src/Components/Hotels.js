@@ -47,6 +47,7 @@ const Hotels = () => {
   const trips = useSelector((state) => state.trips);
   const currUser = useContext(AuthContext);
   const a = useParams().tripid;
+  let destination = null;
 
   useEffect(() => {
     console.log("event fired");
@@ -84,9 +85,7 @@ const Hotels = () => {
 
   const findHotelInTrip = (hotelId) => {
     let currTrip = trips.find((x) => x._id == a);
-    console.log(currTrip);
     let hotel = currTrip.hotels.find((h) => h == hotelId);
-    console.log(hotel);
     return hotel ? true : false;
   };
 
@@ -99,29 +98,40 @@ const Hotels = () => {
     setOpen(false);
   };
 
+  if (trips.length !== 0) {
+    //find the trip from trips array
+    let index = trips.findIndex((x) => x._id === a);
+    console.log("index is : " + index);
+    destination = trips[index].destination.split(",")[0];
+  }
+
   useEffect(() => {
     async function fetchData() {
-      try {
-        let data = await hotelsData.getHotelData("ahmedabad", 1);
-        if (data.length === 0) {
-          return;
+      if (destination) {
+        try {
+          let data = await hotelsData.getHotelData(destination, 1);
+          if (data.length === 0) {
+            return;
+          }
+          for (let i = 0; i < data.length; i++) {
+            data[i].saved = false;
+            data[i].pickerOpen = false;
+            data[i].startDate = dayjs(new Date())
+              .format("MM/DD/YYYY")
+              .toString();
+            console.log(
+              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            );
+          }
+          setHotels(data);
+          setLoading(false);
+        } catch (e) {
+          return e;
         }
-        for (let i = 0; i < data.length; i++) {
-          data[i].saved = false;
-          data[i].pickerOpen = false;
-          data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
-          console.log(
-            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
-          );
-        }
-        setHotels(data);
-        setLoading(false);
-      } catch (e) {
-        return e;
       }
     }
     fetchData();
-  }, []);
+  }, [destination]);
 
   for (let i = 0; i < allState.trips.length; i++) {
     if (allState.trips[i]._id === a) {
