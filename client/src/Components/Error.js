@@ -1,8 +1,7 @@
-import { Button } from "@mui/material";
 import React from "react";
 
 function Error() {
-  // document.getElementById("app-bar").style.display = "none";
+  document.getElementById("app-bar").style.display = "none";
   return (
     <div className="error-page">
       <div className="error-div1">

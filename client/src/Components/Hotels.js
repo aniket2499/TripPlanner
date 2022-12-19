@@ -24,43 +24,22 @@ import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { AuthContext } from "../firebase/Auth";
 import StarIcon from "@mui/icons-material/Star";
 import actions from "../actions";
 import hotelsData from "../services/getApiData";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import tripService from "../services/tripService";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
-import { addHotel, deleteHotel } from "../reducers/hotelReducer";
+import { addHotel } from "../reducers/hotelReducer";
 import Maps from "./Maps";
-import { initializeState as initHotel } from "../reducers/hotelReducer";
-import { initializeState as initRest } from "../reducers/restReducer";
-import { initializeState as initAttr } from "../reducers/attractionReducer";
-import { initializeState as initTrip } from "../reducers/tripsReducer";
 import { useParams } from "react-router";
 
 const Hotels = () => {
   const allState = useSelector((state) => state);
   const trips = useSelector((state) => state.trips);
-  const currUser = useContext(AuthContext);
-  const a = useParams().tripid;
-
-  useEffect(() => {
-    console.log("event fired");
-
-    async function fetchData() {
-      await dispatch(actions.initializeUser(currUser._delegate.uid));
-      await dispatch(initTrip());
-      await dispatch(initHotel(a));
-      await dispatch(initRest(a));
-      await dispatch(initAttr(a));
-    }
-
-    fetchData();
-  }, []);
 
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,20 +50,20 @@ const Hotels = () => {
 
   const [open, setOpen] = React.useState(false);
   const [hotel, setHotel] = React.useState({});
+  const a = useParams().tripid;
 
   const addHotelToBin = (tripId, hotelId, hotel) => {
     dispatch(actions.binHotel(tripId, hotelId));
-    dispatch(addHotel(tripId, hotel));
+    dispatch(actions.addHotel(hotel));
   };
 
-  const removeHotelFromBin = (tripId, hotelId, hotel) => {
+  const removeHotelFromBin = (tripId, hotelId) => {
     dispatch(actions.unbinHotel(tripId, hotelId));
-    dispatch(deleteHotel(tripId, hotelId, hotel));
+    dispatch(actions.deleteHotel(hotelId));
   };
 
   const findHotelInTrip = (hotelId) => {
-    let currTrip = trips.find((x) => x._id == a);
-    console.log(currTrip);
+    let currTrip = trips.find((x) => (x._id = a));
     let hotel = currTrip.hotels.find((h) => h == hotelId);
     console.log(hotel);
     return hotel ? true : false;
@@ -102,7 +81,7 @@ const Hotels = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        let data = await hotelsData.getHotelData("ahmedabad", 1);
+        let data = await hotelsData.getHotelData("new york city", 1);
         if (data.length === 0) {
           return;
         }
@@ -382,7 +361,7 @@ const Hotels = () => {
                               <Button
                                 id={hotel.dupeId}
                                 onClick={() =>
-                                  removeHotelFromBin(a, hotel.dupeId, hotel)
+                                  removeHotelFromBin(a, hotel.dupeId)
                                 }
                               >
                                 <Typography variant="body2">

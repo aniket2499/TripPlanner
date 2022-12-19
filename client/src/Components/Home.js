@@ -31,7 +31,7 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-
+  console.log(trips, "==");
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
@@ -73,11 +73,7 @@ function Home() {
         <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
             <Box sx={{ pb: "2rem" }}>
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{ fontWeight: "bold" }}
-              >
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                 On Going And Upcoming Trips
               </Typography>
             </Box>
@@ -161,11 +157,7 @@ function Home() {
         <Grid container sx={{ mt: "3rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
             <Box sx={{ pb: "1rem" }}>
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{ fontWeight: "bold" }}
-              >
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                 Your Past Trips
               </Typography>
             </Box>
@@ -239,18 +231,10 @@ function Home() {
         <Grid container sx={{ mt: "2rem" }}>
           <Grid item xs={12} sm={8} md={8} lg={9}>
             <Box sx={{ pb: "1rem" }}>
-              <Typography
-                variant="h4"
-                component="h1"
-                sx={{ fontWeight: "bold" }}
-              >
+              <Typography variant="h4" sx={{ fontWeight: "bold" }}>
                 Explore
               </Typography>
-              <Typography
-                variant="h5"
-                component="h2"
-                sx={{ fontWeight: "bold", mt: "1rem" }}
-              >
+              <Typography variant="h5" sx={{ fontWeight: "bold", mt: "1rem" }}>
                 Popular Destinations
               </Typography>
             </Box>
@@ -308,7 +292,6 @@ function Home() {
           <Box sx={{ pt: "2rem", pb: "1rem" }}>
             <Typography
               variant="h4"
-              component="h3"
               sx={{ fontWeight: "bold", textAlign: "center" }}
             >
               About Us
