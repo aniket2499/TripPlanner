@@ -820,7 +820,6 @@ const MyTrip = () => {
               </AccordionDetails>
             </Accordion>
           </Stack>
-          {/* //fdajl */}
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
           <Typography variant="h6" component="h2" align="center" gutterBottom>
