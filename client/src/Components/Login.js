@@ -93,7 +93,7 @@ function Login() {
   };
 
   return (
-    <div className="bc-image">
+    <div>
       <form onSubmit={handleLogin}>
         <Box
           style={styles.box}
