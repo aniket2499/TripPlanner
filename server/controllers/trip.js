@@ -7,6 +7,7 @@ const validation = require("../validation/routesValidation");
 const nodemailer = require("nodemailer");
 const invite = require("./inviteEmail");
 const e = require("express");
+const apiImage = require("../data/base.js");
 
 const getTripById = async (id) => {
   let parsedId = validation.toObjectId(id, "TripId");
@@ -115,7 +116,7 @@ const updateTripById = async (id, updateTripBody) => {
       const updatedTrip = await Trip.findByIdAndUpdate(
         id,
         { $set: trip },
-        { new: true }
+        { new: true },
       );
 
       if (updatedTrip) {
@@ -217,16 +218,25 @@ const addHotelToTrip = async (req, res) => {
       status: 404,
     };
   } else {
-    const hotel = await Hotel.findById(req.params.hotelid);
+    const hotel = await Hotel.find({ location_id: req.params.hotelid });
     if (!hotel) {
       throw {
         message: `Hotel not found`,
         status: 404,
       };
     }
-    if (!trip.hotels.includes(hotel._id)) {
-      trip.hotels.push(hotel._id);
+    if (!trip.hotels.includes(hotel.location_id)) {
+      trip.hotels.push(hotel.location_id);
       await trip.save();
+      // await trip.update(
+      //   {
+      //     _id: trip._id,
+      //     "itinerary.date": req.params.visitDate,
+      //   },
+      //   { $push: { "itinerary.$.placesToVisit": hotel.location_id } },
+      //   { upsert: true },
+      // );
+      // trip.itinerary.push;
       return trip;
     } else {
       throw {
@@ -238,22 +248,43 @@ const addHotelToTrip = async (req, res) => {
 };
 
 const removeHotelFromTrip = async (req, res) => {
-  const trip = await Trip.findById(req.params.tripid);
-  if (!trip) {
-    throw {
-      message: `Trip not found`,
-      status: 404,
-    };
-  } else {
-    if (trip.hotels.includes(req.params.hotelid)) {
-      trip.hotels.pull(req.params.hotelid);
-      await trip.save();
-      return trip;
-    } else {
+  const trip = await Trip.find({ _id: req.params.tripid });
+  console.log(trip);
+  const visitDate = req.params.visitDate.split("-").join("/");
+  if (trip[0].itinerary.length > 0) {
+    trip[0].itinerary.forEach((day) => {
+      console.log(day.date);
+      if (day.date == visitDate) {
+        for (let i = 0; i < day.placesToVisit.length; i++) {
+          console.log(day.placesToVisit[i]);
+          if (day.placesToVisit[i].id == req.params.hotelid) {
+            console.log("hotel found");
+            day.placesToVisit.splice(i, 1);
+            trip[0].save();
+            return trip[0];
+          }
+        }
+      }
+    });
+    if (!trip) {
       throw {
-        message: `Hotel not in trip`,
-        status: 400,
+        message: `Trip not found`,
+        status: 404,
       };
+    } else {
+      if (trip[0].hotels.includes(req.params.hotelid)) {
+        console.log("req.params.hotelid" + req.params.hotelid);
+
+        trip[0].hotels.pull(req.params.hotelid.toString());
+        await trip[0].save();
+
+        return trip[0];
+      } else {
+        throw {
+          message: `Hotel not in trip`,
+          status: 400,
+        };
+      }
     }
   }
 };

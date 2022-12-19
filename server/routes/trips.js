@@ -102,7 +102,7 @@ router.patch("/:tripid/hotels/add/:hotelid", async (req, res) => {
   }
 });
 
-router.patch("/:tripid/hotels/remove/:hotelid", async (req, res) => {
+router.patch("/:tripid/hotels/remove/:hotelid/:visitDate", async (req, res) => {
   try {
     const trip = await removeHotelFromTrip(req, res);
     res.status(200).json(trip);
