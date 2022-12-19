@@ -190,26 +190,70 @@ const addAttractionToTrip = async (req, res) => {
 };
 
 const removeAttractionFromTrip = async (req, res) => {
-  const trip = await Trip.findById(req.params.tripid);
-  if (!trip) {
-    throw {
-      message: `Trip not found`,
-      status: 404,
-    };
-  } else {
-    if (trip.attractions.includes(req.params.attractionid)) {
-      trip.attractions.pull(req.params.attractionid);
-      await trip.save();
-      return trip;
-    } else {
+  console.log(req.params.tripid);
+  const trip = await Trip.find({ _id: req.params.tripid });
+  console.log(trip);
+  const visitDate = req.params.visitDate.split("-").join("/");
+  if (trip[0].itinerary.length > 0) {
+    trip[0].itinerary.forEach((day) => {
+      if (day.date == visitDate) {
+        for (let i = 0; i < day.placesToVisit.length; i++) {
+          if (day.placesToVisit[i].id == req.params.attractionid) {
+            console.log("attraction found");
+            day.placesToVisit.splice(i, 1);
+          }
+        }
+      }
+    });
+    if (!trip) {
       throw {
-        message: `Attraction not in trip`,
-        status: 400,
+        message: `Trip not found`,
+        status: 404,
       };
+    } else {
+      if (trip[0].attractions.includes(req.params.attractionid)) {
+        trip[0].attractions.pull(req.params.attractionid.toString());
+        await trip[0].save();
+        return trip[0];
+      }
     }
   }
 };
 
+const removeHotelFromTrip = async (req, res) => {
+  const trip = await Trip.find({ _id: req.params.tripid });
+  const visitDate = req.params.visitDate.split("-").join("/");
+  if (trip[0].itinerary.length > 0) {
+    trip[0].itinerary.forEach((day) => {
+      if (day.date == visitDate) {
+        for (let i = 0; i < day.placesToVisit.length; i++) {
+          console.log(day.placesToVisit[i]);
+          if (day.placesToVisit[i].id == req.params.hotelid) {
+            day.placesToVisit.splice(i, 1);
+          }
+        }
+      }
+    });
+    if (!trip) {
+      throw {
+        message: `Trip not found`,
+        status: 404,
+      };
+    } else {
+      if (trip[0].hotels.includes(req.params.hotelid)) {
+        trip[0].hotels.pull(req.params.hotelid.toString());
+        console.log("trip is : " + trip[0]);
+        await trip[0].save();
+        return trip[0];
+      } else {
+        throw {
+          message: `Hotel not in trip`,
+          status: 400,
+        };
+      }
+    }
+  }
+};
 const addHotelToTrip = async (req, res) => {
   const trip = await Trip.findById(req.params.tripid);
   if (!trip) {
@@ -247,44 +291,6 @@ const addHotelToTrip = async (req, res) => {
   }
 };
 
-const removeHotelFromTrip = async (req, res) => {
-  const trip = await Trip.find({ _id: req.params.tripid });
-  const visitDate = req.params.visitDate.split("-").join("/");
-  if (trip[0].itinerary.length > 0) {
-    trip[0].itinerary.forEach((day) => {
-      console.log(day.date);
-      if (day.date == visitDate) {
-        for (let i = 0; i < day.placesToVisit.length; i++) {
-          console.log(day.placesToVisit[i]);
-          if (day.placesToVisit[i].id == req.params.hotelid) {
-            console.log("hotel found");
-            day.placesToVisit.splice(i, 1);
-            // trip[0].save();
-          }
-        }
-      }
-    });
-    if (!trip) {
-      throw {
-        message: `Trip not found`,
-        status: 404,
-      };
-    } else {
-      if (trip[0].hotels.includes(req.params.hotelid)) {
-        trip[0].hotels.pull(req.params.hotelid.toString());
-        console.log("trip is : " + trip[0]);
-        await trip[0].save();
-        return trip[0];
-      } else {
-        throw {
-          message: `Hotel not in trip`,
-          status: 400,
-        };
-      }
-    }
-  }
-};
-
 const addRestaurantToTrip = async (req, res) => {
   const trip = await Trip.findById(req.params.tripid);
   if (!trip) {
@@ -314,22 +320,40 @@ const addRestaurantToTrip = async (req, res) => {
 };
 
 const removeRestaurantFromTrip = async (req, res) => {
-  const trip = await Trip.findById(req.params.id);
-  if (!trip) {
-    throw {
-      message: `Trip not found`,
-      status: 404,
-    };
-  } else {
-    if (trip.restaurants.includes(req.params.restaurantid)) {
-      trip.restaurants.pull(req.params.restaurantid);
-      await trip.save();
-      return trip;
-    } else {
+  console.log(req.params.tripid);
+  const trip = await Trip.find({ _id: req.params.tripid });
+  console.log(trip);
+  const visitDate = req.params.visitDate.split("-").join("/");
+
+  if (trip[0].itinerary.length > 0) {
+    trip[0].itinerary.forEach((day) => {
+      if (day.date == visitDate) {
+        for (let i = 0; i < day.placesToVisit.length; i++) {
+          console.log(day.placesToVisit[i]);
+          if (day.placesToVisit[i].id == req.params.restaurantid) {
+            //console.log("restaurant found");
+            day.placesToVisit.splice(i, 1);
+          }
+        }
+      }
+    });
+
+    if (!trip) {
       throw {
-        message: `Restaurant not in trip`,
+        message: `Trip not found`,
         status: 404,
       };
+    } else {
+      if (trip[0].restaurants.includes(req.params.restaurantid)) {
+        trip[0].restaurants.pull(req.params.restaurantid.toString());
+        await trip[0].save();
+        return trip[0];
+      } else {
+        throw {
+          message: `Restaurant not in trip`,
+          status: 400,
+        };
+      }
     }
   }
 };
