@@ -41,6 +41,7 @@ const TripSchema = new Schema({
           id: { type: String },
           name: { type: String },
           image: { type: String },
+          type: { type: String },
         },
       ],
     },

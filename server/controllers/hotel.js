@@ -81,6 +81,7 @@ const createHotel = async (hotelBody, id, visitDate) => {
     id: savedHotel.location_id,
     name: savedHotel.name,
     image: savedHotel.image,
+    type: "hotel",
   };
   trip.itinerary.forEach((day) => {
     if (day.date == convertDate) {
