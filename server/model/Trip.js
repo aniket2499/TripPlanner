@@ -35,7 +35,13 @@ const TripSchema = new Schema({
         icon: { type: String },
         weather: { type: String },
       },
-      placesToVisit: [{ type: String }],
+      placesToVisit: [
+        {
+          id: { type: String },
+          name: { type: String },
+          image: { type: String },
+        },
+      ],
     },
   ],
   hotels: [{ type: Schema.Types.ObjectId, ref: "Hotels" }],

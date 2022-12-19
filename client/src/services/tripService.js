@@ -77,11 +77,12 @@ const addHotelToTrip = (id, body) => {
     });
 };
 
-const removeHotelFromTrip = (id, body) => {
+const removeHotelFromTrip = (id, body, visitDate) => {
   const hotelId = body;
   return axios
-    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}`)
+    .patch(DATA_URL + `/trips/${id}/hotels/remove/${hotelId}/${visitDate}`)
     .then((response) => {
+      console.log(response, "response.data");
       return response.data;
     });
 };
