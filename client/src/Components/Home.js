@@ -31,15 +31,12 @@ function Home() {
 
   const dispatch = useDispatch();
   const trips = useSelector((state) => state.trips);
-
-  useEffect(() => {
   console.log(trips, "==");
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
   const two = Math.floor(Math.random() * (max - min) + min);
   const three = Math.floor(Math.random() * (max - min) + min);
-
 
   let arr = [
     ExportStaticData[one],
@@ -167,6 +164,7 @@ function Home() {
           </Grid>
           <Grid item xs={12} sm={4} md={4} lg={3}>
             <Button
+              onClick={() => navigate("/createtrip")}
               sx={{
                 pt: "0.3rem",
                 pb: "0.3rem",
