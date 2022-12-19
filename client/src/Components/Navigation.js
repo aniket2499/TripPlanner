@@ -79,7 +79,7 @@ const styles = {
     transform: "translate(-50%, -50%)",
     width: 400,
     backgroundColor: "#fafafa",
-    padding: "2rem",
+    padding: "0.5rem",
     borderRadius: "15px",
     boxShadow: 24,
     p: 4,
@@ -244,7 +244,6 @@ const Navigation = () => {
   //   }
   // }, [searchTerm]);
 
-
   const submitForm = async (e) => {
     e.preventDefault();
     const { currentPassword, newPasswordOne, newPasswordTwo } =
@@ -258,7 +257,7 @@ const Navigation = () => {
       await doChangePassword(
         currentUser.email,
         currentPassword.value,
-        newPasswordOne.value
+        newPasswordOne.value,
       );
       // alert("Password has been changed, you will now be logged out");
       setOpen(false);
@@ -295,24 +294,27 @@ const Navigation = () => {
             className="center"
           > */}
           <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <TextField
-              id="search-box"
-              // label="Search"
-              placeholder="Search"
-              variant="outlined"
-              style={{
-                marginTop: "0.5rem",
-                marginBottom: "0.5rem",
-                width: "12rem",
-              }}
-              onChange={(e) => {
-                if (e.target.value === 0) {
-                  return navigate("/home");
-                }
-                setSearchTerm(e.target.value);
-                navigate("/home");
-              }}
-            />
+            <div>
+              <label for="search-box"></label>
+              <TextField
+                id="search-box"
+                // label="Search"
+                placeholder="Search"
+                variant="outlined"
+                style={{
+                  marginTop: "0.5rem",
+                  marginBottom: "0.5rem",
+                  width: "12rem",
+                }}
+                onChange={(e) => {
+                  if (e.target.value === 0) {
+                    return navigate("/home");
+                  }
+                  setSearchTerm(e.target.value);
+                  navigate("/home");
+                }}
+              />
+            </div>
           </Autocomplete>
           {/* </form> */}
 
@@ -322,7 +324,7 @@ const Navigation = () => {
               {...stringAvatar(
                 currentUser._delegate.displayName
                   ? currentUser._delegate.displayName
-                  : "Unknown"
+                  : "Unknown",
               )}
             />
           </Button>
@@ -376,7 +378,7 @@ const Navigation = () => {
             >
               <Box style={styles.modalStyle}>
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   component="h1"
                   style={styles.modalheader}
                   gutterBottom
