@@ -19,7 +19,9 @@ const hotelReducer = (state = [], action) => {
       return state;
 
     case "ADD_HOTEL":
-      return [...state, payload];
+      console.log("payload in hotel reducer is: ", payload);
+      copyState = state;
+      return [...copyState, payload];
 
     case "DELETE_HOTEL":
       // storage.removeItem("persist:root");
@@ -39,6 +41,8 @@ const initializeState = (tripId) => {
       let hotel = await hotelService.getHotelById(trip[0].hotels[i]);
       hotelsData.push(hotel);
     }
+    console.log("hotelsData in hotelReducer is: ", hotelsData);
+
     dispatch({
       type: "INITIALIZE_HOTEL",
       payload: hotelsData,

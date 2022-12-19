@@ -6,7 +6,8 @@ const Trip = require("../model/Trip");
 
 const getHotelById = async (id) => {
   // let parsedId = validation.toObjectId(id, "HotelId");
-  const hotel = await Hotel.find({ location_id: id });
+  const hotel = await Hotel.find({ location_id: id.toString() });
+  console.log(hotel);
   if (hotel) {
     return hotel;
   } else {
