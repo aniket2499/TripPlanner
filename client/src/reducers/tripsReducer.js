@@ -115,10 +115,12 @@ const tripsReducer = (state = [], action) => {
 
     case "DELETE_HOTEL_FROM_TRIP_ITINERARY":
       copyState = [...state];
+      console.log("patyload is : " + JSON.stringify(payload));
       for (let i = 0; i < copyState.length; i++) {
-        if (copyState[i]._id === payload.tripId) {
+        if (copyState[i]._id.toString() === payload.tripId) {
           for (let j = 0; j < copyState[i].itinerary.length; j++) {
             if (copyState[i].itinerary[j].date === payload.visitDate) {
+              console.log("the state is :" + copyState[i].itinerary[j]);
               for (
                 let k = 0;
                 k < copyState[i].itinerary[j].placesToVisit.length;
@@ -126,8 +128,9 @@ const tripsReducer = (state = [], action) => {
               ) {
                 if (
                   copyState[i].itinerary[j].placesToVisit[k]._id ===
-                  payload.hotelId
+                  payload.hotelId.toString()
                 ) {
+                  console.log("entered for deleting the hotel: ");
                   copyState[i].itinerary[j].placesToVisit.splice(k, 1);
                 }
               }

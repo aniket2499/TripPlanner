@@ -74,12 +74,10 @@ const deleteHotel = (tripId, hotelId, hotel) => {
       hotelId,
       hotel.startDate.split("/").join("-"),
     );
-    console.log("data after delete" + JSON.stringify(data));
     dispatch({
       type: "DELETE_HOTEL",
       payload: hotel,
     });
-    hotel.startDate = console.log(hotel.startDate);
     dispatch(
       actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
     );
