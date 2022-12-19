@@ -120,7 +120,6 @@ const MyTrip = () => {
     });
   };
 
-  
   let startDate = "";
   let endDate = "";
   // console.log("trips are: " + JSON.stringify(trips));
@@ -316,15 +315,31 @@ const MyTrip = () => {
                 </Grid>
               </Paper>
             </Box>
+            <Grid container sx={{ mb: "1rem" }}>
+              <Grid item xs={6} sx={{ textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    navigate(`/${tripId}/invite`);
+                  }}
+                  sx={{ mt: 2, ml: 2 }}
+                >
+                  Invite
+                </Button>
+              </Grid>
+              <Grid item xs={6} sx={{ textAlign: "center" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleDownload}
+                  sx={{ mt: 2, ml: 2 }}
+                >
+                  Download PDF
+                </Button>
+              </Grid>
+            </Grid>
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleDownload}
-              sx={{ mt: 2, ml: 2 }}
-            >
-              Download PDF
-            </Button>
             <Accordion>
               <AccordionSummary
                 style={{ flexDirection: "row-reverse" }}
@@ -340,10 +355,8 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-
                       {hotels &&
                         hotels.map((hotel, index) => (
-
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
@@ -809,7 +822,7 @@ const MyTrip = () => {
           </Stack>
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
-          <Typography variant="h6" align="center" gutterBottom>
+          <Typography variant="h6" component="h2" align="center" gutterBottom>
             <Maps />
             <Chat socket={socket} id={id} />
           </Typography>
