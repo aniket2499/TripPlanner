@@ -75,7 +75,6 @@ const createHotel = async (hotelBody, id, visitDate) => {
 
   const savedHotel = await newHotelInfo.save();
 
-  trip.hotels.push(savedHotel.location_id);
   console.log(trip);
 
   const objForPushInItinerary = {
@@ -86,6 +85,7 @@ const createHotel = async (hotelBody, id, visitDate) => {
   trip.itinerary.forEach((day) => {
     if (day.date == convertDate) {
       day.placesToVisit.push(objForPushInItinerary);
+      trip.hotels.push(savedHotel.location_id);
     }
   });
 

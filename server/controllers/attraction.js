@@ -49,9 +49,11 @@ const getAllAttractions = async () => {
   }
 };
 
-const createAttraction = async (attractionBody, id) => {
+const createAttraction = async (attractionBody, id, visitDate) => {
+  const convertDate = visitDate.split("-").join("/");
   const tripId = id;
   const trip = await Trip.findById(tripId);
+  console.log("dsfdsf" + trip);
   const newAttractionInfo = new Attraction(attractionBody);
 
   newAttractionInfo.location_id = validation.checkStringForNumber(
@@ -111,8 +113,22 @@ const createAttraction = async (attractionBody, id) => {
     "Number of Reviews",
   );
   const attraction = await newAttractionInfo.save();
-  trip.attractions.push(attraction);
+  //console.log("attraction is " + attraction);
+  //console.log("trip is " + trip);
+  const objForPushInItinerary = {
+    id: attraction._id,
+    name: attraction.name,
+    image: attraction.image,
+  };
+  trip.itinerary.forEach((day) => {
+    if (day.date === convertDate) {
+      day.placesToVisit.push(objForPushInItinerary);
+      trip.attractions.push(attraction._id);
+    }
+  });
+
   await trip.save();
+
   if (attraction) {
     return attraction;
   } else {
