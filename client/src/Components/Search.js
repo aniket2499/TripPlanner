@@ -501,7 +501,11 @@ function Search() {
                 }}
               >
                 {`Planning your trip to
-                    ${location.state.destination.split(",")[0]} ?`}
+                    ${
+                      location.state.destination.split(",")[0]
+                        ? location.state.destination.split(",")[0]
+                        : ""
+                    }`}
               </Typography>
               <Typography
                 variant="body2"
@@ -540,12 +544,12 @@ function Search() {
                   fontWeight: 500,
                 }}
               >
-                {weatherData[0].description
+                {weatherData
                   ? weatherData[0].description.charAt(0).toUpperCase() +
                     weatherData[0].description.slice(1) +
                     " in " +
                     location.state.destination.split(",")[0]
-                  : ""}
+                  : `No Data in ${location.state.destination.split(",")[0]}`}
               </Typography>
             </Grid>
             <Grid item xs={12} container>
@@ -561,10 +565,10 @@ function Search() {
                       fontWeight: 500,
                     }}
                   >
-                    {weatherData[0].temperature
+                    {weatherData
                       ? weatherData[0].temperature.toString().split(".")[0] +
                         "°F"
-                      : ""}
+                      : "N/A"}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -584,9 +588,14 @@ function Search() {
               </Grid>
               <Grid item xs={2}>
                 <img
-                  src={weatherData[0].icon}
+                  width={100}
+                  src={
+                    weatherData
+                      ? weatherData[0].icon
+                      : "https://freepngimg.com/thumb/weather/23527-3-weather-thumb.png"
+                  }
                   // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                  alt={weatherData[0].description}
+                  alt={weatherData ? weatherData[0].description : "weather"}
                   loading="lazy"
                 />
               </Grid>
