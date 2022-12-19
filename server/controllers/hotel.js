@@ -5,8 +5,8 @@ const newValidation = require("../validation/dataValidation.js");
 const Trip = require("../model/Trip");
 
 const getHotelById = async (id) => {
-  let parsedId = validation.toObjectId(id, "HotelId");
-  const hotel = await Hotel.findById(id);
+  // let parsedId = validation.toObjectId(id, "HotelId");
+  const hotel = await Hotel.find({ location_id: id });
   if (hotel) {
     return hotel;
   } else {
@@ -41,10 +41,11 @@ const getAllHotels = async () => {
   }
 };
 
-const createHotel = async (hotelBody, id) => {
+const createHotel = async (hotelBody, id, visitDate) => {
+  const convertDate = visitDate.split("-").join("/");
+  console.log("currentDateConverted" + convertDate);
   const tripId = id;
   const trip = await Trip.findById(tripId);
-  0;
   const newHotelInfo = new Hotel(hotelBody);
   newHotelInfo.location_id = validation.checkStringForNumber(
     newHotelInfo.location_id,
@@ -74,8 +75,23 @@ const createHotel = async (hotelBody, id) => {
 
   const savedHotel = await newHotelInfo.save();
 
-  trip.hotels.push(savedHotel._id);
+  trip.hotels.push(savedHotel.location_id);
+  console.log(trip);
+
+  const objForPushInItinerary = {
+    id: savedHotel.location_id,
+    name: savedHotel.name,
+    image: savedHotel.image,
+  };
+  trip.itinerary.forEach((day) => {
+    if (day.date == convertDate) {
+      day.placesToVisit.push(objForPushInItinerary);
+    }
+  });
+
   await trip.save();
+
+  console.log("the trip updated is: " + JSON.stringify(trip));
 
   if (savedHotel) {
     return savedHotel;
@@ -84,6 +100,43 @@ const createHotel = async (hotelBody, id) => {
       message: `Hotel not saved`,
       status: 500,
     };
+  }
+};
+
+const addHotelToTripItinerary = async (req, res) => {
+  const trip = await Trip.findById(req.params.tripid);
+  if (!trip) {
+    throw {
+      message: `Trip not found`,
+      status: 404,
+    };
+  } else {
+    const hotel = await Hotel.find({ location_id: req.params.hotelid });
+    if (!hotel) {
+      throw {
+        message: `Hotel not found`,
+        status: 404,
+      };
+    }
+    if (!trip.hotels.includes(hotel.location_id)) {
+      trip.hotels.push(hotel.location_id);
+      await trip.save();
+      await trip.update(
+        {
+          _id: trip._id,
+          "itinerary.date": req.params.visitDate,
+        },
+        { $push: { "itinerary.$.placesToVisit": hotel.location_id } },
+        { upsert: true },
+      );
+      // trip.itinerary.push;
+      return trip;
+    } else {
+      throw {
+        message: `Hotel already added to trip`,
+        status: 400,
+      };
+    }
   }
 };
 

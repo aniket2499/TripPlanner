@@ -3,18 +3,8 @@ import React, { useContext } from "react";
 import hotelService from "../services/hotelService";
 import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
+import actions from "../actions";
 import storage from "redux-persist/lib/storage";
-
-const initialState = [
-  {
-    hotelId: null,
-    name: null,
-    imageUrl: null,
-    rating: null,
-    latitude: null,
-    longitude: null,
-  },
-];
 
 let copyState = null;
 let index = 0;
@@ -29,28 +19,11 @@ const hotelReducer = (state = [], action) => {
       return state;
 
     case "ADD_HOTEL":
-      const newHotel = {
-        hotelId: payload.obj.dupeId,
-        name: payload.obj.name,
-        imageUrl: payload.obj.image,
-        rating: payload.obj.rating,
-        latitude: payload.obj.geoCode.latitude,
-        longitude: payload.obj.geoCode.longitude,
-      };
-      return [...state, newHotel];
+      return [...state, payload];
 
     case "DELETE_HOTEL":
-      copyState = [...state];
-      let elemIndex = -1;
-      for (let i = 0; i < copyState.length; i++) {
-        if (copyState[i].hotelId == payload.location_id) {
-          elemIndex = i;
-          break;
-        }
-      }
-      if (elemIndex > -1) {
-        copyState.splice(elemIndex, 1);
-      }
+      // storage.removeItem("persist:root");
+      copyState = state.filter((x) => x._id !== payload._id);
       return copyState;
 
     default:
@@ -83,23 +56,36 @@ const addHotel = (tripId, hotelData) => {
       longitude: hotelData.geoCode.longitude,
       rating: hotelData.rating,
     };
-    let data = await hotelService.createHotel(tripId, obj);
+    let data = await hotelService.createHotel(tripId, hotelData.startDate, obj);
     dispatch({
       type: "ADD_HOTEL",
-      payload: data,
+      payload: hotelData,
     });
+    dispatch(
+      actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate),
+    );
   };
 };
 
 const deleteHotel = (tripId, hotelId, hotel) => {
   return async (dispatch, getState) => {
-    let data = await tripservice.removeHotelFromTrip(tripId, hotelId);
+    let data = await tripservice.removeHotelFromTrip(
+      tripId,
+      hotelId,
+      hotel.startDate.split("/").join("-"),
+    );
+    console.log("data after delete" + JSON.stringify(data));
     dispatch({
       type: "DELETE_HOTEL",
       payload: hotel,
     });
+    hotel.startDate = console.log(hotel.startDate);
+    dispatch(
+      actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
+    );
   };
 };
-export { initializeState, deleteHotel };
+
+export { initializeState, addHotel, deleteHotel };
 
 export default hotelReducer;
