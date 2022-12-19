@@ -4,6 +4,29 @@ import actions from "../actions";
 import store from "../store";
 // import GetUserInfo from "../Components/getUserInfo";
 
+const initialState = [
+  {
+    _id: null,
+    cur_location: null,
+    destination: null,
+    tripDate: {
+      startDate: null,
+      endDate: null,
+    },
+    destination_lat: null,
+    destination_long: null,
+    userId: null,
+    tripName: null,
+    hotels: [],
+    attractions: [],
+    explore: [],
+    invites: [],
+    itinerary: [],
+    placesToVisit: [],
+    restaurants: [],
+  },
+];
+
 let copyState = null;
 let index = 0;
 
@@ -27,17 +50,14 @@ const tripsReducer = (state = [], action) => {
 
     case "BIN_HOTEL":
       copyState = [...state];
-      console.log("inside bin");
-      console.log(payload);
-      index = copyState.find((x) => x._id === payload.tripId.toString());
-      index.hotels.push(payload.location_id.toString());
+      index = copyState.find((x) => x._id == payload.tripId);
+      index.hotels.push(payload.location_id);
       return [...copyState];
 
     case "UNBIN_HOTEL":
-      console.log("inside unbin");
       copyState = [...state];
-      index = copyState.find((x) => x._id === payload.tripId.toString());
-      const elemIndex = index.hotels.indexOf(payload.location_id.toString());
+      index = copyState.find((x) => x._id == payload.tripId);
+      const elemIndex = index.hotels.indexOf(payload.location_id);
       if (elemIndex > -1) {
         index.hotels.splice(elemIndex, 1);
       }

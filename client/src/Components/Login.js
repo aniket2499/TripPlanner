@@ -93,12 +93,11 @@ function Login() {
   };
 
   return (
-    <div>
+    <div className="bc-image">
       <form onSubmit={handleLogin}>
         <Box
           style={styles.box}
           sx={{
-            backgroundColor: "fafafa",
             ":hover": { boxShadow: "10px 10px 20px #ccc" },
             boxShadow: "5px 5px 10px #ccc",
           }}
