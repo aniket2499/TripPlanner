@@ -164,7 +164,7 @@ function SignUp() {
   }
 
   return (
-    <div className="bc-image">
+    <div>
       <form onSubmit={handleSignUp} autoComplete="off">
         <Box
           style={styles.box}
