@@ -95,6 +95,15 @@ const MyTrip = () => {
   const dispatch = useDispatch();
   const tripId = useParams().id;
 
+  const removeHotelFromBin = (tripId, hotelId, hotel) => {
+    console.log("tripId", "hotelId");
+    console.log(tripId, hotelId);
+    console.log("hotel");
+    console.log(hotel);
+    dispatch(actions.unbinHotel(tripId, hotelId));
+    dispatch(deleteHotel(tripId, hotelId, hotel));
+  };
+
   const trips = useSelector((state) => state.trips);
 
   const hotels = useSelector((state) => state.hotels);
@@ -264,7 +273,7 @@ const MyTrip = () => {
                   justifyContent="center"
                   style={{ paddingBottom: 0 }}
                 >
-                  {currentTrip &&
+                  {currentTrip.length &&
                     currentTrip.map((trip) => (
                       <Grid item xs={12} sm={12} md={8} lg={8}>
                         <Card sx={{ mt: 40 }}>
@@ -309,7 +318,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {hotels &&
+                      {hotels.length &&
                         hotels.map((hotel, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -346,11 +355,10 @@ const MyTrip = () => {
                                           <Button
                                             color="primary"
                                             onClick={(e) =>
-                                              handleDeleteHotel(
-                                                e,
+                                              removeHotelFromBin(
                                                 tripId,
-                                                hotel._id,
-                                                hotel,
+                                                hotel[0].location_id,
+                                                hotel[0],
                                               )
                                             }
                                           >
@@ -365,7 +373,8 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {hotel.name}
+                                        {/* {console.log(hotel[0].name)} */}
+                                        {hotel[0] ? hotel[0].name : "N/a"}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -386,7 +395,13 @@ const MyTrip = () => {
                                         component="img"
                                         height="150"
                                         width="50"
-                                        image={hotel.image}
+                                        image={
+                                          hotel[0]
+                                            ? hotel[0].image
+                                            : `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
+                                                Math.random() * 300 + 1,
+                                              )}.jpg`
+                                        }
                                         alt="green iguana"
                                         style={{
                                           borderRadius: 11,
@@ -418,43 +433,48 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    {restaurants.map(
-                      (
-                        restaurant, // hotels is an array of objects}
-                      ) => (
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <Card
-                            sx={{ mt: 2 }}
-                            backgroundColor="primary.main"
-                            style={{ backgroundColor: "" }}
-                          >
-                            <CardContent>
-                              <Stack direction="column" justifyContent="Center">
-                                <Typography
-                                  variant="h5"
-                                  component="h2"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
+                    {restaurants.length &&
+                      restaurants.map(
+                        (
+                          restaurant, // hotels is an array of objects}
+                        ) => (
+                          <Grid item xs={12} sm={12} md={6} lg={6}>
+                            <Card
+                              sx={{ mt: 2 }}
+                              backgroundColor="primary.main"
+                              style={{ backgroundColor: "" }}
+                            >
+                              <CardContent>
+                                <Stack
+                                  direction="column"
+                                  justifyContent="Center"
                                 >
-                                  {restaurant.name}
-                                </Typography>
-                                <Typography
-                                  variant="body1"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
-                                  color="text.hint"
-                                >
-                                  Address
-                                </Typography>
-                              </Stack>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      ),
-                    )}
+                                  <Typography
+                                    variant="h5"
+                                    component="h2"
+                                    fontWeight="fontWeightBold"
+                                    sx={{ mt: 2, ml: 2 }}
+                                  >
+                                    {console.log(restaurant[0].name)}
+                                    {/* {restaurant ? restaurant[0].name : "N/a"} */}
+                                  </Typography>
+                                  <Typography
+                                    variant="body1"
+                                    fontWeight="fontWeightBold"
+                                    sx={{ mt: 2, ml: 2 }}
+                                    color="text.hint"
+                                  >
+                                    Address
+                                  </Typography>
+                                </Stack>
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                        ),
+                      )}
 
                     <Card styles={{ padding: "1.5rem" }}>
-                      {restaurantState &&
+                      {restaurantState.length &&
                         restaurantState.map((restaurant, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -508,7 +528,9 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {restaurant.name}
+                                        {/* {restaurant
+                                          ? restaurant[0].name
+                                          : "N/a"} */}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -562,7 +584,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {attractionState &&
+                      {attractionState.length &&
                         attractionState.map((attraction, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -617,7 +639,10 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {attraction.name}
+                                        {console.log(attraction[0].name)}
+                                        {/* {attraction
+                                          ? attraction[0].name
+                                          : "N/a"} */}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -638,7 +663,13 @@ const MyTrip = () => {
                                         component="img"
                                         height="150"
                                         width="50"
-                                        image={attraction.image}
+                                        image={
+                                          attraction && attraction[0].image
+                                            ? attraction[0].image
+                                            : `https://tripplannercs554.s3.amazonaws.com/AttractionImages/${Math.floor(
+                                                Math.random() * 100 + 1,
+                                              )}.jpg`
+                                        }
                                         alt="green iguana"
                                         style={{
                                           borderRadius: 11,
@@ -677,8 +708,8 @@ const MyTrip = () => {
                       >
                         <CardContent>
                           <Stack direction="column" justifyContent="Center">
-                            {trips.itinerary}
                             {trips.itinerary &&
+                              trips.itinerary.length &&
                               trips.itinerary.map((day) => (
                                 <Accordion fontWeight="fontWeightBold">
                                   <Accordion>
