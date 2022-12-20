@@ -215,10 +215,10 @@ const MyTrip = () => {
   useEffect(() => {
     if (currentTrip[0]) {
       setLat(
-        Number(currentTrip[0] || trips[0] ? currentTrip[0].destCord.lat : "")
+        Number(currentTrip[0] || trips[0] ? currentTrip[0].destCord.lat : ""),
       );
       setLng(
-        Number(currentTrip[0] || trips[0] ? currentTrip[0].destCord.long : "")
+        Number(currentTrip[0] || trips[0] ? currentTrip[0].destCord.long : ""),
       );
     }
   }, [currentTrip]);
@@ -276,7 +276,7 @@ const MyTrip = () => {
         currentTrip && currentTrip[0] && currentTrip[0].image
           ? currentTrip[0].image
           : `https://tripplannercs554.s3.amazonaws.com/AttractionImages/${Math.floor(
-              Math.random() * 100 + 1
+              Math.random() * 100 + 1,
             )}.jpg`
       })`,
     },
@@ -406,7 +406,7 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    <Card styles={{ padding: "1.5rem" }}>                   
+                    <Card styles={{ padding: "1.5rem" }}>
                       {hotels.length &&
                         hotels.map((hotel, index) => (
                           <div key={index}>
@@ -504,7 +504,7 @@ const MyTrip = () => {
                               </div>
                             </Box>
                           </div>
-                        ))} */}
+                        ))}
                       {hotels.map((hotel) => {
                         return (
                           <Grid
@@ -633,7 +633,7 @@ const MyTrip = () => {
                                                   ,{" "}
                                                 </Typography>
                                               );
-                                            }
+                                            },
                                           )}
                                         <Typography variant="bode2"></Typography>
                                         <br />
@@ -678,7 +678,7 @@ const MyTrip = () => {
                                           hotel.image
                                             ? hotel.image
                                             : `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
-                                                Math.random() * 300 + 1
+                                                Math.random() * 300 + 1,
                                               )}.jpg`
                                         }
                                         alt="green iguana"
@@ -797,7 +797,7 @@ const MyTrip = () => {
                                         <Stack
                                           direction="row"
                                           justifyContent="flex-end"
-                                          sx={{ width: "100%", mr: "1rem" }}                        
+                                          sx={{ width: "100%", mr: "1rem" }}
                                         ></Stack>
                                       </Stack>
                                       <Typography
