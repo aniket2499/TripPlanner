@@ -21,30 +21,75 @@ import {
 } from "@mui/material";
 import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { AuthContext } from "../firebase/Auth";
 import StarIcon from "@mui/icons-material/Star";
 import actions from "../actions";
 import getApiData from "../services/getApiData";
-import Maps from "./Maps";
+import { useEffect, useState, useContext } from "react";
 import tripService from "../services/tripService";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { addHotel, deleteHotel } from "../reducers/hotelReducer";
+import Maps from "./Maps";
+import store from "../store";
+import { addRestaurant, deleteRestaurant } from "../reducers/restReducer";
+import { initializeState as initHotel } from "../reducers/hotelReducer";
+import { initializeState as initRest } from "../reducers/restReducer";
+import { initializeState as initAttr } from "../reducers/attractionReducer";
+import { initializeState as initTrip } from "../reducers/tripsReducer";
+import { useParams } from "react-router";
 
-function Restaurants() {
+const Restaurants = () => {
   const dispatch = useDispatch();
+  const currUser = useContext(AuthContext);
   const [restaurantData, setRestaurantData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = useState(false);
   const [open, setOpen] = useState(false);
   const [rest, setRest] = useState({});
+  const [calendarDate, setCalendarDate] = useState(false);
+  let destination = null;
+  let rangeStartDate = null;
+  let rangeEndDate = null;
+  const allState = useSelector((state) => state);
   const trips = useSelector((state) => state.trips);
-  const id = "63934796bd080530bbdc3111";
-  console.log(trips);
+  const id = useParams().tripid;
+  console.log("id", id);
+
+  useEffect(() => {
+    console.log("event fired");
+
+    async function fetchData() {
+      await dispatch(actions.initializeUser(currUser._delegate.uid));
+      await dispatch(initTrip());
+      await dispatch(initHotel(id));
+      await dispatch(initRest(id));
+      await dispatch(initAttr(id));
+    }
+    fetchData();
+  }, []);
+
+  const addRestToBin = (tripId, restaurantId, restaurant, visitDate) => {
+    dispatch(actions.binRestaurant(tripId, restaurantId));
+    dispatch(addRestaurant(tripId, restaurant, visitDate));
+  };
+
+  const removeRestFromBin = (tripId, restaurantId, restaurant) => {
+    dispatch(actions.unbinRestaurant(tripId, restaurantId));
+    dispatch(deleteRestaurant(tripId, restaurantId, restaurant));
+  };
+
+  const findRestInTrip = (restaurantId) => {
+    let currTrip = trips.find((x) => x._id == id);
+    let restaurant = currTrip.restaurants.find((h) => h == restaurantId);
+    console.log(restaurant);
+    return restaurant ? true : false;
+  };
 
   const handleOpen = (hotel) => {
     setOpen(true);
@@ -55,43 +100,74 @@ function Restaurants() {
     setOpen(false);
   };
 
-  const destination = trips[0].destination.split(",")[0];
+  // console.log("trips");
+
+  // console.log(trips);
+  if (trips.length !== 0) {
+    let index = trips.findIndex((x) => x._id === id);
+    console.log("index is : " + index);
+    destination = trips[index].destination.split(",")[0];
+  }
 
   useEffect(() => {
     async function getResData() {
-      try {
-        let data = await getApiData.getRestaurantData(`${destination}`, 1, 4);
-        if (data.length === 0) {
-          return;
-        }
-        let resData = [];
-        console.log(data);
-        for (let i = 0; i < data.length; i++) {
-          if (data[i].location_id.length != 8) {
-            continue;
+      if (destination) {
+        try {
+          let data = await getApiData.getRestaurantData(`${destination}`, 1, 4);
+          if (data.length === 0) {
+            return;
           }
-          let restaurantObj = {
-            name: data[i].name,
-            locationId: data[i].location_id,
-            address: data[i].address,
-            rating: data[i].rating,
-            priceLevel: data[i].price_level,
-            latitude: data[i].latitude,
-            longitude: data[i].longitude,
-            image: data[i].image,
-          };
-          resData.push(restaurantObj);
+          let resData = [];
+          for (let i = 0; i < data.length; i++) {
+            data[i].saved = false;
+            data[i].pickerOpen = false;
+            data[i].startDate = dayjs(new Date())
+              .format("MM/DD/YYYY")
+              .toString();
+            console.log(
+              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            );
+          }
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].ad_position) {
+              continue;
+            }
+            let restaurantObj = {
+              name: data[i].name,
+              locationId: data[i].location_id,
+              address: data[i].address,
+              rating: data[i].rating,
+              priceLevel: data[i].price_level,
+              latitude: data[i].latitude,
+              longitude: data[i].longitude,
+              image: data[i].image,
+              startDate: data[i].startDate,
+            };
+            resData.push(restaurantObj);
+          }
+          setRestaurantData(resData);
+          setLoading(false);
+          // console.log("restaurantData");
+          // console.log(resData);
+        } catch (e) {
+          console.log(e);
+          return e;
         }
-        setRestaurantData(resData);
-        setLoading(false);
-        console.log(restaurantData);
-      } catch (e) {
-        console.log(e);
-        return e;
       }
     }
     getResData();
-  }, []);
+  }, [destination]);
+
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeStartDate = allState.trips[i].tripDate.startDate;
+    }
+  }
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeEndDate = allState.trips[i].tripDate.endDate;
+    }
+  }
 
   if (loading) {
     return (
@@ -323,65 +399,76 @@ function Restaurants() {
                           </Grid>
 
                           <Grid item xs={12} sm={3} md={4} lg={5}>
-                            <Button
-                              id={restaurant.locationId}
-                              onClick={(e) => {
-                                if (restaurant.saved === true) {
-                                  tripService.addHotelToTrip(id, {
-                                    locationId: restaurant.locationId,
-                                  });
-                                } else {
+                            {trips &&
+                              !findRestInTrip(restaurant.locationId) && (
+                                <Button
+                                  id={restaurant.locationId}
+                                  onClick={() =>
+                                    addRestToBin(
+                                      id,
+                                      restaurant.locationId,
+                                      restaurant,
+                                    )
+                                  }
+                                >
+                                  <Typography variant="body2">
+                                    Add Restaurant
+                                  </Typography>
+                                  <TurnedInNotIcon />
+                                </Button>
+                              )}
+                            {trips && findRestInTrip(restaurant.locationId) && (
+                              <Button
+                                id={restaurant.locationId}
+                                onClick={() =>
+                                  removeRestFromBin(
+                                    id,
+                                    restaurant.locationId,
+                                    restaurant,
+                                  )
                                 }
-                                restaurant.saved = !restaurant.saved;
-                                setSavedButton(!savedButton);
-                              }}
-                            >
-                              {restaurant.saved ? (
+                              >
+                                <Typography variant="body2">
+                                  Remove Restaurant
+                                </Typography>
                                 <TurnedInIcon />
-                              ) : (
-                                <TurnedInNotIcon />
-                              )}
-                              {restaurant.saved ? (
-                                <Typography variant="body2">
-                                  Remove From Bin
-                                </Typography>
-                              ) : (
-                                <Typography variant="body2">
-                                  Add To Bin
-                                </Typography>
-                              )}
-                            </Button>
-                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                  <DesktopDatePicker
-                                    label="Select Date"
-                                    disablePast
-                                    inputFormat="MM/DD/YYYY"
-                                    value={hotel.startDate}
-                                    onSelect={(event) => {
-                                      event.preventDefault();
-                                    }}
-                                    onChange={(newValue) => {
-                                      console.log(
-                                        "aniket new value" + hotel.startDate,
-                                      );
-                                      hotel.startDate =
-                                        dayjs(newValue).format("MM/DD/YYYY");
-                                      setCalendarDate(!calendarDate);
-                                      console.log(
-                                        "aniket new value after" + hotel.startDate,
-                                      );
-                                    }}
-                                    id="startDate"
-                                    renderInput={(params) => (
-                                      <TextField
-                                        sx={{ width: "16rem" }}
-                                        margin="normal"
-                                        {...params}
-                                        // onChange={handleStartDateChange}
-                                      />
-                                    )}
+                              </Button>
+                            )}
+
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DesktopDatePicker
+                                label="Select Date"
+                                disablePast
+                                maxDate={rangeEndDate}
+                                minDate={rangeStartDate}
+                                inputFormat="MM/DD/YYYY"
+                                value={restaurant.startDate}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                }}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + restaurant.startDate,
+                                  );
+                                  restaurant.startDate =
+                                    dayjs(newValue).format("MM/DD/YYYY");
+                                  setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" +
+                                      restaurant.startDate,
+                                  );
+                                }}
+                                id="startDate"
+                                renderInput={(params) => (
+                                  <TextField
+                                    sx={{ width: "16rem" }}
+                                    margin="normal"
+                                    {...params}
+                                    // onChange={handleStartDateChange}
                                   />
-                                </LocalizationProvider> */}
+                                )}
+                              />
+                            </LocalizationProvider>
 
                             <CardMedia
                               component="img"
@@ -692,5 +779,5 @@ function Restaurants() {
       </Grid>
     );
   }
-}
+};
 export default Restaurants;

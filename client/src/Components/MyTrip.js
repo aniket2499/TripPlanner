@@ -151,6 +151,15 @@ const MyTrip = () => {
   const dispatch = useDispatch();
   const tripId = useParams().id;
 
+  const removeHotelFromBin = (tripId, hotelId, hotel) => {
+    console.log("tripId", "hotelId");
+    console.log(tripId, hotelId);
+    console.log("hotel");
+    console.log(hotel);
+    dispatch(actions.unbinHotel(tripId, hotelId));
+    dispatch(deleteHotel(tripId, hotelId, hotel));
+  };
+
   const trips = useSelector((state) => state.trips);
   console.log(trips);
 
@@ -353,7 +362,7 @@ const MyTrip = () => {
                   justifyContent="center"
                   style={{ paddingBottom: 0 }}
                 >
-                  {currentTrip &&
+                  {currentTrip.length &&
                     currentTrip.map((trip) => (
                       <Grid item xs={12} sm={12} md={8} lg={8}>
                         <Card sx={{ mt: 40 }}>
@@ -397,8 +406,8 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    <Card styles={{ padding: "1.5rem" }}>
-                      {/* {hotels &&
+                    <Card styles={{ padding: "1.5rem" }}>                   
+                      {hotels.length &&
                         hotels.map((hotel, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -435,11 +444,10 @@ const MyTrip = () => {
                                           <Button
                                             color="primary"
                                             onClick={(e) =>
-                                              handleDeleteHotel(
-                                                e,
+                                              removeHotelFromBin(
                                                 tripId,
-                                                hotel._id,
-                                                hotel
+                                                hotel[0].location_id,
+                                                hotel[0],
                                               )
                                             }
                                           >
@@ -454,7 +462,8 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {hotel.name}
+                                        {/* {console.log(hotel[0].name)} */}
+                                        {hotel[0] ? hotel[0].name : "N/a"}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -475,7 +484,13 @@ const MyTrip = () => {
                                         component="img"
                                         height="150"
                                         width="50"
-                                        image={hotel.image}
+                                        image={
+                                          hotel[0]
+                                            ? hotel[0].image
+                                            : `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
+                                                Math.random() * 300 + 1,
+                                              )}.jpg`
+                                        }
                                         alt="green iguana"
                                         style={{
                                           borderRadius: 11,
@@ -693,133 +708,46 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    {restaurants.map(
-                      (
-                        restaurant // hotels is an array of objects}
-                      ) => (
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <Card
-                            sx={{ mt: 2 }}
-                            backgroundColor="primary.main"
-                            style={{ backgroundColor: "" }}
-                          >
-                            <CardContent>
-                              <Stack direction="column" justifyContent="Center">
-                                <Typography
-                                  variant="h5"
-                                  component="h2"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
+                    {restaurants.length &&
+                      restaurants.map(
+                        (
+                          restaurant, // hotels is an array of objects}
+                        ) => (
+                          <Grid item xs={12} sm={12} md={6} lg={6}>
+                            <Card
+                              sx={{ mt: 2 }}
+                              backgroundColor="primary.main"
+                              style={{ backgroundColor: "" }}
+                            >
+                              <CardContent>
+                                <Stack
+                                  direction="column"
+                                  justifyContent="Center"
                                 >
-                                  {restaurant.name}
-                                </Typography>
-                                <Typography
-                                  variant="body1"
-                                  fontWeight="fontWeightBold"
-                                  sx={{ mt: 2, ml: 2 }}
-                                  color="text.hint"
-                                >
-                                  Address
-                                </Typography>
-                              </Stack>
-                            </CardContent>
-                          </Card>
-                        </Grid>
-                      )
-                    )}
-
-                    <Card styles={{ padding: "1.5rem" }}>
-                      {restaurantState &&
-                        restaurantState.map((restaurant, index) => (
-                          <div key={index}>
-                            <Box sx={{ p: 1 }}>
-                              <Divider
-                                styles={{
-                                  backgroundColor: "blue",
-                                  paddingTop: 0.5,
-                                  paddingBottom: 0.5,
-                                  marginTop: "1rem",
-                                  marginBottom: "1rem",
-                                }}
-                              />
-                              <div>
-                                <Container>
-                                  <Grid
-                                    container
-                                    sx={{ mt: "1rem", mb: "1rem" }}
+                                  <Typography
+                                    variant="h5"
+                                    component="h2"
+                                    fontWeight="fontWeightBold"
+                                    sx={{ mt: 2, ml: 2 }}
                                   >
-                                    <Grid item xs={12} sm={9} md={8} lg={8}>
-                                      <Stack direction="row">
-                                        <Avatar
-                                          sx={{
-                                            backgroundColor: "primary.main",
-                                            mr: "1rem",
-                                          }}
-                                        >
-                                          {index + 1}
-                                        </Avatar>
-                                        <Stack
-                                          direction="row"
-                                          justifyContent="flex-end"
-                                          sx={{ width: "100%", mr: "1rem" }}
-                                        >
-                                          <Button
-                                            color="primary"
-                                            onClick={() =>
-                                              handleDeleteRestaurant(
-                                                tripId,
-                                                restaurant._id
-                                              )
-                                            }
-                                          >
-                                            <DeleteIcon />
-                                          </Button>
-                                        </Stack>
-                                      </Stack>
-
-                                      <Typography
-                                        variant="h6"
-                                        component="div"
-                                        fontWeight="fontWeightBold"
-                                        sx={{ mr: "1rem" }}
-                                      >
-                                        {restaurant.name}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        component="div"
-                                        style={{
-                                          paddingTop: "0.2rem",
-                                        }}
-                                      >
-                                        The gateway was built in 1924, in
-                                        memorial to King George V of England,
-                                        who landed in India at the same place in
-                                        1911.
-                                      </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={3} md={4} lg={4}>
-                                      <CardMedia
-                                        component="img"
-                                        height="150"
-                                        width="50"
-                                        image={restaurant.image}
-                                        alt="green iguana"
-                                        style={{
-                                          borderRadius: 11,
-                                          mr: "2rem",
-                                        }}
-                                        // adding on click for opening modalForHotel
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Container>
-                              </div>
-                            </Box>
-                          </div>
-                        ))}
-                    </Card>
+                                    {restaurant.length
+                                      ? restaurant[0].name
+                                      : "N/a"}
+                                  </Typography>
+                                  <Typography
+                                    variant="body1"
+                                    fontWeight="fontWeightBold"
+                                    sx={{ mt: 2, ml: 2 }}
+                                    color="text.hint"
+                                  >
+                                    Address
+                                  </Typography>
+                                </Stack>
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                        ),
+                      )}
                   </Grid>
                 </Paper>
               </AccordionDetails>
@@ -837,7 +765,7 @@ const MyTrip = () => {
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {attractionState &&
+                      {attractionState.length &&
                         attractionState.map((attraction, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
@@ -869,30 +797,18 @@ const MyTrip = () => {
                                         <Stack
                                           direction="row"
                                           justifyContent="flex-end"
-                                          sx={{ width: "100%", mr: "1rem" }}
-                                        >
-                                          <Button
-                                            color="primary"
-                                            onClick={(e) =>
-                                              handleDeleteAttraction(
-                                                e,
-                                                tripId,
-                                                attraction._id
-                                              )
-                                            }
-                                          >
-                                            <DeleteIcon />
-                                          </Button>
-                                        </Stack>
+                                          sx={{ width: "100%", mr: "1rem" }}                        
+                                        ></Stack>
                                       </Stack>
-
                                       <Typography
                                         variant="h6"
                                         component="div"
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {attraction.name}
+                                        {attraction.length
+                                          ? attraction[0].name
+                                          : "N/a"}
                                       </Typography>
                                       <Typography
                                         variant="body2"
@@ -913,7 +829,13 @@ const MyTrip = () => {
                                         component="img"
                                         height="150"
                                         width="50"
-                                        image={attraction.image}
+                                        image={
+                                          attraction && attraction[0].image
+                                            ? attraction[0].image
+                                            : `https://tripplannercs554.s3.amazonaws.com/AttractionImages/${Math.floor(
+                                                Math.random() * 100 + 1,
+                                              )}.jpg`
+                                        }
                                         alt="green iguana"
                                         style={{
                                           borderRadius: 11,
@@ -952,8 +874,8 @@ const MyTrip = () => {
                       >
                         <CardContent>
                           <Stack direction="column" justifyContent="Center">
-                            {trips.itinerary}
                             {trips.itinerary &&
+                              trips.itinerary.length &&
                               trips.itinerary.map((day) => (
                                 <Accordion fontWeight="fontWeightBold">
                                   <Accordion defaultExpanded={true}>

@@ -630,7 +630,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -945,7 +945,7 @@ function Search() {
                         </Stack>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );
@@ -975,7 +975,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -1110,7 +1110,7 @@ function Search() {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );
@@ -1140,7 +1140,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -1275,7 +1275,7 @@ function Search() {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );

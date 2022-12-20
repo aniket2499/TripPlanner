@@ -66,6 +66,7 @@ const Hotels = () => {
   const [loading, setLoading] = useState(true);
   const [calendarDate, setCalendarDate] = useState(false);
   const dispatch = useDispatch();
+  let destination = null;
   let rangeStartDate = null;
   let rangeEndDate = null;
 
@@ -78,6 +79,10 @@ const Hotels = () => {
   };
 
   const removeHotelFromBin = (tripId, hotelId, hotel) => {
+    console.log(1, "tripId", "hotelId");
+    console.log(tripId, hotelId);
+    console.log(1, "hotel");
+    console.log(hotel);
     dispatch(actions.unbinHotel(tripId, hotelId));
     dispatch(deleteHotel(tripId, hotelId, hotel));
   };
@@ -99,29 +104,42 @@ const Hotels = () => {
     setOpen(false);
   };
 
+  if (trips.length !== 0) {
+    let index = trips.findIndex((x) => x._id === a);
+    console.log("index is : " + index);
+    destination = trips[index].destination.split(",")[0];
+    console.log(destination);
+  }
+
   useEffect(() => {
     async function fetchData() {
-      try {
-        let data = await hotelsData.getHotelData("ahmedabad", 1);
-        if (data.length === 0) {
-          return;
+      if (destination) {
+        try {
+          let data = await hotelsData.getHotelData(`${destination}`, 1);
+          if (data.length === 0) {
+            return;
+          }
+          for (let i = 0; i < data.length; i++) {
+            data[i].saved = false;
+            data[i].pickerOpen = false;
+            data[i].startDate = dayjs(new Date())
+              .format("MM/DD/YYYY")
+              .toString();
+            console.log(
+              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            );
+          }
+          console.log("data");
+          console.log(data);
+          setHotels(data);
+          setLoading(false);
+        } catch (e) {
+          return e;
         }
-        for (let i = 0; i < data.length; i++) {
-          data[i].saved = false;
-          data[i].pickerOpen = false;
-          data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
-          console.log(
-            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY")
-          );
-        }
-        setHotels(data);
-        setLoading(false);
-      } catch (e) {
-        return e;
       }
     }
     fetchData();
-  }, []);
+  }, [destination]);
 
   for (let i = 0; i < allState.trips.length; i++) {
     if (allState.trips[i]._id === a) {
