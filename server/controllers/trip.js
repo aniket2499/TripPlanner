@@ -320,8 +320,12 @@ const addRestaurantToTrip = async (req, res) => {
 };
 
 const removeRestaurantFromTrip = async (req, res) => {
-  console.log(req.params.tripid);
+  console.log("req.params.tripid: ", req.params.tripid);
+  consoel.log("req.params.restaurantid: ", req.params.restaurantid);
   const trip = await Trip.find({ _id: req.params.tripid });
+  console.log(
+    "********************** trip in removeRest *********************",
+  );
   console.log(trip);
   const visitDate = req.params.visitDate.split("-").join("/");
 
@@ -331,7 +335,7 @@ const removeRestaurantFromTrip = async (req, res) => {
         for (let i = 0; i < day.placesToVisit.length; i++) {
           console.log(day.placesToVisit[i]);
           if (day.placesToVisit[i].id == req.params.restaurantid) {
-            //console.log("restaurant found");
+            console.log("restaurant found");
             day.placesToVisit.splice(i, 1);
           }
         }

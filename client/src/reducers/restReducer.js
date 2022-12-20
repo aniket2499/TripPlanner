@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import restaurantService from "../services/restaurantService";
+import tripservice from "../services/tripService";
 import { AuthContext } from "../firebase/Auth";
 
 // const initialState = [
@@ -72,14 +73,22 @@ const initializeState = (tripId) => {
 const addRestaurant = (tripId, restaurantData) => {
   return async (dispatch, getState) => {
     let obj = {
-      location_id: restaurantData.location_id,
+      location_id: restaurantData.locationId,
       name: restaurantData.name,
       image: restaurantData.image,
       latitude: restaurantData.latitude,
       longitude: restaurantData.longitude,
       rating: restaurantData.rating,
+      address: restaurantData.address,
+      priceLevel: restaurantData.priceLevel,
     };
-    // let data = await restaurantService.createRestaurant();
+    console.log("restaurantData");
+    console.log(restaurantData);
+    let data = await restaurantService.createRestaurant(
+      tripId,
+      restaurantData.startDate,
+      obj,
+    );
     dispatch({
       type: "ADD_RESTAURANT",
       payload: restaurantData,
@@ -91,12 +100,17 @@ const addRestaurant = (tripId, restaurantData) => {
 };
 
 const deleteRestaurant = (tripId, restaurantId, restaurant) => {
+  console.log("deleteRestaurant");
+  console.log("tripId", "restaurantId");
+  console.log(tripId, restaurantId);
+  console.log("restaurant");
+  console.log(restaurant);
   return async (dispatch, getState) => {
-    // let data = await tripservice.removeHotelFromTrip(
-    //   tripId,
-    //   hotelId,
-    //   hotel.startDate.split("/").join("-"),
-    // );
+    let data = await tripservice.removeRestaurantFromTrip(
+      tripId,
+      restaurantId,
+      restaurant.startDate.split("/").join("-"),
+    );
     dispatch({
       type: "DELETE_RESTAURANT",
       payload: restaurantId,

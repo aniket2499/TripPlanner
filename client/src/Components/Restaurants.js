@@ -52,7 +52,11 @@ const Restaurants = () => {
   const [savedButton, setSavedButton] = useState(false);
   const [open, setOpen] = useState(false);
   const [rest, setRest] = useState({});
+  const [calendarDate, setCalendarDate] = useState(false);
   let destination = null;
+  let rangeStartDate = null;
+  let rangeEndDate = null;
+  const allState = useSelector((state) => state);
   const trips = useSelector((state) => state.trips);
   const id = useParams().tripid;
   console.log("id", id);
@@ -96,9 +100,9 @@ const Restaurants = () => {
     setOpen(false);
   };
 
-  console.log("trips");
+  // console.log("trips");
 
-  console.log(trips);
+  // console.log(trips);
   if (trips.length !== 0) {
     let index = trips.findIndex((x) => x._id === id);
     console.log("index is : " + index);
@@ -115,6 +119,16 @@ const Restaurants = () => {
           }
           let resData = [];
           for (let i = 0; i < data.length; i++) {
+            data[i].saved = false;
+            data[i].pickerOpen = false;
+            data[i].startDate = dayjs(new Date())
+              .format("MM/DD/YYYY")
+              .toString();
+            console.log(
+              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            );
+          }
+          for (let i = 0; i < data.length; i++) {
             if (data[i].ad_position) {
               continue;
             }
@@ -127,13 +141,14 @@ const Restaurants = () => {
               latitude: data[i].latitude,
               longitude: data[i].longitude,
               image: data[i].image,
+              startDate: data[i].startDate,
             };
             resData.push(restaurantObj);
           }
           setRestaurantData(resData);
           setLoading(false);
-          console.log("restaurantData");
-          console.log(resData);
+          // console.log("restaurantData");
+          // console.log(resData);
         } catch (e) {
           console.log(e);
           return e;
@@ -142,6 +157,17 @@ const Restaurants = () => {
     }
     getResData();
   }, [destination]);
+
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeStartDate = allState.trips[i].tripDate.startDate;
+    }
+  }
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeEndDate = allState.trips[i].tripDate.endDate;
+    }
+  }
 
   if (loading) {
     return (
@@ -409,37 +435,40 @@ const Restaurants = () => {
                               </Button>
                             )}
 
-                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                  <DesktopDatePicker
-                                    label="Select Date"
-                                    disablePast
-                                    inputFormat="MM/DD/YYYY"
-                                    value={hotel.startDate}
-                                    onSelect={(event) => {
-                                      event.preventDefault();
-                                    }}
-                                    onChange={(newValue) => {
-                                      console.log(
-                                        "aniket new value" + hotel.startDate,
-                                      );
-                                      hotel.startDate =
-                                        dayjs(newValue).format("MM/DD/YYYY");
-                                      setCalendarDate(!calendarDate);
-                                      console.log(
-                                        "aniket new value after" + hotel.startDate,
-                                      );
-                                    }}
-                                    id="startDate"
-                                    renderInput={(params) => (
-                                      <TextField
-                                        sx={{ width: "16rem" }}
-                                        margin="normal"
-                                        {...params}
-                                        // onChange={handleStartDateChange}
-                                      />
-                                    )}
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DesktopDatePicker
+                                label="Select Date"
+                                disablePast
+                                maxDate={rangeEndDate}
+                                minDate={rangeStartDate}
+                                inputFormat="MM/DD/YYYY"
+                                value={restaurant.startDate}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                }}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + restaurant.startDate,
+                                  );
+                                  restaurant.startDate =
+                                    dayjs(newValue).format("MM/DD/YYYY");
+                                  setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" +
+                                      restaurant.startDate,
+                                  );
+                                }}
+                                id="startDate"
+                                renderInput={(params) => (
+                                  <TextField
+                                    sx={{ width: "16rem" }}
+                                    margin="normal"
+                                    {...params}
+                                    // onChange={handleStartDateChange}
                                   />
-                                </LocalizationProvider> */}
+                                )}
+                              />
+                            </LocalizationProvider>
 
                             <CardMedia
                               component="img"
