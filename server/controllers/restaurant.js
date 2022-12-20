@@ -43,7 +43,10 @@ const getAllRestaurants = async () => {
   }
 };
 
-const createRestaurant = async (restaurantBody, id) => {
+const createRestaurant = async (restaurantBody, id, visitDate) => {
+  const convertDate = visitDate.split("-").join("/");
+  console.log("currentDateConverted" + convertDate);
+
   const tripId = id;
   const trip = await Trip.findById(tripId);
   const newRestaurantInfo = new Restaurant(restaurantBody);
@@ -114,7 +117,21 @@ const createRestaurant = async (restaurantBody, id) => {
   );
 
   const savedRestaurant = await newRestaurantInfo.save();
-  trip.restaurants.push(savedRestaurant);
+
+  const objForPushInItinerary = {
+    id: savedRestaurant._id,
+    name: savedRestaurant.name,
+    image: savedRestaurant.image,
+    type: "restaurant",
+  };
+
+  trip.itinerary.forEach((day) => {
+    if (day.date === convertDate) {
+      day.placesToVisit.push(objForPushInItinerary);
+      trip.restaurants.push(savedRestaurant._id);
+    }
+  });
+
   await trip.save();
 
   if (savedRestaurant) {

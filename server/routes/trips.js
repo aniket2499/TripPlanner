@@ -84,14 +84,17 @@ router.patch("/:tripid/attractions/add/:attractionid", async (req, res) => {
   }
 });
 
-router.patch("/:tripid/attractions/remove/:attractionid", async (req, res) => {
-  try {
-    const trip = await removeAttractionFromTrip(req, res);
-    res.status(200).json(trip);
-  } catch (e) {
-    res.status(e.status ? e.status : 500).json(e);
-  }
-});
+router.patch(
+  "/:tripid/attractions/remove/:attractionid/:visitDate",
+  async (req, res) => {
+    try {
+      const trip = await removeAttractionFromTrip(req, res);
+      res.status(200).json(trip);
+    } catch (e) {
+      res.status(e.status ? e.status : 500).json(e);
+    }
+  },
+);
 
 router.patch("/:tripid/hotels/add/:hotelid/", async (req, res) => {
   try {
@@ -121,14 +124,17 @@ router.patch("/:tripid/restaurants/add/:restaurantid", async (req, res) => {
   }
 });
 
-router.patch("/:id/restaurants/remove/:restaurantid", async (req, res) => {
-  try {
-    const trip = await removeRestaurantFromTrip(req, res);
-    res.status(200).json(trip);
-  } catch (e) {
-    res.status(e.status ? e.status : 500).json(e);
-  }
-});
+router.patch(
+  "/:tripid/restaurants/remove/:restaurantid/:visitDate",
+  async (req, res) => {
+    try {
+      const trip = await removeRestaurantFromTrip(req, res);
+      res.status(200).json(trip);
+    } catch (e) {
+      res.status(e.status ? e.status : 500).json(e);
+    }
+  },
+);
 
 router.post("/:id/invite", async (req, res) => {
   // console.log(req.body);

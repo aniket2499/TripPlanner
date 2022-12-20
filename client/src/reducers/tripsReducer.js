@@ -14,6 +14,7 @@ const tripsReducer = (state = [], action) => {
     case "INITIALIZE_TRIP":
       state = [];
       state = payload;
+
       return state;
 
     case "ADD_TRIP":
@@ -66,10 +67,32 @@ const tripsReducer = (state = [], action) => {
     case "UNBIN_HOTEL":
       console.log("inside unbin");
       copyState = [...state];
+      console.log("payload");
+      console.log(payload);
       index = copyState.find((x) => x._id === payload.tripId.toString());
       const elemIndex = index.hotels.indexOf(payload.location_id.toString());
       if (elemIndex > -1) {
         index.hotels.splice(elemIndex, 1);
+      }
+      return [...copyState];
+
+    case "BIN_RESTAURANT":
+      copyState = [...state];
+      console.log("inside bin");
+      console.log(payload);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      index.restaurants.push(payload.location_id.toString());
+      return [...copyState];
+
+    case "UNBIN_RESTAURANT":
+      console.log("inside unbin");
+      copyState = [...state];
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      const elemIndexRes = index.restaurants.indexOf(
+        payload.location_id.toString(),
+      );
+      if (elemIndexRes > -1) {
+        index.restaurants.splice(elemIndexRes, 1);
       }
       return [...copyState];
 

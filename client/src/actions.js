@@ -77,6 +77,22 @@ const deleteHotel = (location_id) => ({
   },
 });
 
+const binRestaurant = (tripId, location_id) => ({
+  type: "BIN_RESTAURANT",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
+const unbinRestaurant = (tripId, location_id) => ({
+  type: "UNBIN_RESTAURANT",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
 const binHotel = (tripId, location_id) => ({
   type: "BIN_HOTEL",
   payload: {
@@ -196,6 +212,8 @@ let exports = {
   unbinHotel,
   addHotelToTripItinerary,
   deleteHotelFromTripItinerary,
+  binRestaurant,
+  unbinRestaurant,
 };
 
 export default exports;

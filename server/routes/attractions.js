@@ -29,9 +29,13 @@ router.get("/:id", async (req, res) => {
 
 router.get("/data/:location/:pg/:rating", getAttractionsFromApi);
 
-router.post("/create/:tripId", async (req, res) => {
+router.post("/create/:tripId/:visitDate", async (req, res) => {
   try {
-    const newAttraction = await createAttraction(req.body, req.params.tripId);
+    const newAttraction = await createAttraction(
+      req.body,
+      req.params.tripId,
+      req.params.visitDate,
+    );
     res.status(200).json(newAttraction);
   } catch (e) {
     res.status(500).json(e);
