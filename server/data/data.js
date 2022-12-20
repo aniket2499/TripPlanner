@@ -20,7 +20,6 @@ const amadeus = new Amadeus({
 });
 const getAllRestaurant = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
-  console.log(baseData);
   let latitude = baseData.lat;
   let longitude = baseData.long;
   let min = 1;
@@ -88,7 +87,7 @@ const getAllRestaurant = async (location, pg, rating) => {
 const getAllAttractions = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
   let latitude = baseData.lat;
-  let longitude = baseData.lon;
+  let longitude = baseData.long;
   try {
     const cachedData = await client.hGet(`${location}cachedAttractions`, pg);
     if (cachedData) {
@@ -166,7 +165,6 @@ const getAllHotels = async (location, pg) => {
             ratings: "2,3,4,5",
           },
         );
-        console.log(data, "hotel");
         const hotelData = data.data;
         let hotelList = hotelData.slice(low, high);
         for (let i = 0; i < hotelList.length; i++) {

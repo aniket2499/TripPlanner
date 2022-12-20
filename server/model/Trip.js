@@ -10,7 +10,10 @@ const TripSchema = new Schema({
   },
   users: [{ type: String, ref: "User" }],
   image: { type: String },
-
+  destCord: {
+    lat: { type: String },
+    long: { type: String },
+  },
   invites: [
     {
       email: { type: String },
@@ -47,8 +50,8 @@ const TripSchema = new Schema({
     },
   ],
   hotels: [{ type: String, ref: "Hotels" }],
-  restaurants: [{ type: Schema.Types.ObjectId, ref: "Restaurants" }],
-  attractions: [{ type: Schema.Types.ObjectId, ref: "Attractions" }],
+  restaurants: [{ type: String, ref: "Restaurants" }],
+  attractions: [{ type: String, ref: "Attractions" }],
 });
 
 module.exports = mongoose.model("Trip", TripSchema);
