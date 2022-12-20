@@ -19,7 +19,7 @@ function Welcome() {
     <div className="bc-image">
       <Grid container>
         <Grid item xs={6} sx={{ mt: "5rem", ml: "9rem" }}>
-          <Typography variant="h3" color="#919191">
+          <Typography variant="h3" component="h1" color="#707070">
             You'll never travel without our TRIP PLANNER again
           </Typography>
         </Grid>
