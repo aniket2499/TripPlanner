@@ -11,9 +11,13 @@ const getRestaurantById = (id) => {
     return response.data;
   });
 };
-const createRestaurant = (body) => {
+const createRestaurant = (tripId, visitDate, body) => {
+  console.log("body in service is: " + JSON.stringify(body));
+  console.log("visitDate");
+  console.log(visitDate);
+  visitDate = visitDate.split("/").join("-");
   return axios
-    .post(DATA_URL + "/restaurants/create", { body: body })
+    .post(DATA_URL + `/restaurants/create/${tripId}/${visitDate}`, body)
     .then((response) => {
       return response.data;
     });

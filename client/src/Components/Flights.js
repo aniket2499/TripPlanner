@@ -269,248 +269,256 @@ function Flights(props) {
           <CircularProgress varient="indeterminate" value={100} />
         ) : (
           <div>
-            {flights.map((flight) => (
-              <Paper
-                elevation={3}
-                style={{ padding: "10px", margin: "10px" }}
-                className="flightsDetailsCard"
-                display="flex"
-                justifyContent="center"
-              >
-                {/* <Card variant="outlined" key={flight.id}>
+            {flights.length &&
+              flights.map((flight) => (
+                <Paper
+                  elevation={3}
+                  style={{ padding: "10px", margin: "10px" }}
+                  className="flightsDetailsCard"
+                  display="flex"
+                  justifyContent="center"
+                >
+                  {/* <Card variant="outlined" key={flight.id}>
                   <CardContent> */}
-                <Grid container>
-                  <Grid item xs={12} sm={12} md={8} lg={8}>
-                    {flight.itineraries.map((itinerary) => (
-                      <Card
-                        variant="outlined"
-                        sx={{
-                          mt: 3,
-                          mb: 3,
-                        }}
-                      >
-                        <List>
-                          {itinerary.segments.map((segment, index) => (
-                            <div>
-                              <ListItem key={segment.id}>
-                                <Grid container>
-                                  <Grid item xs={12} sm={12} md={2} lg={2}>
-                                    <Grid
-                                      container
-                                      justifyContent="center"
-                                      alignItems="center"
-                                      sx={{
-                                        mt: 7,
-                                        mb: 3.5,
-                                        mr: 3,
-                                        maxHeight: 100,
-                                      }}
-                                    >
-                                      <img
-                                        className="FlightLogos"
-                                        alt="Remy Sharp"
-                                        src={`imgs/logos/${segment.carrierCode}.png`}
-                                        style={{
-                                          width: "70%",
-                                          maxWidth: "70px",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={10}
-                                    lg={8}
-                                    justifyContent="center"
-                                  >
-                                    <Typography
-                                      variant="h4"
-                                      component="h1"
-                                      sx={{ m: 0.5 }}
-                                      color="primary.main"
-                                    >
-                                      {segment.departure.iataCode} -{" "}
-                                      {segment.arrival.iataCode}
-                                    </Typography>
-                                    <Stack direction="row">
-                                      <FlightTakeoffTwoToneIcon
-                                        sx={{
-                                          mt: 1,
-                                          mb: 0,
-                                          mr: 1,
-                                          ml: 0,
-                                        }}
-                                      >
-                                        {" "}
-                                      </FlightTakeoffTwoToneIcon>
-                                      <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        color="text.secondary"
-                                        sx={{ p: 0.5 }}
-                                      >
-                                        {segment.departure.at.split("T")[0]}{" "}
-                                      </Typography>
-                                      <FlightLandTwoToneIcon
-                                        sx={{
-                                          mt: 1,
-                                          mb: 0,
-                                          mr: 1,
-                                          ml: 14.5,
-                                        }}
-                                      ></FlightLandTwoToneIcon>
-                                      <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        color="text.secondary"
-                                        sx={{ p: 0.5 }}
-                                      >
-                                        {segment.arrival.at.split("T")[0]}
-                                      </Typography>
-                                    </Stack>
-                                    <Stack direction="row">
-                                      <CalendarMonthIcon
-                                        data-testid="CalendarMonth"
-                                        sx={{ m: 0.5 }}
-                                      ></CalendarMonthIcon>
-                                      <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        color="text.secondary"
-                                        sx={{ p: 0.5 }}
-                                      >
-                                        {segment.departure.at.split("T")[1]} -{" "}
-                                        {segment.arrival.at.split("T")[1]}
-                                      </Typography>
-
-                                      <AccessTimeTwoToneIcon
-                                        data-testid="CalendarMonth"
-                                        sx={{ ml: 2.5, mt: 0.5, mr: 1 }}
-                                      ></AccessTimeTwoToneIcon>
-
-                                      <Typography
-                                        variant="subtitle1"
-                                        component="div"
-                                        color="text.secondary"
-                                        sx={{ p: 0.5 }}
-                                      >
-                                        {
-                                          segment.duration
-                                            .split("PT")[1]
-                                            .split("H")[0]
-                                        }
-                                        h{" "}
-                                        {
-                                          segment.duration
-                                            .split("PT")[1]
-                                            .split("H")[1]
-                                            .split("M")[0]
-                                        }
-                                        m
-                                      </Typography>
-                                    </Stack>
-                                  </Grid>
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sm={12}
-                                    md={12}
-                                    lg={2}
-                                    justifyContent="center"
-                                  ></Grid>
-                                </Grid>
-                              </ListItem>
-                              {index < itinerary.segments.length - 1 ? (
-                                <Divider></Divider>
-                              ) : null}
-                              {index < itinerary.segments.length - 1
-                                ? () => {
-                                    index = index + 1;
-                                  }
-                                : () => {}}
-                            </div>
-                          ))}
-                        </List>
-                      </Card>
-                    ))}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={4}
-                    justify="center"
-                    display="flex"
-                  >
-                    <Box
-                      display="flex"
-                      justifyContent="center"
-                      alignItems="center"
-                      sx={{ mr: 12, ml: 12 }}
-                    >
-                      <Stack direction="column">
-                        <Stack direction="row">
-                          <AttachMoneyTwoToneIcon
-                            style={{
-                              color: "rgba(0,0,0,0.54)",
-                              fontSize: "3.2rem",
-                              fontFamily: "Source Sans Pro",
-                              fontWeight: 400,
-                              lineHeight: 1.19,
-                              letterSpacing: "0.00735em",
-                            }}
-                            sx={{ mt: 3, mb: 2, pr: 0 }}
-                            justifyContent="center"
-                          ></AttachMoneyTwoToneIcon>
-                          <Typography
-                            variant="h3"
-                            component="h2"
-                            sx={{ mt: 2, mb: 2, mr: 0, ml: 0 }}
-                            color="primary.main"
-                          >
-                            {flight.price.grandTotal}
-                          </Typography>
-                        </Stack>
-                        <Stack
-                          direction="row"
-                          sx={{ mt: 0, mb: 0, mr: 2, ml: 2 }}
+                  <Grid container>
+                    <Grid item xs={12} sm={12} md={8} lg={8}>
+                      {flight.itineraries.map((itinerary) => (
+                        <Card
+                          variant="outlined"
+                          sx={{
+                            mt: 3,
+                            mb: 3,
+                          }}
                         >
-                          {flight.pricingOptions.includedCheckedBagsOnly ===
-                          true ? (
-                            <LuggageTwoToneIcon></LuggageTwoToneIcon>
-                          ) : (
-                            <NoLuggageTwoToneIcon></NoLuggageTwoToneIcon>
-                          )}
-                          <Typography
-                            variant="body1"
-                            sx={{ mt: 0, mb: 0, mr: 2, ml: 1 }}
-                            color="text.hint"
-                          >
-                            Chekin Bag{"  "}
-                          </Typography>
+                          <List>
+                            {itinerary.segments.length &&
+                              itinerary.segments.map((segment, index) => (
+                                <div>
+                                  <ListItem key={segment.id}>
+                                    <Grid container>
+                                      <Grid item xs={12} sm={12} md={2} lg={2}>
+                                        <Grid
+                                          container
+                                          justifyContent="center"
+                                          alignItems="center"
+                                          sx={{
+                                            mt: 7,
+                                            mb: 3.5,
+                                            mr: 3,
+                                            maxHeight: 100,
+                                          }}
+                                        >
+                                          <img
+                                            className="FlightLogos"
+                                            alt="Remy Sharp"
+                                            src={`imgs/logos/${segment.carrierCode}.png`}
+                                            style={{
+                                              width: "70%",
+                                              maxWidth: "70px",
+                                            }}
+                                          />
+                                        </Grid>
+                                      </Grid>
+                                      <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={10}
+                                        lg={8}
+                                        justifyContent="center"
+                                      >
+                                        <Typography
+                                          variant="h4"
+                                          component="h1"
+                                          sx={{ m: 0.5 }}
+                                          color="primary.main"
+                                        >
+                                          {segment.departure.iataCode} -{" "}
+                                          {segment.arrival.iataCode}
+                                        </Typography>
+                                        <Stack direction="row">
+                                          <FlightTakeoffTwoToneIcon
+                                            sx={{
+                                              mt: 1,
+                                              mb: 0,
+                                              mr: 1,
+                                              ml: 0,
+                                            }}
+                                          >
+                                            {" "}
+                                          </FlightTakeoffTwoToneIcon>
+                                          <Typography
+                                            variant="subtitle1"
+                                            component="div"
+                                            color="text.secondary"
+                                            sx={{ p: 0.5 }}
+                                          >
+                                            {`${
+                                              segment.departure.at.split("T")[0]
+                                            }}`}
+                                          </Typography>
+                                          <FlightLandTwoToneIcon
+                                            sx={{
+                                              mt: 1,
+                                              mb: 0,
+                                              mr: 1,
+                                              ml: 14.5,
+                                            }}
+                                          ></FlightLandTwoToneIcon>
+                                          <Typography
+                                            variant="subtitle1"
+                                            component="div"
+                                            color="text.secondary"
+                                            sx={{ p: 0.5 }}
+                                          >
+                                            {`${
+                                              segment.arrival.at.split("T")[0]
+                                            }`}
+                                          </Typography>
+                                        </Stack>
+                                        <Stack direction="row">
+                                          <CalendarMonthIcon
+                                            data-testid="CalendarMonth"
+                                            sx={{ m: 0.5 }}
+                                          ></CalendarMonthIcon>
+                                          <Typography
+                                            variant="subtitle1"
+                                            component="div"
+                                            color="text.secondary"
+                                            sx={{ p: 0.5 }}
+                                          >
+                                            {`${
+                                              segment.departure.at.split("T")[1]
+                                            }`}
+                                            {`${
+                                              segment.arrival.at.split("T")[1]
+                                            }`}
+                                          </Typography>
 
-                          <AirlineSeatLegroomNormalTwoToneIcon
-                            sx={{ mt: 0, mb: 0, mr: 0, ml: 2 }}
-                          ></AirlineSeatLegroomNormalTwoToneIcon>
-                          <Typography
-                            variant="body1"
-                            sx={{ mt: 0, mb: 0, mr: 2, ml: 1 }}
-                            color="text.hint"
+                                          <AccessTimeTwoToneIcon
+                                            data-testid="CalendarMonth"
+                                            sx={{ ml: 2.5, mt: 0.5, mr: 1 }}
+                                          ></AccessTimeTwoToneIcon>
+
+                                          <Typography
+                                            variant="subtitle1"
+                                            component="div"
+                                            color="text.secondary"
+                                            sx={{ p: 0.5 }}
+                                          >
+                                            {`${
+                                              segment.duration
+                                                .split("PT")[1]
+                                                .split("H")[0]
+                                            }`}
+                                            h{" "}
+                                            {`${
+                                              segment.duration
+                                                .split("PT")[1]
+                                                .split("H")[1]
+                                                .split("M")[0]
+                                            }`}
+                                            m
+                                          </Typography>
+                                        </Stack>
+                                      </Grid>
+                                      <Grid
+                                        item
+                                        xs={12}
+                                        sm={12}
+                                        md={12}
+                                        lg={2}
+                                        justifyContent="center"
+                                      ></Grid>
+                                    </Grid>
+                                  </ListItem>
+                                  {index < itinerary.segments.length - 1 ? (
+                                    <Divider></Divider>
+                                  ) : null}
+                                  {index < itinerary.segments.length - 1
+                                    ? () => {
+                                        index = index + 1;
+                                      }
+                                    : () => {}}
+                                </div>
+                              ))}
+                          </List>
+                        </Card>
+                      ))}
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={12}
+                      md={12}
+                      lg={4}
+                      justify="center"
+                      display="flex"
+                    >
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        sx={{ mr: 12, ml: 12 }}
+                      >
+                        <Stack direction="column">
+                          <Stack direction="row">
+                            <AttachMoneyTwoToneIcon
+                              style={{
+                                color: "rgba(0,0,0,0.54)",
+                                fontSize: "3.2rem",
+                                fontFamily: "Source Sans Pro",
+                                fontWeight: 400,
+                                lineHeight: 1.19,
+                                letterSpacing: "0.00735em",
+                              }}
+                              sx={{ mt: 3, mb: 2, pr: 0 }}
+                              justifyContent="center"
+                            ></AttachMoneyTwoToneIcon>
+                            <Typography
+                              variant="h3"
+                              component="h2"
+                              sx={{ mt: 2, mb: 2, mr: 0, ml: 0 }}
+                              color="primary.main"
+                            >
+                              {flight.price.grandTotal}
+                            </Typography>
+                          </Stack>
+                          <Stack
+                            direction="row"
+                            sx={{ mt: 0, mb: 0, mr: 2, ml: 2 }}
                           >
-                            {flight.numberOfBookableSeats}
-                          </Typography>
+                            {flight.pricingOptions.includedCheckedBagsOnly ===
+                            true ? (
+                              <LuggageTwoToneIcon></LuggageTwoToneIcon>
+                            ) : (
+                              <NoLuggageTwoToneIcon></NoLuggageTwoToneIcon>
+                            )}
+                            <Typography
+                              variant="body1"
+                              sx={{ mt: 0, mb: 0, mr: 2, ml: 1 }}
+                              color="text.hint"
+                            >
+                              Chekin Bag{"  "}
+                            </Typography>
+
+                            <AirlineSeatLegroomNormalTwoToneIcon
+                              sx={{ mt: 0, mb: 0, mr: 0, ml: 2 }}
+                            ></AirlineSeatLegroomNormalTwoToneIcon>
+                            <Typography
+                              variant="body1"
+                              sx={{ mt: 0, mb: 0, mr: 2, ml: 1 }}
+                              color="text.hint"
+                            >
+                              {flight.numberOfBookableSeats}
+                            </Typography>
+                          </Stack>
                         </Stack>
-                      </Stack>
-                    </Box>
+                      </Box>
+                    </Grid>
                   </Grid>
-                </Grid>
-                {/* </CardContent>
-                </Card> */}
-              </Paper>
-            ))}
+                </Paper>
+              ))}
           </div>
         )}
       </Container>

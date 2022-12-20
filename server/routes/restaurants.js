@@ -29,9 +29,16 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/create/:tripId", async (req, res) => {
+router.post("/create/:tripId/:visitDate", async (req, res) => {
   try {
-    const newRestaurant = await createRestaurant(req.body, req.params.tripId);
+    console.log("inside route=======================");
+    console.log(req.body);
+    console.log(req.params);
+    const newRestaurant = await createRestaurant(
+      req.body,
+      req.params.tripId,
+      req.params.visitDate,
+    );
     res.status(200).json(newRestaurant);
   } catch (e) {
     res.status(e.status ? e.status : 500).json(e);

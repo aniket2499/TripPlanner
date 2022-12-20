@@ -4,29 +4,6 @@ import actions from "../actions";
 import store from "../store";
 // import GetUserInfo from "../Components/getUserInfo";
 
-const initialState = [
-  {
-    _id: null,
-    cur_location: null,
-    destination: null,
-    tripDate: {
-      startDate: null,
-      endDate: null,
-    },
-    destination_lat: null,
-    destination_long: null,
-    userId: null,
-    tripName: null,
-    hotels: [],
-    attractions: [],
-    explore: [],
-    invites: [],
-    itinerary: [],
-    placesToVisit: [],
-    restaurants: [],
-  },
-];
-
 let copyState = null;
 let index = 0;
 
@@ -37,12 +14,10 @@ const tripsReducer = (state = [], action) => {
     case "INITIALIZE_TRIP":
       state = [];
       state = payload;
+
       return state;
 
     case "ADD_TRIP":
-      console.log(
-        `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`,
-      );
       payload.obj.tripDate.startDate = new Date(
         `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`,
       );
@@ -51,7 +26,6 @@ const tripsReducer = (state = [], action) => {
       );
       // console.log(payload.tripDate.startDate);
       while (payload.obj.tripDate.startDate <= payload.obj.tripDate.endDate) {
-        console.log("inside while");
         let date = payload.obj.tripDate.endDate
           .toISOString()
           .split("T")[0]
@@ -70,7 +44,6 @@ const tripsReducer = (state = [], action) => {
         );
       }
 
-      console.log(payload.obj);
       return [...state, payload.obj];
 
     case "DELETE_TRIP":
@@ -80,21 +53,42 @@ const tripsReducer = (state = [], action) => {
 
     case "BIN_HOTEL":
       copyState = [...state];
-      index = copyState.find((x) => x._id == payload.tripId);
-      index.hotels.push(payload.location_id);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      index.hotels.push(payload.location_id.toString());
       return [...copyState];
 
     case "UNBIN_HOTEL":
       copyState = [...state];
-      index = copyState.find((x) => x._id == payload.tripId);
-      const elemIndex = index.hotels.indexOf(payload.location_id);
+      console.log("payload");
+      console.log(payload);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      const elemIndex = index.hotels.indexOf(payload.location_id.toString());
       if (elemIndex > -1) {
         index.hotels.splice(elemIndex, 1);
       }
       return [...copyState];
 
+    case "BIN_RESTAURANT":
+      copyState = [...state];
+      console.log("inside bin");
+      console.log(payload);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      index.restaurants.push(payload.location_id.toString());
+      return [...copyState];
+
+    case "UNBIN_RESTAURANT":
+      console.log("inside unbin");
+      copyState = [...state];
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      const elemIndexRes = index.restaurants.indexOf(
+        payload.location_id.toString(),
+      );
+      if (elemIndexRes > -1) {
+        index.restaurants.splice(elemIndexRes, 1);
+      }
+      return [...copyState];
+
     case "ADD_HOTEL_TO_TRIP_ITINERARY":
-      console.log(payload.visitDate);
       let newHotel = {
         _id: payload.hotel.dupeId.toString(),
         name: payload.hotel.name,
@@ -115,12 +109,10 @@ const tripsReducer = (state = [], action) => {
 
     case "DELETE_HOTEL_FROM_TRIP_ITINERARY":
       copyState = [...state];
-      console.log("patyload is : " + JSON.stringify(payload));
       for (let i = 0; i < copyState.length; i++) {
         if (copyState[i]._id.toString() === payload.tripId) {
           for (let j = 0; j < copyState[i].itinerary.length; j++) {
             if (copyState[i].itinerary[j].date === payload.visitDate) {
-              console.log("the state is :" + copyState[i].itinerary[j]);
               for (
                 let k = 0;
                 k < copyState[i].itinerary[j].placesToVisit.length;
@@ -130,7 +122,6 @@ const tripsReducer = (state = [], action) => {
                   copyState[i].itinerary[j].placesToVisit[k]._id ===
                   payload.hotelId.toString()
                 ) {
-                  console.log("entered for deleting the hotel: ");
                   copyState[i].itinerary[j].placesToVisit.splice(k, 1);
                 }
               }
@@ -157,6 +148,20 @@ const initializeState = () => {
   };
 };
 
-export { initializeState };
+const initializeAllTrips = () => {
+  return async (dispatch, getState) => {
+    const trips = await tripService.getAllTripsForCurrentUser(
+      getState().user[0].id,
+    );
+    for (let i = 0; i < trips.length; i++) {
+      dispatch({
+        type: "ADD_TRIP",
+        payload: trips[i],
+      });
+    }
+  };
+};
+
+export { initializeState, initializeAllTrips };
 
 export default tripsReducer;
