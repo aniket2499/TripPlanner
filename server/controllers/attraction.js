@@ -5,7 +5,7 @@ const newValidation = require("../validation/dataValidation.js");
 const Trip = require("../model/Trip");
 const getAttractionById = async (id) => {
   // let parsedId = validation.toObjectId(req.params.id, "AttractionId");
-  const attraction = await Attraction.findById(id);
+  const attraction = await Attraction.find({ location_id: id });
   if (attraction) {
     return attraction;
   } else {
@@ -74,49 +74,49 @@ const createAttraction = async (attractionBody, id, visitDate) => {
     newAttractionInfo.longitude,
     "Longitude",
   );
-  newAttractionInfo.description = validation.checkString(
-    newAttractionInfo.description,
-    "Description",
-  );
+  // newAttractionInfo.description = validation.checkString(
+  //   newAttractionInfo.description,
+  //   "Description",
+  // );
 
   newAttractionInfo.image = validation.checkURL(
     newAttractionInfo.image,
     "Image",
   );
-  newAttractionInfo.category = validation.checkString(
-    newAttractionInfo.category,
-    "Category",
-  );
-  newAttractionInfo.rating = validation.checkStringForNumber(
-    newAttractionInfo.rating,
-    "Rating",
-  );
+  // newAttractionInfo.category = validation.checkString(
+  //   newAttractionInfo.category,
+  //   "Category",
+  // );
+  // newAttractionInfo.rating = validation.checkStringForNumber(
+  //   newAttractionInfo.rating,
+  //   "Rating",
+  // );
 
-  newAttractionInfo.website = validation.checkURL(
-    newAttractionInfo.website,
-    "Website",
-  );
-  newAttractionInfo.phone = validation.checkPhoneNumber(
-    newAttractionInfo.phone,
-    "Phone",
-  );
-  newAttractionInfo.address = validation.checkString(
-    newAttractionInfo.address,
-    "Address",
-  );
-  newAttractionInfo.web_url = validation.checkURL(
-    newAttractionInfo.web_url,
-    "Web Url",
-  );
-  newAttractionInfo.num_reviews = validation.checkStringForNumber(
-    newAttractionInfo.num_reviews,
-    "Number of Reviews",
-  );
+  // newAttractionInfo.website = validation.checkURL(
+  //   newAttractionInfo.website,
+  //   "Website",
+  // );
+  // newAttractionInfo.phone = validation.checkPhoneNumber(
+  //   newAttractionInfo.phone,
+  //   "Phone",
+  // );
+  // newAttractionInfo.address = validation.checkString(
+  //   newAttractionInfo.address,
+  //   "Address",
+  // );
+  // newAttractionInfo.web_url = validation.checkURL(
+  //   newAttractionInfo.web_url,
+  //   "Web Url",
+  // );
+  // newAttractionInfo.num_reviews = validation.checkStringForNumber(
+  //   newAttractionInfo.num_reviews,
+  //   "Number of Reviews",
+  // );
   const attraction = await newAttractionInfo.save();
   //console.log("attraction is " + attraction);
   //console.log("trip is " + trip);
   const objForPushInItinerary = {
-    id: attraction._id,
+    id: attraction.location_id,
     name: attraction.name,
     image: attraction.image,
     type: "attraction",
@@ -124,7 +124,7 @@ const createAttraction = async (attractionBody, id, visitDate) => {
   trip.itinerary.forEach((day) => {
     if (day.date === convertDate) {
       day.placesToVisit.push(objForPushInItinerary);
-      trip.attractions.push(attraction._id);
+      trip.attractions.push(attraction.location_id);
     }
   });
 
@@ -141,8 +141,8 @@ const createAttraction = async (attractionBody, id, visitDate) => {
 };
 
 const updateAttractionById = async (id, updateAttractionBody) => {
-  let parsedId = validation.toObjectId(id, "AttractionId");
-  const attraction = await Attraction.findById(parsedId);
+  // let parsedId = validation.toObjectId(id, "AttractionId");
+  const attraction = await Attraction.find({ location_id: id });
   if (attraction) {
     throw {
       message: `Attraction not found with ID: ${id}`,
@@ -237,7 +237,7 @@ const updateAttractionById = async (id, updateAttractionBody) => {
         "Number of Reviews",
       );
     }
-    const oldAttractionInfo = await Attraction.findById(id);
+    const oldAttractionInfo = await Attraction.find({ location_id: id });
 
     if (
       newAttractionInfo.location_id &&

@@ -76,6 +76,27 @@ const tripsReducer = (state = [], action) => {
       }
       return [...copyState];
 
+    case "BIN_ATTRACTION":
+      copyState = [...state];
+      console.log("inside bin");
+      console.log(payload);
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      index.attractions.push(payload.location_id.toString());
+      return [...copyState];
+
+    case "UNBIN_ATTRACTION":
+      console.log("inside unbin");
+      console.log(payload);
+      copyState = [...state];
+      index = copyState.find((x) => x._id === payload.tripId.toString());
+      const elemIndexAttr = index.attractions.indexOf(
+        payload.location_id.toString(),
+      );
+      if (elemIndexAttr > -1) {
+        index.attractions.splice(elemIndexAttr, 1);
+      }
+      return [...copyState];
+
     case "BIN_RESTAURANT":
       copyState = [...state];
       console.log("inside bin");
@@ -116,6 +137,62 @@ const tripsReducer = (state = [], action) => {
       }
       return [...copyState];
 
+    case "ADD_ATTRACTION_TO_TRIP_ITINERARY":
+      console.log("ADD_ATTRACTION_TO_TRIP_ITINERARY");
+      console.log(payload);
+      let newAttraction = {
+        location_id: payload.attraction.locationId,
+        name: payload.attraction.name,
+        image: payload.attraction.image,
+        latitude: payload.attraction.latitude,
+        longitude: payload.attraction.longitude,
+        address: payload.attraction.address,
+        startDate: payload.startDate,
+      };
+      console.log("newAttraction");
+      console.log(newAttraction);
+      copyState = [...state];
+      for (let i = 0; i < copyState.length; i++) {
+        if (copyState[i]._id === payload.tripId) {
+          for (let j = 0; j < copyState[i].itinerary.length; j++) {
+            if (copyState[i].itinerary[j].date === payload.startDate) {
+              console.log("inside add newAttraction to trip itinerary");
+              copyState[i].itinerary[j].placesToVisit.push(newAttraction);
+            }
+          }
+        }
+      }
+      return [...copyState];
+
+    case "ADD_RESTAURANT_TO_TRIP_ITINERARY":
+      console.log("ADD_RESTAURANT_TO_TRIP_ITINERARY");
+      console.log(payload);
+      let newRestaurant = {
+        location_id: payload.restaurant.locationId,
+        name: payload.restaurant.name,
+        image: payload.restaurant.image,
+        latitude: payload.restaurant.latitude,
+        longitude: payload.restaurant.longitude,
+        rating: payload.restaurant.rating,
+        address: payload.restaurant.address,
+        priceLevel: payload.restaurant.priceLevel,
+        startDate: payload.startDate,
+      };
+      console.log("newRestaurant");
+      console.log(newRestaurant);
+      copyState = [...state];
+      for (let i = 0; i < copyState.length; i++) {
+        if (copyState[i]._id === payload.tripId) {
+          for (let j = 0; j < copyState[i].itinerary.length; j++) {
+            if (copyState[i].itinerary[j].date === payload.visitDate) {
+              console.log("inside add restaurant to trip itinerary");
+              copyState[i].itinerary[j].placesToVisit.push(newRestaurant);
+            }
+          }
+        }
+      }
+      return [...copyState];
+
     case "DELETE_HOTEL_FROM_TRIP_ITINERARY":
       copyState = [...state];
       console.log("patyload is : " + JSON.stringify(payload));
@@ -141,6 +218,58 @@ const tripsReducer = (state = [], action) => {
           }
         }
       }
+      return [...copyState];
+
+    case "DELETE_RESTAURANT_FROM_TRIP_ITINERARY":
+      copyState = [...state];
+      console.log("patyload is : " + JSON.stringify(payload));
+      for (let i = 0; i < copyState.length; i++) {
+        if (copyState[i]._id.toString() === payload.tripId) {
+          for (let j = 0; j < copyState[i].itinerary.length; j++) {
+            if (copyState[i].itinerary[j].date === payload.visitDate) {
+              console.log("the state is :" + copyState[i].itinerary[j]);
+              for (
+                let k = 0;
+                k < copyState[i].itinerary[j].placesToVisit.length;
+                k++
+              ) {
+                if (
+                  copyState[i].itinerary[j].placesToVisit[k]._id ===
+                  payload.restaurantId.toString()
+                ) {
+                  console.log("entered for deleting the hotel: ");
+                  copyState[i].itinerary[j].placesToVisit.splice(k, 1);
+                }
+              }
+            }
+          }
+        }
+      }
+      return [...copyState];
+
+    case "DELETE_ATTRACTION_FROM_TRIP_ITINERARY":
+      // console.log("DELETE_ATTRACTION_FROM_TRIP_ITINERARY");
+      // copyState = [...state];
+      // console.log("patyload is : " + JSON.stringify(payload));
+      console.log("copystate");
+      console.log(copyState);
+
+      // deleting attraction from trips itinerary array of objects
+
+      copyState.forEach((trip) => {
+        if (trip._id === payload.tripId) {
+          trip.itinerary.forEach((day) => {
+            if (day.date === payload.visitDate) {
+              day.placesToVisit.forEach((place, index) => {
+                if (place.location_id === payload.attractionId) {
+                  day.placesToVisit.splice(index, 1);
+                }
+              });
+            }
+          });
+        }
+      });
+
       return [...copyState];
 
     default:

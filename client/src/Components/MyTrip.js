@@ -7,6 +7,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteHotel } from "../reducers/hotelReducer";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import {
   Grid,
   Paper,
@@ -149,26 +150,26 @@ const MyTrip = () => {
     fetchData(id.id);
   }, [id]);
 
-  const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
-    e.preventDefault();
-    console.log("edit hotel");
-    dispatch(deleteHotel(tripId, hotelId, hotel));
-  };
+  // const handleDeleteHotel = (e, tripId, hotelId, hotel) => {
+  //   e.preventDefault();
+  //   console.log("edit hotel");
+  //   dispatch(deleteHotel(tripId, hotelId, hotel));
+  // };
 
-  const handleDeleteRestaurant = (tripId, restaurantId) => {
-    dispatch(actions.deleteRest(restaurantId));
-    tripService
-      .removeRestaurantFromTrip(tripId, restaurantId)
-      .then((res) => {});
-  };
+  // const handleDeleteRestaurant = (tripId, restaurantId) => {
+  //   dispatch(actions.deleteRest(restaurantId));
+  //   tripService
+  //     .removeRestaurantFromTrip(tripId, restaurantId)
+  //     .then((res) => {});
+  // };
 
-  const handleDeleteAttraction = (e, tripId, attractionId) => {
-    e.preventDefault();
-    tripService
-      .removeAttractionFromTrip(tripId, attractionId)
-      .then((res) => {});
-    dispatch(actions.deleteAttratcion(attractionId));
-  };
+  // const handleDeleteAttraction = (e, tripId, attractionId) => {
+  //   e.preventDefault();
+  //   tripService
+  //     .removeAttractionFromTrip(tripId, attractionId)
+  //     .then((res) => {});
+  //   dispatch(actions.deleteAttratcion(attractionId));
+  // };
 
   // getting start and end date from current trip
 
@@ -355,14 +356,10 @@ const MyTrip = () => {
                                           <Button
                                             color="primary"
                                             onClick={(e) =>
-                                              removeHotelFromBin(
-                                                tripId,
-                                                hotel[0].location_id,
-                                                hotel[0],
-                                              )
+                                              navigate(`/hotels/${tripId}`)
                                             }
                                           >
-                                            <DeleteIcon />
+                                            <EditRoundedIcon />
                                           </Button>
                                         </Stack>
                                       </Stack>
@@ -375,18 +372,6 @@ const MyTrip = () => {
                                       >
                                         {/* {console.log(hotel[0].name)} */}
                                         {hotel[0] ? hotel[0].name : "N/a"}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        component="div"
-                                        style={{
-                                          paddingTop: "0.2rem",
-                                        }}
-                                      >
-                                        The gateway was built in 1924, in
-                                        memorial to King George V of England,
-                                        who landed in India at the same place in
-                                        1911.
                                       </Typography>
                                     </Grid>
 
@@ -433,65 +418,9 @@ const MyTrip = () => {
               <AccordionDetails>
                 <Paper className="greyPaper" elevation={0}>
                   <Grid container>
-                    {restaurants.length &&
-                      restaurants.map(
-                        (
-                          restaurant, // hotels is an array of objects}
-                        ) => (
-                          <Grid item xs={12} sm={12} md={6} lg={6}>
-                            <Card
-                              sx={{ mt: 2 }}
-                              backgroundColor="primary.main"
-                              style={{ backgroundColor: "" }}
-                            >
-                              <CardContent>
-                                <Stack
-                                  direction="column"
-                                  justifyContent="Center"
-                                >
-                                  <Typography
-                                    variant="h5"
-                                    component="h2"
-                                    fontWeight="fontWeightBold"
-                                    sx={{ mt: 2, ml: 2 }}
-                                  >
-                                    {restaurant.length
-                                      ? restaurant[0].name
-                                      : "N/a"}
-                                  </Typography>
-                                  <Typography
-                                    variant="body1"
-                                    fontWeight="fontWeightBold"
-                                    sx={{ mt: 2, ml: 2 }}
-                                    color="text.hint"
-                                  >
-                                    Address
-                                  </Typography>
-                                </Stack>
-                              </CardContent>
-                            </Card>
-                          </Grid>
-                        ),
-                      )}
-                  </Grid>
-                </Paper>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion>
-              <AccordionSummary
-                style={{ flexDirection: "row-reverse" }}
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography fontWeight="fontWeightBold">Attractions</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Paper className="greyPaper" elevation={0}>
-                  <Grid container>
                     <Card styles={{ padding: "1.5rem" }}>
-                      {attractionState.length &&
-                        attractionState.map((attraction, index) => (
+                      {restaurants.length &&
+                        restaurants.map((restaurant, index) => (
                           <div key={index}>
                             <Box sx={{ p: 1 }}>
                               <Divider
@@ -523,7 +452,119 @@ const MyTrip = () => {
                                           direction="row"
                                           justifyContent="flex-end"
                                           sx={{ width: "100%", mr: "1rem" }}
-                                        ></Stack>
+                                        >
+                                          <Button
+                                            color="primary"
+                                            onClick={(e) =>
+                                              navigate(`/restaurants/${tripId}`)
+                                            }
+                                          >
+                                            <EditRoundedIcon />
+                                          </Button>
+                                        </Stack>
+                                      </Stack>
+
+                                      <Typography
+                                        variant="h6"
+                                        component="div"
+                                        fontWeight="fontWeightBold"
+                                        sx={{ mr: "1rem" }}
+                                      >
+                                        {/* {console.log(hotel[0].name)} */}
+                                        {restaurant[0]
+                                          ? restaurant[0].name
+                                          : "N/a"}
+                                      </Typography>
+                                    </Grid>
+
+                                    <Grid item xs={12} sm={3} md={4} lg={4}>
+                                      <CardMedia
+                                        component="img"
+                                        height="150"
+                                        width="50"
+                                        image={
+                                          restaurant[0]
+                                            ? restaurant[0].image
+                                            : `https://tripplannercs554.s3.amazonaws.com/RestaurantImages/${Math.floor(
+                                                Math.random() * 300 + 1,
+                                              )}.jpg`
+                                        }
+                                        alt="green iguana"
+                                        style={{
+                                          borderRadius: 11,
+                                          mr: "2rem",
+                                        }}
+                                        // adding on click for opening modalForHotel
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                </Container>
+                              </div>
+                            </Box>
+                          </div>
+                        ))}
+                    </Card>
+                  </Grid>
+                </Paper>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion>
+              <AccordionSummary
+                style={{ flexDirection: "row-reverse" }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography fontWeight="fontWeightBold">Attractions</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Paper className="greyPaper" elevation={0}>
+                  <Grid container>
+                    <Card styles={{ padding: "1.5rem" }}>
+                      {console.log(attractions)}
+                      {attractions.length &&
+                        attractions.map((attraction, index) => (
+                          <div key={index}>
+                            <Box sx={{ p: 1 }}>
+                              <Divider
+                                styles={{
+                                  backgroundColor: "blue",
+                                  paddingTop: 0.5,
+                                  paddingBottom: 0.5,
+                                  marginTop: "1rem",
+                                  marginBottom: "1rem",
+                                }}
+                              />
+                              <div>
+                                <Container>
+                                  <Grid
+                                    container
+                                    sx={{ mt: "1rem", mb: "1rem" }}
+                                  >
+                                    <Grid item xs={12} sm={9} md={8} lg={8}>
+                                      <Stack direction="row">
+                                        <Avatar
+                                          sx={{
+                                            backgroundColor: "primary.main",
+                                            mr: "1rem",
+                                          }}
+                                        >
+                                          {index + 1}
+                                        </Avatar>
+                                        <Stack
+                                          direction="row"
+                                          justifyContent="flex-end"
+                                          sx={{ width: "100%", mr: "1rem" }}
+                                        >
+                                          <Button
+                                            color="primary"
+                                            onClick={(e) =>
+                                              navigate(`/attractions/${tripId}`)
+                                            }
+                                          >
+                                            <EditRoundedIcon />
+                                          </Button>
+                                        </Stack>
                                       </Stack>
 
                                       <Typography
@@ -535,18 +576,6 @@ const MyTrip = () => {
                                         {attraction.length
                                           ? attraction[0].name
                                           : "N/a"}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        component="div"
-                                        style={{
-                                          paddingTop: "0.2rem",
-                                        }}
-                                      >
-                                        The gateway was built in 1924, in
-                                        memorial to King George V of England,
-                                        who landed in India at the same place in
-                                        1911.
                                       </Typography>
                                     </Grid>
 
