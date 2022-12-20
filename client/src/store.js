@@ -10,7 +10,6 @@ const ThunkMiddleware = require("redux-thunk").default;
 // remove all the data from the storage
 //storage.removeItem("persist:root");
 
-
 // const persistConfig = {
 //   key: "root",
 //   storage,
@@ -25,7 +24,7 @@ const ThunkMiddleware = require("redux-thunk").default;
 
 const store = createStore(
   rootReducer,
-  composeEnhancer(compose, applyMiddleware(ThunkMiddleware)),
+  composeEnhancer(compose, applyMiddleware(ThunkMiddleware))
   // applyMiddleware(ThunkMiddleware),
 );
 

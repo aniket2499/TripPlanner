@@ -381,27 +381,27 @@ function Search() {
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const restaurants = await getApiData.getRestaurantData(
           location.state.destination
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const hotels = await getApiData.getHotelData(
           location.state.destination
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const weather = await getApiData.getWeatherData(
           //send today's date in MM/DD/YYYY format by default
           `${mm}-${dd}-${yyyy}`,
           location.state.lattitude,
-          location.state.longitude,
+          location.state.longitude
         );
         setAttractionsList(attractions);
         setRestaurantsList(restaurants);
@@ -671,7 +671,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >
@@ -769,7 +769,7 @@ function Search() {
                               attraction.photo
                                 ? attraction.photo.images.large.url
                                 : `https://tripplannercs554.s3.amazonaws.com/AttractionImages/${Math.floor(
-                                    Math.random() * 100 + 1,
+                                    Math.random() * 100 + 1
                                   )}.jpg`
                             }
                             alt="green iguana"
@@ -1016,7 +1016,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >
@@ -1102,7 +1102,7 @@ function Search() {
                               hotel.image
                                 ? hotel.image
                                 : `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
-                                    Math.random() * 300 + 1,
+                                    Math.random() * 300 + 1
                                   )}.jpg`
                             }
                             alt="green iguana"
@@ -1181,7 +1181,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >

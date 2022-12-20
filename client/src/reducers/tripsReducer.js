@@ -18,13 +18,13 @@ const tripsReducer = (state = [], action) => {
 
     case "ADD_TRIP":
       console.log(
-        `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`,
+        `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`
       );
       payload.obj.tripDate.startDate = new Date(
-        `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`,
+        `${payload.obj.tripDate.startDate.$y}-${payload.obj.tripDate.startDate.$M}-${payload.obj.tripDate.startDate.$D}`
       );
       payload.obj.tripDate.endDate = new Date(
-        `${payload.obj.tripDate.endDate.$y}-${payload.obj.tripDate.endDate.$M}-${payload.obj.tripDate.endDate.$D}`,
+        `${payload.obj.tripDate.endDate.$y}-${payload.obj.tripDate.endDate.$M}-${payload.obj.tripDate.endDate.$D}`
       );
       // console.log(payload.tripDate.startDate);
       while (payload.obj.tripDate.startDate <= payload.obj.tripDate.endDate) {
@@ -43,7 +43,7 @@ const tripsReducer = (state = [], action) => {
         };
         payload.obj.itinerary.push(itineraryObject);
         payload.obj.tripDate.startDate.setDate(
-          payload.obj.tripDate.startDate.getDate() + 1,
+          payload.obj.tripDate.startDate.getDate() + 1
         );
       }
 
@@ -128,7 +128,7 @@ const tripsReducer = (state = [], action) => {
 const initializeState = () => {
   return async (dispatch, getState) => {
     const trips = await tripService.getAllTripsForCurrentUser(
-      getState().user[0].id,
+      getState().user[0].id
     );
     dispatch({
       type: "INITIALIZE_TRIP",
@@ -137,6 +137,20 @@ const initializeState = () => {
   };
 };
 
-export { initializeState };
+const initializeAllTrips = () => {
+  return async (dispatch, getState) => {
+    const trips = await tripService.getAllTripsForCurrentUser(
+      getState().user[0].id
+    );
+    for (let i = 0; i < trips.length; i++) {
+      dispatch({
+        type: "ADD_TRIP",
+        payload: trips[i],
+      });
+    }
+  };
+};
+
+export { initializeState, initializeAllTrips };
 
 export default tripsReducer;

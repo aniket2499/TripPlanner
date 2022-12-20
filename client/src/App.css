@@ -15,6 +15,10 @@ html, body{
   height: 100%;
 }
 
+.xyz{
+  all: unset
+}
+
 /* .wrapper{
   position: absolute;
   top: 50%;

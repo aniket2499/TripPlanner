@@ -55,6 +55,7 @@ const addHotel = (tripId, hotelData) => {
       latitude: hotelData.geoCode.latitude,
       longitude: hotelData.geoCode.longitude,
       rating: hotelData.rating,
+      amenities: hotelData.amenities,
     };
     let data = await hotelService.createHotel(tripId, hotelData.startDate, obj);
     dispatch({
@@ -62,7 +63,7 @@ const addHotel = (tripId, hotelData) => {
       payload: hotelData,
     });
     dispatch(
-      actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate),
+      actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate)
     );
   };
 };
@@ -72,14 +73,14 @@ const deleteHotel = (tripId, hotelId, hotel) => {
     let data = await tripservice.removeHotelFromTrip(
       tripId,
       hotelId,
-      hotel.startDate.split("/").join("-"),
+      hotel.startDate.split("/").join("-")
     );
     dispatch({
       type: "DELETE_HOTEL",
       payload: hotel,
     });
     dispatch(
-      actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
+      actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate)
     );
   };
 };

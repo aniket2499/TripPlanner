@@ -10,7 +10,10 @@ const TripSchema = new Schema({
   },
   users: [{ type: String, ref: "User" }],
   image: { type: String },
-
+  destCord: {
+    lat: { type: String },
+    long: { type: String },
+  },
   invites: [
     {
       email: { type: String },

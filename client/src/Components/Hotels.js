@@ -111,7 +111,7 @@ const Hotels = () => {
           data[i].pickerOpen = false;
           data[i].startDate = dayjs(new Date()).format("MM/DD/YYYY").toString();
           console.log(
-            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY")
           );
         }
         setHotels(data);
@@ -133,7 +133,8 @@ const Hotels = () => {
       rangeEndDate = allState.trips[i].tripDate.endDate;
     }
   }
-
+  console.log("+++++++++++++");
+  console.log(hotels);
   if (loading) {
     return (
       <div>
@@ -404,13 +405,13 @@ const Hotels = () => {
                                 }}
                                 onChange={(newValue) => {
                                   console.log(
-                                    "aniket new value" + hotel.startDate,
+                                    "aniket new value" + hotel.startDate
                                   );
                                   hotel.startDate =
                                     dayjs(newValue).format("MM/DD/YYYY");
                                   setCalendarDate(!calendarDate);
                                   console.log(
-                                    "aniket new value after" + hotel.startDate,
+                                    "aniket new value after" + hotel.startDate
                                   );
                                 }}
                                 id="startDate"
