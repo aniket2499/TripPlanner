@@ -2,25 +2,25 @@ import React, { useContext } from "react";
 import restaurantService from "../services/restaurantService";
 import { AuthContext } from "../firebase/Auth";
 
-const initialState = [
-  {
-    location_id: null,
-    name: null,
-    latitude: null,
-    longitude: null,
-    num_reviews: null,
-    category: null,
-    rating: null,
-    web_url: null,
-    address: null,
-    price_level: null,
-    image: null,
-    description: null,
-    phone: null,
-    price: null,
-    website: null,
-  },
-];
+// const initialState = [
+//   {
+//     location_id: null,
+//     name: null,
+//     latitude: null,
+//     longitude: null,
+//     num_reviews: null,
+//     category: null,
+//     rating: null,
+//     web_url: null,
+//     address: null,
+//     price_level: null,
+//     image: null,
+//     description: null,
+//     phone: null,
+//     price: null,
+//     website: null,
+//   },
+// ];
 
 let copyState = null;
 
@@ -32,30 +32,13 @@ const restReducer = (state = [], action) => {
       state = payload;
       return state;
     case "ADD_RESTAURANT":
-      return [
-        ...state,
-        {
-          location_id: payload.location_id,
-          name: payload.name,
-          latitude: payload.latitude,
-          longitude: payload.longitude,
-          num_reviews: payload.num_reviews,
-          category: payload.category,
-          rating: payload.rating,
-          web_url: payload.web_url,
-          address: payload.address,
-          price_level: payload.price_level,
-          image: payload.image,
-          description: payload.description,
-          phone: payload.phone,
-          price: payload.price,
-          website: payload.website,
-        },
-      ];
+      return [...state, payload];
 
     case "DELETE_RESTAURANT":
       // delete restaurant
-      copyState = state.filter((x) => x._id !== payload.id);
+      console.log("payload");
+      console.log(payload);
+      copyState = state.filter((x) => x.location_id !== payload.id);
       return copyState;
 
     default:
@@ -86,6 +69,44 @@ const initializeState = (tripId) => {
   };
 };
 
-export { initializeState };
+const addRestaurant = (tripId, restaurantData) => {
+  return async (dispatch, getState) => {
+    let obj = {
+      location_id: restaurantData.location_id,
+      name: restaurantData.name,
+      image: restaurantData.image,
+      latitude: restaurantData.latitude,
+      longitude: restaurantData.longitude,
+      rating: restaurantData.rating,
+    };
+    // let data = await restaurantService.createRestaurant();
+    dispatch({
+      type: "ADD_RESTAURANT",
+      payload: restaurantData,
+    });
+    // dispatch(
+    //   actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate),
+    // );
+  };
+};
+
+const deleteRestaurant = (tripId, restaurantId, restaurant) => {
+  return async (dispatch, getState) => {
+    // let data = await tripservice.removeHotelFromTrip(
+    //   tripId,
+    //   hotelId,
+    //   hotel.startDate.split("/").join("-"),
+    // );
+    dispatch({
+      type: "DELETE_RESTAURANT",
+      payload: restaurantId,
+    });
+    // dispatch(
+    //   actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
+    // );
+  };
+};
+
+export { initializeState, addRestaurant, deleteRestaurant };
 
 export default restReducer;

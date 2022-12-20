@@ -25,7 +25,7 @@ const hotelReducer = (state = [], action) => {
 
     case "DELETE_HOTEL":
       // storage.removeItem("persist:root");
-      copyState = state.filter((x) => x._id !== payload._id);
+      copyState = state.filter((x) => x.location_id !== payload._id);
       return copyState;
 
     default:

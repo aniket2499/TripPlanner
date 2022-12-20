@@ -258,8 +258,12 @@ function App() {
                   <Route path="/flights" element={<Flights />} />
                 </Route>
 
-                <Route path="/restaurants" element={<PrivateRoute />}>
-                  <Route exact path="/restaurants" element={<Restaurants />} />
+                <Route path="/restaurants/:tripid" element={<PrivateRoute />}>
+                  <Route
+                    exact
+                    path="/restaurants/:tripid"
+                    element={<Restaurants />}
+                  />
                 </Route>
 
                 <Route path="/hotels/:tripid" element={<PrivateRoute />}>

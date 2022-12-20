@@ -47,7 +47,6 @@ const Hotels = () => {
   const trips = useSelector((state) => state.trips);
   const currUser = useContext(AuthContext);
   const a = useParams().tripid;
-  let destination = null;
 
   useEffect(() => {
     console.log("event fired");
@@ -67,6 +66,7 @@ const Hotels = () => {
   const [loading, setLoading] = useState(true);
   const [calendarDate, setCalendarDate] = useState(false);
   const dispatch = useDispatch();
+  let destination = null;
   let rangeStartDate = null;
   let rangeEndDate = null;
 
@@ -79,13 +79,19 @@ const Hotels = () => {
   };
 
   const removeHotelFromBin = (tripId, hotelId, hotel) => {
+    console.log(1, "tripId", "hotelId");
+    console.log(tripId, hotelId);
+    console.log(1, "hotel");
+    console.log(hotel);
     dispatch(actions.unbinHotel(tripId, hotelId));
     dispatch(deleteHotel(tripId, hotelId, hotel));
   };
 
   const findHotelInTrip = (hotelId) => {
     let currTrip = trips.find((x) => x._id == a);
+    console.log(currTrip);
     let hotel = currTrip.hotels.find((h) => h == hotelId);
+    console.log(hotel);
     return hotel ? true : false;
   };
 
@@ -99,17 +105,17 @@ const Hotels = () => {
   };
 
   if (trips.length !== 0) {
-    //find the trip from trips array
     let index = trips.findIndex((x) => x._id === a);
     console.log("index is : " + index);
     destination = trips[index].destination.split(",")[0];
+    console.log(destination);
   }
 
   useEffect(() => {
     async function fetchData() {
       if (destination) {
         try {
-          let data = await hotelsData.getHotelData(destination, 1);
+          let data = await hotelsData.getHotelData(`${destination}`, 1);
           if (data.length === 0) {
             return;
           }
@@ -123,6 +129,8 @@ const Hotels = () => {
               "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
             );
           }
+          console.log("data");
+          console.log(data);
           setHotels(data);
           setLoading(false);
         } catch (e) {
