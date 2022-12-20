@@ -104,7 +104,7 @@ router.patch(
   },
 );
 
-router.patch("/:tripid/hotels/add/:hotelid/", async (req, res) => {
+router.patch("/:tripid/hotels/add/:hotelid", async (req, res) => {
   try {
     const trip = await addHotelToTrip(req, res);
     res.status(200).json(trip);

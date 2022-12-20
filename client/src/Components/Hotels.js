@@ -151,7 +151,8 @@ const Hotels = () => {
       rangeEndDate = allState.trips[i].tripDate.endDate;
     }
   }
-
+  console.log("+++++++++++++");
+  console.log(hotels);
   if (loading) {
     return (
       <div>

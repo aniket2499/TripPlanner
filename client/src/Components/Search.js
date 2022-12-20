@@ -381,27 +381,27 @@ function Search() {
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const restaurants = await getApiData.getRestaurantData(
           location.state.destination
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const hotels = await getApiData.getHotelData(
           location.state.destination
             ? location.state.destination.split(",")[0]
             : "",
           1,
-          4,
+          4
         );
         const weather = await getApiData.getWeatherData(
           //send today's date in MM/DD/YYYY format by default
           `${mm}-${dd}-${yyyy}`,
           location.state.lattitude,
-          location.state.longitude,
+          location.state.longitude
         );
         setAttractionsList(attractions);
         setRestaurantsList(restaurants);
@@ -501,7 +501,11 @@ function Search() {
                 }}
               >
                 {`Planning your trip to
-                    ${location.state.destination.split(",")[0]} ?`}
+                    ${
+                      location.state.destination.split(",")[0]
+                        ? location.state.destination.split(",")[0]
+                        : ""
+                    }`}
               </Typography>
               <Typography
                 variant="body2"
@@ -540,12 +544,12 @@ function Search() {
                   fontWeight: 500,
                 }}
               >
-                {weatherData[0].description
+                {weatherData
                   ? weatherData[0].description.charAt(0).toUpperCase() +
                     weatherData[0].description.slice(1) +
                     " in " +
                     location.state.destination.split(",")[0]
-                  : ""}
+                  : `No Data in ${location.state.destination.split(",")[0]}`}
               </Typography>
             </Grid>
             <Grid item xs={12} container>
@@ -561,10 +565,10 @@ function Search() {
                       fontWeight: 500,
                     }}
                   >
-                    {weatherData[0].temperature
+                    {weatherData
                       ? weatherData[0].temperature.toString().split(".")[0] +
                         "°F"
-                      : ""}
+                      : "N/A"}
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -584,9 +588,14 @@ function Search() {
               </Grid>
               <Grid item xs={2}>
                 <img
-                  src={weatherData[0].icon}
+                  width={100}
+                  src={
+                    weatherData
+                      ? weatherData[0].icon
+                      : "https://freepngimg.com/thumb/weather/23527-3-weather-thumb.png"
+                  }
                   // srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                  alt={weatherData[0].description}
+                  alt={weatherData ? weatherData[0].description : "weather"}
                   loading="lazy"
                 />
               </Grid>
@@ -630,7 +639,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -671,7 +680,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >
@@ -769,7 +778,7 @@ function Search() {
                               attraction.photo
                                 ? attraction.photo.images.large.url
                                 : `https://tripplannercs554.s3.amazonaws.com/AttractionImages/${Math.floor(
-                                    Math.random() * 100 + 1,
+                                    Math.random() * 100 + 1
                                   )}.jpg`
                             }
                             alt="green iguana"
@@ -945,7 +954,7 @@ function Search() {
                         </Stack>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );
@@ -975,7 +984,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -1016,7 +1025,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >
@@ -1102,7 +1111,7 @@ function Search() {
                               hotel.image
                                 ? hotel.image
                                 : `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
-                                    Math.random() * 300 + 1,
+                                    Math.random() * 300 + 1
                                   )}.jpg`
                             }
                             alt="green iguana"
@@ -1110,7 +1119,7 @@ function Search() {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );
@@ -1140,7 +1149,7 @@ function Search() {
                 }}
               >
                 <Card sx={{ width: "100%" }}>
-                  <>
+                  <CardActionArea>
                     <CardContent>
                       <Grid spacing={2} container>
                         <Grid item xs={1}>
@@ -1181,7 +1190,7 @@ function Search() {
                                 handleClose();
                                 navigate("/createtrip");
                                 document.getElementById(
-                                  "app-bar",
+                                  "app-bar"
                                 ).style.display = "block";
                               }}
                             >
@@ -1275,7 +1284,7 @@ function Search() {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </>
+                  </CardActionArea>
                 </Card>
               </Grid>
             );

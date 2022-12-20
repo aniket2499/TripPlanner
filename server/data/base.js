@@ -22,7 +22,6 @@ const s3 = new aws.S3({
 
 const getLocationsCoordinates = async (location) => {
   try {
-    location = dataValidation.checkLocation(location);
     const data = await axios.get(
       SEARCH_URL + `&query=${location}` + `&limit=1`
     );
@@ -31,7 +30,7 @@ const getLocationsCoordinates = async (location) => {
     } else {
       const obj = {
         lat: data.data.data[0].latitude,
-        lon: data.data.data[0].longitude,
+        long: data.data.data[0].longitude,
       };
       return obj;
     }
@@ -42,6 +41,7 @@ const getLocationsCoordinates = async (location) => {
 
 const getLocationDetails = async (location) => {
   try {
+    location = dataValidation.checkLocation(location);
     const data = await axios.get(
       GOOGLE_URL +
         `?input=${location}` +
@@ -66,20 +66,20 @@ const getLocationDetails = async (location) => {
 
 const getPhotos = async (location) => {
   try {
+    location = dataValidation.checkLocation(location);
     const data = await getLocationDetails(location);
-
     if (!data.photo_reference) {
       throw new Error("No photos available for this location");
     }
     const photo_reference = data.photo_reference;
-
     try {
+      location = dataValidation.checkLocation(location);
       const data = await axios.get(
         GOOGLE_PHOTO_URL +
           `?photoreference=${photo_reference}` +
           `&key=${process.env.GOOGLE_API_KEY}` +
-          `&maxwidth=400` +
-          `&maxheight=400`
+          `&maxwidth=1000` +
+          `&maxheight=1000`
       );
 
       return data.config.url;
