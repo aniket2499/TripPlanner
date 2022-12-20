@@ -6,32 +6,81 @@ import {
   Box,
   Typography,
   CardActionArea,
+  Paper,
 } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
+import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { AuthContext } from "../firebase/Auth";
 import actions from "../actions";
+import GoogleMapReact from "google-map-react";
 import userService from "../services/userService";
 import tripService from "../services/tripService";
 import Maps from "./Maps";
 import { Container } from "@mui/system";
 import storage from "redux-persist/lib/storage";
 import store from "../store";
-import { initializeState } from "../reducers/tripsReducer";
+import { initializeAllTrips, initializeState } from "../reducers/tripsReducer";
 import { ExportStaticData } from "../ExploreStaticData";
+import RoomSharpIcon from "@mui/icons-material/RoomSharp";
 
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+  height: "2rem",
+  lineHeight: "60px",
+  margin: "0 30px",
+  marginTop: "1rem",
+  boxShadow: "1 0 1 0",
+  backgroundImage: `url(${"./img/travel.jpg"})`,
+  // backgroundColor: "#fafafa",
+}));
+
 function Home() {
+  const trips = useSelector((state) => state.trips);
+  const stylesMaps = {
+    paper: {
+      padding: "10px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "100px",
+      borderRadius: "100",
+    },
+    mapContainer: {
+      height: "50vh",
+      width: "100%",
+    },
+    markerContainer: {
+      position: "absolute",
+      transform: "translate(-50%, -50%)",
+      zIndex: 1,
+      backgroundColor: "white",
+      "&:hover": { zIndex: 2 },
+    },
+    pointer: {
+      cursor: "pointer",
+    },
+    typography: {
+      color: "white",
+    },
+  };
   const currUser = useContext(AuthContext);
   const userId = currUser._delegate.uid;
   let array1 = [1, 2, 3];
   const navigate = useNavigate();
+  const coords = { lat: 38.5, lng: -98.0 };
+  const [tripData, setTripData] = useState([]);
 
   const dispatch = useDispatch();
-  const trips = useSelector((state) => state.trips);
+  // const trips = useSelector((state) => state.trips);
 
+  console.log("+++++");
+  console.log(tripData);
   let min = 0;
   let max = 25;
   const one = Math.floor(Math.random() * (max - min) + min);
@@ -43,7 +92,25 @@ function Home() {
     ExportStaticData[two],
     ExportStaticData[three],
   ];
+  useEffect(() => {
+    const getAllTripData = async (userId) => {
+      const data = await userService.getUserById(userId);
+      const tripArray = data.trips;
 
+      tripArray.forEach(async (id) => {
+        const mongoData = await tripService.getTripById(id);
+        console.log("mongoData", mongoData);
+        setTripData((tripData) => [...tripData, mongoData]);
+      });
+
+      let idsArr = [];
+      trips.map((tr) => {
+        idsArr.push(tr._id);
+      });
+    };
+    getAllTripData(userId);
+  }, []);
+  console.log(tripData, "====");
   const getData = async (id) => {
     try {
       await userService.getUserById(id);
@@ -103,9 +170,9 @@ function Home() {
             </Button>
           </Grid>
           <Grid container spacing={5}>
-            {trips &&
-              trips.map((item) => (
-                <Grid item xs={6} sm={6} md={4} lg={3}>
+            {tripData &&
+              tripData.map((item, index) => (
+                <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                   <CardActionArea
                     onClick={() => navigate(`/my-trips/${item._id}`)}
                   >
@@ -117,12 +184,22 @@ function Home() {
                         mt: "1rem",
                       }}
                     >
-                      <CardMedia
-                        component="img"
-                        height="150"
-                        image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
-                        alt="random"
-                      />
+                      {item.image ? (
+                        <CardMedia
+                          component="img"
+                          height="150"
+                          image={item.image}
+                          alt="random"
+                        />
+                      ) : (
+                        <CardMedia
+                          component="img"
+                          height="150"
+                          image="https://www.history.com/.image/ar_1:1%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTU3ODc5MDg3MjM3MTc5MTAz/panoramic-view-of-lower-manhattan-and-hudson-river-new-york-city-skyline-ny-with-world-trade-towers-at-sunset.jpg"
+                          alt="random"
+                        />
+                      )}
+
                       <Card>
                         <Typography
                           variant="body1"
@@ -155,7 +232,56 @@ function Home() {
         </Grid>
       </Container>
       <Container sx={{ mt: "3.9rem" }}>
-        <Maps />
+        <div id="mapContainer" style={stylesMaps.mapContainer}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: process.env.GOOGLE_API_KEY }}
+            defaultCenter={coords}
+            center={coords}
+            defaultZoom={4}
+            margin={[50, 50, 50, 50]}
+            // options={""}
+            options={{
+              disableDefaultUI: true,
+              zoomControl: true,
+            }}
+          >
+            {tripData.length &&
+              tripData.map((place, i) => (
+                <div
+                  className={stylesMaps.markerContainer}
+                  lat={Number(place.destCord.lat)}
+                  lng={Number(place.destCord.long)}
+                  key={i}
+                >
+                  <RoomSharpIcon className="xyz" />
+                  {/* <Grid item xs={12} style={{ paddingRight: "3rem" }}>
+                    
+                 
+                  </Grid> */}
+                  {/* <Paper elevation={3} className={stylesMaps.paper}>
+                  
+                    {/* <Typography
+                      className={stylesMaps.typography}
+                      variant="subtitle2"
+                      gutterBottom
+                    >
+                      {place.destination.split(",")[0]}
+                    </Typography>
+                    <img
+                      height="30px"
+                      widht="30px"
+                      className={stylesMaps.pointer}
+                      src={
+                        place.image
+                          ? place.image
+                          : "https://www.foodserviceandhospitality.com/wp-content/uploads/2016/09/Restaurant-Placeholder-001.jpg"
+                      }
+                    /> */}
+                  {/* </Paper> */}
+                </div>
+              ))}
+          </GoogleMapReact>
+        </div>
       </Container>
       <Container sx={{ mt: "2rem" }}>
         <Grid container sx={{ mt: "3rem" }}>
@@ -191,8 +317,8 @@ function Home() {
             </Button>
           </Grid>
           <Grid container spacing={7}>
-            {array1.map((item) => (
-              <Grid item xs={6} sm={6} md={4} lg={3}>
+            {array1.map((item, index) => (
+              <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                 <Card
                   sx={{
                     width: "100%",
@@ -257,8 +383,8 @@ function Home() {
           </Grid>
 
           <Grid container spacing={7}>
-            {arr.map((item) => (
-              <Grid item xs={6} sm={6} md={4} lg={3}>
+            {arr.map((item, index) => (
+              <Grid item xs={6} sm={6} md={4} lg={3} key={index}>
                 <Card
                   sx={{
                     width: "100%",

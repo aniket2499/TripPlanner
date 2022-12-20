@@ -151,7 +151,8 @@ const Hotels = () => {
       rangeEndDate = allState.trips[i].tripDate.endDate;
     }
   }
-
+  console.log("+++++++++++++");
+  console.log(hotels);
   if (loading) {
     return (
       <div>
@@ -422,13 +423,13 @@ const Hotels = () => {
                                 }}
                                 onChange={(newValue) => {
                                   console.log(
-                                    "aniket new value" + hotel.startDate,
+                                    "aniket new value" + hotel.startDate
                                   );
                                   hotel.startDate =
                                     dayjs(newValue).format("MM/DD/YYYY");
                                   setCalendarDate(!calendarDate);
                                   console.log(
-                                    "aniket new value after" + hotel.startDate,
+                                    "aniket new value after" + hotel.startDate
                                   );
                                 }}
                                 id="startDate"
