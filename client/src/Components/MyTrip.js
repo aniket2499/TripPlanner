@@ -455,8 +455,9 @@ const MyTrip = () => {
                                     fontWeight="fontWeightBold"
                                     sx={{ mt: 2, ml: 2 }}
                                   >
-                                    {console.log(restaurant[0].name)}
-                                    {/* {restaurant ? restaurant[0].name : "N/a"} */}
+                                    {restaurant.length
+                                      ? restaurant[0].name
+                                      : "N/a"}
                                   </Typography>
                                   <Typography
                                     variant="body1"
@@ -472,101 +473,6 @@ const MyTrip = () => {
                           </Grid>
                         ),
                       )}
-
-                    <Card styles={{ padding: "1.5rem" }}>
-                      {restaurantState.length &&
-                        restaurantState.map((restaurant, index) => (
-                          <div key={index}>
-                            <Box sx={{ p: 1 }}>
-                              <Divider
-                                styles={{
-                                  backgroundColor: "blue",
-                                  paddingTop: 0.5,
-                                  paddingBottom: 0.5,
-                                  marginTop: "1rem",
-                                  marginBottom: "1rem",
-                                }}
-                              />
-                              <div>
-                                <Container>
-                                  <Grid
-                                    container
-                                    sx={{ mt: "1rem", mb: "1rem" }}
-                                  >
-                                    <Grid item xs={12} sm={9} md={8} lg={8}>
-                                      <Stack direction="row">
-                                        <Avatar
-                                          sx={{
-                                            backgroundColor: "primary.main",
-                                            mr: "1rem",
-                                          }}
-                                        >
-                                          {index + 1}
-                                        </Avatar>
-                                        <Stack
-                                          direction="row"
-                                          justifyContent="flex-end"
-                                          sx={{ width: "100%", mr: "1rem" }}
-                                        >
-                                          <Button
-                                            color="primary"
-                                            onClick={() =>
-                                              handleDeleteRestaurant(
-                                                tripId,
-                                                restaurant._id,
-                                              )
-                                            }
-                                          >
-                                            <DeleteIcon />
-                                          </Button>
-                                        </Stack>
-                                      </Stack>
-
-                                      <Typography
-                                        variant="h6"
-                                        component="div"
-                                        fontWeight="fontWeightBold"
-                                        sx={{ mr: "1rem" }}
-                                      >
-                                        {/* {restaurant
-                                          ? restaurant[0].name
-                                          : "N/a"} */}
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        component="div"
-                                        style={{
-                                          paddingTop: "0.2rem",
-                                        }}
-                                      >
-                                        The gateway was built in 1924, in
-                                        memorial to King George V of England,
-                                        who landed in India at the same place in
-                                        1911.
-                                      </Typography>
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={3} md={4} lg={4}>
-                                      <CardMedia
-                                        component="img"
-                                        height="150"
-                                        width="50"
-                                        image={restaurant.image}
-                                        alt="green iguana"
-                                        style={{
-                                          borderRadius: 11,
-                                          mr: "2rem",
-                                        }}
-                                        // adding on click for opening modalForHotel
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Container>
-                              </div>
-                            </Box>
-                          </div>
-                        ))}
-                    </Card>
                   </Grid>
                 </Paper>
               </AccordionDetails>
@@ -617,20 +523,7 @@ const MyTrip = () => {
                                           direction="row"
                                           justifyContent="flex-end"
                                           sx={{ width: "100%", mr: "1rem" }}
-                                        >
-                                          <Button
-                                            color="primary"
-                                            onClick={(e) =>
-                                              handleDeleteAttraction(
-                                                e,
-                                                tripId,
-                                                attraction._id,
-                                              )
-                                            }
-                                          >
-                                            <DeleteIcon />
-                                          </Button>
-                                        </Stack>
+                                        ></Stack>
                                       </Stack>
 
                                       <Typography
@@ -639,10 +532,9 @@ const MyTrip = () => {
                                         fontWeight="fontWeightBold"
                                         sx={{ mr: "1rem" }}
                                       >
-                                        {console.log(attraction[0].name)}
-                                        {/* {attraction
+                                        {attraction.length
                                           ? attraction[0].name
-                                          : "N/a"} */}
+                                          : "N/a"}
                                       </Typography>
                                       <Typography
                                         variant="body2"

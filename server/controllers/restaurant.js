@@ -5,8 +5,8 @@ const newValidation = require("../validation/dataValidation.js");
 const Trip = require("../model/Trip");
 
 const getRestaurantById = async (id) => {
-  let parsedId = validation.toObjectId(id, "RestaurantId");
-  const restaurant = await Restaurant.findById(parsedId);
+  // let parsedId = validation.toObjectId(id, "RestaurantId");
+  const restaurant = await Restaurant.find({ location_id: id });
   if (restaurant) {
     return restaurant;
   } else {
@@ -66,60 +66,60 @@ const createRestaurant = async (restaurantBody, id, visitDate) => {
     newRestaurantInfo.longitude,
     "Restaurant Longitude",
   );
-  newRestaurantInfo.num_reviews = validation.checkStringForNumber(
-    newRestaurantInfo.num_reviews,
-    "Restaurant Number of Reviews",
-  );
+  // newRestaurantInfo.num_reviews = validation.checkStringForNumber(
+  //   newRestaurantInfo.num_reviews,
+  //   "Restaurant Number of Reviews",
+  // );
   newRestaurantInfo.address = validation.checkString(
     newRestaurantInfo.address,
     "Restaurant Address",
   );
-  newRestaurantInfo.category = validation.checkString(
-    newRestaurantInfo.category,
-    "Restaurant Category",
-  );
+  // newRestaurantInfo.category = validation.checkString(
+  //   newRestaurantInfo.category,
+  //   "Restaurant Category",
+  // );
 
   newRestaurantInfo.image = validation.checkURL(
     newRestaurantInfo.image,
     "Restaurant Image Url",
   );
-  newRestaurantInfo.web_url = validation.checkURL(
-    newRestaurantInfo.web_url,
-    "Restaurant Web Url",
-  );
-  newRestaurantInfo.cuisine = validation.checkStringArray(
-    newRestaurantInfo.cuisine,
-    "Restaurant Cuisine",
-  );
+  // newRestaurantInfo.web_url = validation.checkURL(
+  //   newRestaurantInfo.web_url,
+  //   "Restaurant Web Url",
+  // );
+  // newRestaurantInfo.cuisine = validation.checkStringArray(
+  //   newRestaurantInfo.cuisine,
+  //   "Restaurant Cuisine",
+  // );
   newRestaurantInfo.rating = validation.checkStringForNumber(
     newRestaurantInfo.rating,
     "Restaurant Rating",
   );
-  newRestaurantInfo.price_level = validation.checkPriceLevel(
-    newRestaurantInfo.price_level,
-    "Restaurant Price Level",
-  );
-  newRestaurantInfo.description = validation.checkString(
-    newRestaurantInfo.description,
-    "Restaurant Description",
-  );
-  newRestaurantInfo.phone = validation.checkPhoneNumber(
-    newRestaurantInfo.phone,
-    "Restaurant Phone",
-  );
-  newRestaurantInfo.price = validation.checkPriceRange(
-    newRestaurantInfo.price,
-    "Restaurant Price",
-  );
-  newRestaurantInfo.website = validation.checkURL(
-    newRestaurantInfo.website,
-    "Restaurant Website",
-  );
+  // newRestaurantInfo.price_level = validation.checkPriceLevel(
+  //   newRestaurantInfo.price_level,
+  //   "Restaurant Price Level",
+  // );
+  // newRestaurantInfo.description = validation.checkString(
+  //   newRestaurantInfo.description,
+  //   "Restaurant Description",
+  // );
+  // newRestaurantInfo.phone = validation.checkPhoneNumber(
+  //   newRestaurantInfo.phone,
+  //   "Restaurant Phone",
+  // );
+  // newRestaurantInfo.price = validation.checkPriceRange(
+  //   newRestaurantInfo.price,
+  //   "Restaurant Price",
+  // );
+  // newRestaurantInfo.website = validation.checkURL(
+  //   newRestaurantInfo.website,
+  //   "Restaurant Website",
+  // );
 
   const savedRestaurant = await newRestaurantInfo.save();
 
   const objForPushInItinerary = {
-    id: savedRestaurant._id,
+    id: savedRestaurant.location_id,
     name: savedRestaurant.name,
     image: savedRestaurant.image,
     type: "restaurant",
@@ -128,7 +128,7 @@ const createRestaurant = async (restaurantBody, id, visitDate) => {
   trip.itinerary.forEach((day) => {
     if (day.date === convertDate) {
       day.placesToVisit.push(objForPushInItinerary);
-      trip.restaurants.push(savedRestaurant._id);
+      trip.restaurants.push(savedRestaurant.location_id);
     }
   });
 

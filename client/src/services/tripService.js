@@ -97,10 +97,14 @@ const addRestaurantToTrip = (id, body) => {
     });
 };
 
-const removeRestaurantFromTrip = (id, body) => {
+const removeRestaurantFromTrip = (id, body, visitDate) => {
   const restaurantId = body;
+  console.log("body");
+  console.log(body);
   return axios
-    .patch(DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}`)
+    .patch(
+      DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}/${visitDate}`,
+    )
     .then((response) => {
       return response.data;
     });
