@@ -77,6 +77,22 @@ const deleteHotel = (location_id) => ({
   },
 });
 
+const binAttaction = (tripId, location_id) => ({
+  type: "BIN_ATTRACTION",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
+const unbinAttaction = (tripId, location_id) => ({
+  type: "UNBIN_ATTRACTION",
+  payload: {
+    tripId: tripId,
+    location_id: location_id,
+  },
+});
+
 const binRestaurant = (tripId, location_id) => ({
   type: "BIN_RESTAURANT",
   payload: {
@@ -176,6 +192,24 @@ const deleteTrip = (location_id) => ({
   },
 });
 
+const addAttractionToTripItinerary = (tripId, attractionData, startDate) => ({
+  type: "ADD_ATTRACTION_TO_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    attraction: attractionData,
+    startDate: startDate,
+  },
+});
+
+const addRestaurantToTripItinerary = (tripId, restaurantData, startDate) => ({
+  type: "ADD_RESTAURANT_TO_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    restaurant: restaurantData,
+    startDate: startDate,
+  },
+});
+
 const addHotelToTripItinerary = (tripId, data, visitDate) => ({
   type: "ADD_HOTEL_TO_TRIP_ITINERARY",
   payload: {
@@ -190,6 +224,32 @@ const deleteHotelFromTripItinerary = (tripId, hotelId, visitDate) => ({
   payload: {
     tripId: tripId,
     hotelId: hotelId,
+    visitDate: visitDate,
+  },
+});
+
+const deleteRestaurantFromTripItinerary = (
+  tripId,
+  restaurantId,
+  visitDate,
+) => ({
+  type: "DELETE_RESTAURANT_FROM_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    restaurantId: restaurantId,
+    visitDate: visitDate,
+  },
+});
+
+const deleteAttractionFromTripItinerary = (
+  tripId,
+  attractionId,
+  visitDate,
+) => ({
+  type: "DELETE_ATTRACTION_FROM_TRIP_ITINERARY",
+  payload: {
+    tripId: tripId,
+    attractionId: attractionId,
     visitDate: visitDate,
   },
 });
@@ -214,6 +274,12 @@ let exports = {
   deleteHotelFromTripItinerary,
   binRestaurant,
   unbinRestaurant,
+  addRestaurantToTripItinerary,
+  deleteRestaurantFromTripItinerary,
+  binAttaction,
+  unbinAttaction,
+  addAttractionToTripItinerary,
+  deleteAttractionFromTripItinerary,
 };
 
 export default exports;

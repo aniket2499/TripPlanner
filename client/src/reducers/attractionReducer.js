@@ -5,23 +5,23 @@ import { AuthContext } from "../firebase/Auth";
 import tripservice from "../services/tripService";
 import actions from "../actions";
 
-const initialState = [
-  {
-    location_id: null,
-    name: null,
-    latitude: null,
-    longitude: null,
-    num_reviews: null,
-    category: null,
-    address: null,
-    image: null,
-    description: null,
-    rating: null,
-    web_url: null,
-    phone: null,
-    website: null,
-  },
-];
+// const initialState = [
+//   {
+//     location_id: null,
+//     name: null,
+//     latitude: null,
+//     longitude: null,
+//     num_reviews: null,
+//     category: null,
+//     address: null,
+//     image: null,
+//     description: null,
+//     rating: null,
+//     web_url: null,
+//     phone: null,
+//     website: null,
+//   },
+// ];
 
 let copyState = null;
 let index = 0;
@@ -39,7 +39,8 @@ const attractionReducer = (state = [], action) => {
       return [...state, payload];
 
     case "DELETE_ATTRACTION":
-      copyState = state.filter((x) => x._id !== payload._id);
+      console.log(payload);
+      copyState = state.filter((x) => x._id !== payload.location_id);
       return copyState;
 
     default:
@@ -65,26 +66,31 @@ const initializeState = (tripId) => {
 };
 
 const addAttraction = (tripId, attractionData) => {
+  console.log("attractionData");
+  console.log(attractionData);
   return async (dispatch, getState) => {
     let obj = {
-      location_id: attractionData.dupeId,
+      location_id: attractionData.locationId,
       name: attractionData.name,
       image: attractionData.image,
-      latitude: attractionData.geoCode.latitude,
-      longitude: attractionData.geoCode.longitude,
-      rating: attractionData.rating,
+      latitude: attractionData.latitude,
+      longitude: attractionData.longitude,
+      address: attractionData.address,
+      startDate: attractionData.startDate,
     };
-    let data = await attractionService.createHotel(
+    console.log("obj ================================");
+    console.log(obj);
+    let data = await attractionService.createAttraction(
       tripId,
       attractionData.startDate,
       obj,
     );
     dispatch({
-      type: "ADD_HOTEL",
+      type: "ADD_ATTRACTION",
       payload: attractionData,
     });
     dispatch(
-      actions.addHotelToTripItinerary(
+      actions.addAttractionToTripItinerary(
         tripId,
         attractionData,
         attractionData.startDate,
@@ -93,19 +99,28 @@ const addAttraction = (tripId, attractionData) => {
   };
 };
 
-const deleteAttraction = (tripId, hotelId, hotel) => {
+const deleteAttraction = (tripId, attractionId, attractionData) => {
+  console.log("deleteRestaurant");
+  console.log("tripId", "restaurantId");
+  console.log(tripId, attractionId);
+  console.log("attraction");
+  console.log(attractionId);
   return async (dispatch, getState) => {
-    let data = await tripservice.removeHotelFromTrip(
+    let data = await tripservice.removeAttractionFromTrip(
       tripId,
-      hotelId,
-      hotel.startDate.split("/").join("-"),
+      attractionId,
+      attractionData.startDate.split("/").join("-"),
     );
     dispatch({
-      type: "DELETE_HOTEL",
-      payload: hotel,
+      type: "DELETE_ATTRACTION",
+      payload: attractionData,
     });
     dispatch(
-      actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
+      actions.deleteAttractionFromTripItinerary(
+        tripId,
+        attractionId,
+        attractionData.startDate,
+      ),
     );
   };
 };

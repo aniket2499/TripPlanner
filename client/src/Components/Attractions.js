@@ -2,67 +2,211 @@ import {
   Grid,
   Paper,
   Card,
+  CardContent,
   Button,
   CardMedia,
   Box,
   Divider,
+  Icon,
+  Stack,
+  ListItem,
+  List,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  TextField,
+  AppBar,
   Typography,
   Avatar,
-  Stack,
 } from "@mui/material";
+import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
 import TurnedInIcon from "@mui/icons-material/TurnedIn";
 import TurnedInNotIcon from "@mui/icons-material/TurnedInNot";
-
 import React from "react";
-import { useState, useEffect } from "react";
-import actions from "../actions";
-import attractionsData from "../services/getApiData";
-import tripService from "../services/tripService";
+import { useSelector, useDispatch } from "react-redux";
+import { AuthContext } from "../firebase/Auth";
 import StarIcon from "@mui/icons-material/Star";
+import actions from "../actions";
+import getApiData from "../services/getApiData";
+import { useEffect, useState, useContext } from "react";
+import tripService from "../services/tripService";
+import dayjs from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Maps from "./Maps";
-import DisabledByDefaultTwoToneIcon from "@mui/icons-material/DisabledByDefaultTwoTone";
-import { Link } from "react-router-dom";
+import store from "../store";
+import attractionReducer, {
+  addAttraction,
+  deleteAttraction,
+} from "../reducers/attractionReducer";
+import { initializeState as initHotel } from "../reducers/hotelReducer";
+import { initializeState as initRest } from "../reducers/restReducer";
+import { initializeState as initAttr } from "../reducers/attractionReducer";
+import { initializeState as initTrip } from "../reducers/tripsReducer";
+import { useParams } from "react-router";
 
-const id = "63934796bd080530bbdc3111";
-const Attractions = () => {
+const Restaurants = () => {
+  const dispatch = useDispatch();
+  const currUser = useContext(AuthContext);
+  const [attractionData, setAttractionData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [savedButton, setSavedButton] = useState(false);
-  const [attractions, setAttractions] = useState([]);
-  const [attraction, setAttraction] = useState([]);
   const [open, setOpen] = useState(false);
+  const [rest, setRest] = useState({});
+  const [calendarDate, setCalendarDate] = useState(false);
+  let destination = null;
+  let rangeStartDate = null;
+  let rangeEndDate = null;
+  const allState = useSelector((state) => state);
+  const trips = useSelector((state) => state.trips);
+  const id = useParams().tripid;
+  console.log("id", id);
 
-  const [loading, setLoading] = useState(false);
-  const handleOpen = (attraction) => {
+  useEffect(() => {
+    console.log("event fired");
+
+    async function fetchData() {
+      await dispatch(actions.initializeUser(currUser._delegate.uid));
+      await dispatch(initTrip());
+      await dispatch(initHotel(id));
+      await dispatch(initRest(id));
+      await dispatch(initAttr(id));
+    }
+    fetchData();
+  }, []);
+
+  const addAttactionToBin = (tripId, attractionId, attraction, visitDate) => {
+    dispatch(actions.binAttaction(tripId, attractionId));
+    console.log("tripId", tripId);
+    console.log("attraction", attraction);
+    dispatch(addAttraction(tripId, attraction, visitDate));
+  };
+
+  const removeAttactionFromBin = (tripId, attractionId, attraction) => {
+    console.log("removeAttactionFromBin");
+    console.log(tripId, attractionId);
+    dispatch(actions.unbinAttaction(tripId, attractionId));
+    dispatch(deleteAttraction(tripId, attractionId, attraction));
+  };
+
+  const findAttractionInTrip = (attractionId) => {
+    let currTrip = trips.find((x) => x._id == id);
+    let attr = currTrip.attractions.find((h) => h == attractionId);
+    console.log(attr);
+    return attr ? true : false;
+  };
+
+  const handleOpen = (hotel) => {
     setOpen(true);
-    setAttraction(attraction);
+    setRest(hotel);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        let data = await attractionsData.getAttractionsData("surat", 1, 5.0);
-        if (data.length === 0) {
-          return;
-        }
 
-        setAttractions(data);
-        setLoading(false);
-      } catch (e) {
-        return e;
+  // console.log("trips");
+
+  // console.log(trips);
+  if (trips.length !== 0) {
+    let index = trips.findIndex((x) => x._id === id);
+    console.log("index is : " + index);
+    destination = trips[index].destination.split(",")[0];
+  }
+
+  useEffect(() => {
+    async function getAttrData() {
+      if (destination) {
+        try {
+          let data = await getApiData.getAttractionsData(
+            `${destination}`,
+            1,
+            3,
+          );
+          if (data.length === 0) {
+            return;
+          }
+          console.log(data);
+          let attrData = [];
+          for (let i = 0; i < data.length; i++) {
+            data[i].saved = false;
+            data[i].pickerOpen = false;
+            data[i].startDate = dayjs(new Date())
+              .format("MM/DD/YYYY")
+              .toString();
+            console.log(
+              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
+            );
+          }
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].ad_position) {
+              continue;
+            }
+            console.log("=============================");
+            data[i].image = "";
+            if (
+              data[i].photo &&
+              data[i].photo.images &&
+              data[i].photo.images.medium
+            ) {
+              data[i].image = data[i].photo.images.medium.url;
+            } else {
+              data[
+                i
+              ].image = `https://tripplannercs554.s3.amazonaws.com/HotelImages/${Math.floor(
+                Math.random() * 300 + 1,
+              )}.jpg`;
+            }
+            let addressObject = data[i].address_obj;
+            let addressString = `${addressObject.street1}, ${addressObject.street2}, ${addressObject.city}, ${addressObject.state}`;
+            let attrObj = {
+              name: data[i].name,
+              locationId: data[i].distance,
+              address: addressString,
+              latitude: data[i].latitude,
+              longitude: data[i].longitude,
+              startDate: data[i].startDate,
+              image: data[i].image,
+            };
+            attrData.push(attrObj);
+          }
+          setAttractionData(attrData);
+          setLoading(false);
+          console.log("attraction data");
+          console.log(attrData);
+        } catch (e) {
+          console.log(e);
+          return e;
+        }
       }
     }
-    fetchData();
-  }, []);
+    getAttrData();
+  }, [destination]);
 
-  if (loading) return <div>Loading...</div>;
-  else {
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeStartDate = allState.trips[i].tripDate.startDate;
+    }
+  }
+  for (let i = 0; i < allState.trips.length; i++) {
+    if (allState.trips[i]._id === id) {
+      rangeEndDate = allState.trips[i].tripDate.endDate;
+    }
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <h2>Loading....</h2>
+      </div>
+    );
+  } else {
     return (
       <Grid container>
         <Grid item xs={12} sm={12} md={6.5} lg={6.5}>
           <Paper elevation={3}>
-            <Box sx={{ pt: "2rem", pb: "1rem" }}>
+            <Box sx={{ pt: "3rem", pb: "1rem" }}>
               <Typography
                 variant="h5"
                 component="div"
@@ -72,121 +216,135 @@ const Attractions = () => {
               </Typography>
             </Box>
 
-            <Card sx={{ pl: "1rem", pr: "1rem" }}>
-              {attractions.map((attraction, index) => (
-                <Box sx={{ p: 1 }}>
-                  <Divider
-                    style={{
-                      backgroundColor: "blue",
-                      paddingTop: 0.5,
-                      paddingBottom: 0.5,
-                      marginTop: "1rem",
+            <Card styles={{ padding: "1.5rem" }}>
+              {attractionData &&
+                attractionData.map((attraction, index) => (
+                  <div key={index}>
+                    <Box sx={{ p: 1 }}>
+                      <Divider
+                        styles={{
+                          backgroundColor: "blue",
+                          paddingTop: 0.5,
+                          paddingBottom: 0.5,
+                          marginTop: "1rem",
+                          marginBottom: "1rem",
+                        }}
+                      />
 
-                      marginBottom: "1rem",
-                    }}
-                  />
-                  <div>
-                    <Grid container>
-                      <Grid item xs={12} sm={9} md={8} lg={7}>
-                        <Avatar sx={{ backgroundColor: "primary.main", mr: 2 }}>
-                          {index + 1}
-                        </Avatar>
+                      <div>
+                        <Grid container sx={{ mt: "1rem" }}>
+                          <Grid item xs={12} sm={9} md={8} lg={7}>
+                            <Avatar
+                              sx={{ backgroundColor: "primary.main", mr: 2 }}
+                            >
+                              {index + 1}
+                            </Avatar>
+                            <Typography
+                              variant="h6"
+                              component="div"
+                              fontWeight="fontWeightBold"
+                            >
+                              {attraction.name}
+                            </Typography>
+                            <Typography
+                              variant="body1"
+                              component="div"
+                              style={{ paddingTop: "1rem" }}
+                            >
+                              {/* {restaurant.address} */}
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12} sm={3} md={4} lg={5}>
+                            {trips &&
+                              !findAttractionInTrip(attraction.locationId) && (
+                                <Button
+                                  id={attraction.locationId}
+                                  onClick={() =>
+                                    addAttactionToBin(
+                                      id,
+                                      attraction.locationId,
+                                      attraction,
+                                    )
+                                  }
+                                >
+                                  <Typography variant="body2">
+                                    Add Attraction
+                                  </Typography>
+                                  <TurnedInNotIcon />
+                                </Button>
+                              )}
+                            {trips &&
+                              findAttractionInTrip(attraction.locationId) && (
+                                <Button
+                                  id={attraction.locationId}
+                                  onClick={() =>
+                                    removeAttactionFromBin(
+                                      id,
+                                      attraction.locationId,
+                                      attraction,
+                                    )
+                                  }
+                                >
+                                  <Typography variant="body2">
+                                    Remove Attraction
+                                  </Typography>
+                                  <TurnedInIcon />
+                                </Button>
+                              )}
 
-                        {attraction.name ? (
-                          <Typography
-                            variant="h6"
-                            component="div"
-                            fontWeight="fontWeightBold"
-                          >
-                            {attraction.name}
-                          </Typography>
-                        ) : (
-                          <Typography
-                            variant="h6"
-                            component="div"
-                            fontWeight="fontWeightBold"
-                          >
-                            Attraction
-                          </Typography>
-                        )}
-                        {attraction.description ? (
-                          <Typography
-                            variant="body2"
-                            component="div"
-                            style={{ paddingTop: "1rem" }}
-                          >
-                            {attraction.description}
-                          </Typography>
-                        ) : (
-                          <Typography
-                            variant="body2"
-                            component="div"
-                            style={{ paddingTop: "1rem" }}
-                          >
-                            Grand, Indo-Saracenic-style, 26m-tall triumphal
-                            stone arch, built on the waterfront in 1924.Situated
-                            at the tip of Apollo’s Blunder in South Mumbai, the
-                            Gateway of India is a great place to start your
-                            sightseeing in Mumbai
-                          </Typography>
-                        )}
-                      </Grid>
-                      <Grid item xs={12} sm={3} md={4} lg={5}>
-                        <Button
-                          id={attraction.location_id}
-                          onClick={(e) => {
-                            if (attraction.saved === true) {
-                              tripService.addAttractionToTrip(id, {
-                                attractionId: attraction.id,
-                              });
-                            } else {
-                            }
-                            attraction.saved = !attraction.saved;
-                            setSavedButton(!savedButton);
-                          }}
-                        >
-                          {attraction.saved ? (
-                            <TurnedInIcon />
-                          ) : (
-                            <TurnedInNotIcon />
-                          )}
-                          <Typography variant="body2">
-                            {attraction.saved
-                              ? "Remove From Bin"
-                              : "Add To Bin"}
-                          </Typography>
-                        </Button>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DesktopDatePicker
+                                label="Select Date"
+                                disablePast
+                                maxDate={rangeEndDate}
+                                minDate={rangeStartDate}
+                                inputFormat="MM/DD/YYYY"
+                                value={attraction.startDate}
+                                onSelect={(event) => {
+                                  event.preventDefault();
+                                }}
+                                onChange={(newValue) => {
+                                  console.log(
+                                    "aniket new value" + attraction.startDate,
+                                  );
+                                  attraction.startDate =
+                                    dayjs(newValue).format("MM/DD/YYYY");
+                                  setCalendarDate(!calendarDate);
+                                  console.log(
+                                    "aniket new value after" +
+                                      attraction.startDate,
+                                  );
+                                }}
+                                id="startDate"
+                                renderInput={(params) => (
+                                  <TextField
+                                    sx={{ width: "16rem" }}
+                                    margin="normal"
+                                    {...params}
+                                    // onChange={handleStartDateChange}
+                                  />
+                                )}
+                              />
+                            </LocalizationProvider>
 
-                        {attraction.photo?.images?.original?.url ? (
-                          <CardMedia
-                            component="img"
-                            height="180"
-                            image={attraction.photo.images.original.url}
-                            alt="green iguana"
-                            style={{ borderRadius: 11 }}
-                            onClick={() => {
-                              handleOpen(attraction);
-                              setAttraction(attraction);
-                            }}
-                          />
-                        ) : (
-                          <CardMedia
-                            component="img"
-                            height="180"
-                            image="https://www.planetware.com/photos-large/USNY/usa-best-places-new-york.jpg"
-                            alt="green iguana"
-                            style={{ borderRadius: 11 }}
-                            onClick={() => {
-                              handleOpen(attraction);
-                              setAttraction(attraction);
-                            }}
-                          />
-                        )}
-                      </Grid>
-                    </Grid>
+                            <CardMedia
+                              component="img"
+                              height="180"
+                              image={attraction.image}
+                              alt="green iguana"
+                              style={{ borderRadius: 11 }}
+                              // adding on click for opening modalForHotel
+                              onClick={() => {
+                                handleOpen(rest);
+                                setRest(attraction);
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                      </div>
+                    </Box>
                   </div>
-                </Box>
-              ))}
+                ))}
             </Card>
           </Paper>
         </Grid>
@@ -194,93 +352,75 @@ const Attractions = () => {
           <Maps />
           <Paper elevation={3}>
             <Box sx={{ p: 2 }}>
-              {/* <Typography variant="h4" component="div">
-                <Maps />
-              </Typography> */}
-              {open && (
-                <div>
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: "90%",
-                      left: "80%",
-                      transform: "translate(-61%, -84%)",
-                      width: "33rem",
-                      height: "20rem",
-                      bgcolor: "background.paper",
-                      border: "2px solid #000",
-                      boxShadow: 24,
-                      borderRadius: 2,
-                      p: 4,
-                    }}
-                  >
-                    <Grid container sx={{ mt: "0.2rem" }}>
-                      <Grid item xs={12} sm={9} md={8} lg={12}>
-                        <Typography
-                          variant="body2"
-                          component="div"
-                          fontWeight="fontWeightBold"
-                        >
-                          {attraction.name}
-                        </Typography>
-                        <div style={{ marginTop: "0.3rem" }}>
-                          <Typography
-                            variant="body2"
-                            fontWeight="fontWeightLight"
-                          >
-                            Grand, Indo-Saracenic-style, 26m-tall triumphal
-                            stone arch, built on the waterfront in 1924.Situated
-                            at the tip of Apollo’s Blunder in South Mumbai, the
-                            Gateway of India is a great place to start your
-                            sightseeing in Mumbai.
-                          </Typography>
-                        </div>
-                        <Grid container sx={{ mt: "1rem" }}>
-                          <Grid item xs={12} sm={9} md={8} lg={6}>
-                            <Button
-                              variant="contained"
-                              id={attraction.dupeId}
-                              onClick={(e) => {
-                                if (attraction.saved === true) {
-                                  tripService.addAttractionToTrip(id, {
-                                    dupeId: attraction.id,
-                                  });
-                                } else {
-                                }
-                                attraction.saved = !attraction.saved;
-                                setSavedButton(!savedButton);
-                              }}
+              {/* {open && (
+                    <div>
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: "90%",
+                          left: "80%",
+                          transform: "translate(-61%, -84%)",
+                          width: "33rem",
+                          height: "20rem",
+                          bgcolor: "background.paper",
+                          border: "2px solid #000",
+                          boxShadow: 24,
+                          borderRadius: 2,
+                          p: 4,
+                        }}
+                      >
+                        <Grid container sx={{ mt: "0.2rem" }}>
+                          <Grid item xs={12} sm={9} md={8} lg={12}>
+                            <Typography
+                              variant="body2"
+                              component="div"
+                              fontWeight="fontWeightBold"
                             >
-                              {attraction.saved ? (
-                                <TurnedInIcon />
-                              ) : (
-                                <TurnedInNotIcon />
-                              )}
-                              <Typography variant="body2">
-                                {attraction.saved
-                                  ? "Remove From Bin"
-                                  : "Add To Bin"}
+                              {hotel.name}
+                            </Typography>
+                            <div style={{ marginTop: "0.3rem" }}>
+                              <Typography
+                                variant="body2"
+                                fontWeight="fontWeightLight"
+                              >
+                                Grand, Indo-Saracenic-style, 26m-tall triumphal
+                                stone arch, built on the waterfront in 1924.Situated
+                                at the tip of Apollo’s Blunder in South Mumbai, the
+                                Gateway of India is a great place to start your
+                                sightseeing in Mumbai. The gateway was built in
+                                1924, in memorial to King George V of England, who
+                                landed in India at the same place in 1911.
                               </Typography>
-                            </Button>
-                          </Grid>
-                          <Grid item xs={12} sm={9} md={8} lg={6}>
-                            {attraction.rating ? (
-                              <Stack direction="row">
-                                {attraction.rating == 1 ||
-                                attraction.rating == 1.5 ? (
-                                  <StarIcon
-                                    sx={{
-                                      color: "primary.main",
-                                      "&.half": {
-                                        color: "yellow",
-                                        width: 20,
-                                        height: 20,
-                                      },
-                                    }}
-                                  />
-                                ) : attraction.rating == 2 ||
-                                  attraction.rating == 2.5 ? (
-                                  <div>
+                            </div>
+                            <Grid container sx={{ mt: "0.7rem" }}>
+                              <Grid item xs={12} sm={9} md={8} lg={8}>
+                                <Button
+                                  variant="contained"
+                                  id={hotel.dupeId}
+                                  onClick={(e) => {
+                                    if (hotel.saved === true) {
+                                      tripService.addHotelToTrip(id, {
+                                        dupeId: hotel.id,
+                                      });
+                                    } else {
+                                    }
+                                    hotel.saved = !hotel.saved;
+                                    setSavedButton(!savedButton);
+                                  }}
+                                >
+                                  {hotel.saved ? (
+                                    <TurnedInIcon />
+                                  ) : (
+                                    <TurnedInNotIcon />
+                                  )}
+                                  <Typography variant="body2">
+                                    {hotel.saved ? "Remove From Bin" : "Add To Bin"}
+                                  </Typography>
+                                </Button>
+                              </Grid>
+                              <Grid item xs={12} sm={9} md={8} lg={4}>
+                                <Stack direction="row">
+                                  {hotel.rating === 1 ? (
                                     <StarIcon
                                       sx={{
                                         color: "primary.main",
@@ -291,267 +431,205 @@ const Attractions = () => {
                                         },
                                       }}
                                     />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                  </div>
-                                ) : attraction.rating == 3 ||
-                                  attraction.rating == 3.5 ? (
-                                  <div>
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                  </div>
-                                ) : attraction.rating == 4 ||
-                                  attraction.rating == 4.5 ? (
-                                  <div>
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                  </div>
-                                ) : attraction.rating == 5 ? (
-                                  <div>
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                  </div>
-                                ) : (
-                                  <div></div>
-                                )}
-                              </Stack>
-                            ) : (
-                              <Stack direction="row">
-                                <Typography variant="body2">
-                                  No Ratings Yet
-                                </Typography>
-                              </Stack>
-                            )}
-                          </Grid>
-                        </Grid>
-
-                        <Grid
-                          item
-                          xs={12}
-                          sm={9}
-                          md={8}
-                          lg={12}
-                          sx={{ mt: "0.2rem" }}
-                        >
-                          <Typography
-                            variant="body2"
-                            fontWeight="fontWeightBold"
-                            style={{
-                              display: "inline-block",
-                              marginRight: "0.5rem",
-                            }}
-                          >
-                            Address:
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            fontWeight="fontWeightLight"
-                            style={{ display: "inline-block" }}
-                          >
-                            {attraction.address}
-                          </Typography>
-                        </Grid>
-
-                        <Grid
-                          item
-                          xs={12}
-                          sm={9}
-                          md={8}
-                          lg={12}
-                          sx={{ mb: "0.2rem" }}
-                        >
-                          <Typography
-                            variant="body2"
-                            fontWeight="fontWeightBold"
-                            style={{
-                              display: "inline-block",
-                              marginRight: "0.5rem",
-                            }}
-                          >
-                            Subcategory Rankings:
-                          </Typography>
-
-                          <Typography
-                            variant="body2"
-                            fontWeight="fontWeightLight"
-                            style={{ display: "inline-block" }}
-                          >
-                            {attraction.ranking_subcategory}
-                          </Typography>
-                        </Grid>
-                        {attraction.website && (
-                          <Grid container sx={{ mt: "0.3rem" }}>
-                            <Grid item xs={12} sm={9} md={8} lg={6}>
+                                  ) : hotel.rating === 2 ? (
+                                    <div>
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                    </div>
+                                  ) : hotel.rating === 3 ? (
+                                    <div>
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                    </div>
+                                  ) : hotel.rating === 4 ? (
+                                    <div>
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                    </div>
+                                  ) : hotel.rating === 5 ? (
+                                    <div>
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                      <StarIcon
+                                        sx={{
+                                          color: "primary.main",
+                                          "&.half": {
+                                            color: "yellow",
+                                            width: 20,
+                                            height: 20,
+                                          },
+                                        }}
+                                      />
+                                    </div>
+                                  ) : (
+                                    <div></div>
+                                  )}
+                                </Stack>
+                              </Grid>
+                            </Grid>
+                            <Grid style={{ marginTop: "1rem" }}>
                               <Typography
                                 variant="body2"
                                 fontWeight="fontWeightBold"
                               >
-                                Website:
+                                Amenities :
                               </Typography>
-                              <Stack direction="row" spacing={2}>
-                                <div>
-                                  <a
-                                    href={attraction.website}
-                                    target="_blank"
-                                    rel="noopener"
-                                  >
+                              <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
+                                {hotel.amenities.map((amenity) => (
+                                  <div>
                                     <Typography
                                       variant="body2"
                                       fontWeight="fontWeightLight"
-                                      style={{ display: "inline-block" }}
                                     >
-                                      {attraction.website}
+                                      {amenity}
                                     </Typography>
-                                  </a>
-                                </div>
+                                  </div>
+                                ))}
                               </Stack>
                             </Grid>
-                          </Grid>
-                        )}
-                        <Grid
-                          style={{
-                            marginTop: "0.2rem",
-                            textAlign: "center",
-                          }}
-                        >
-                          <Button onClick={handleClose}>
-                            <DisabledByDefaultTwoToneIcon
-                              sx={{
-                                color: "primary.main",
-                                width: 40,
-                                height: 40,
+                            <Grid
+                              style={{
+                                marginTop: "0.8rem",
+                                textAlign: "center",
                               }}
-                            />
-                          </Button>
+                            >
+                              <Button onClick={handleClose}>
+                                <DisabledByDefaultTwoToneIcon
+                                  sx={{
+                                    color: "primary.main",
+                                    width: 40,
+                                    height: 40,
+                                  }}
+                                />
+                              </Button>
+                            </Grid>
+                          </Grid>
                         </Grid>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </div>
-              )}
+                      </Box>
+                    </div>
+                  )} */}
             </Box>
           </Paper>
         </Grid>
@@ -559,5 +637,4 @@ const Attractions = () => {
     );
   }
 };
-
-export default Attractions;
+export default Restaurants;

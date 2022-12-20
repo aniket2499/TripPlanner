@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import restaurantService from "../services/restaurantService";
 import tripservice from "../services/tripService";
+import actions from "../actions";
 import { AuthContext } from "../firebase/Auth";
 
 // const initialState = [
@@ -93,18 +94,22 @@ const addRestaurant = (tripId, restaurantData) => {
       type: "ADD_RESTAURANT",
       payload: restaurantData,
     });
-    // dispatch(
-    //   actions.addHotelToTripItinerary(tripId, hotelData, hotelData.startDate),
-    // );
+    dispatch(
+      actions.addRestaurantToTripItinerary(
+        tripId,
+        restaurantData,
+        restaurantData.startDate,
+      ),
+    );
   };
 };
 
 const deleteRestaurant = (tripId, restaurantId, restaurant) => {
-  console.log("deleteRestaurant");
-  console.log("tripId", "restaurantId");
-  console.log(tripId, restaurantId);
-  console.log("restaurant");
-  console.log(restaurant);
+  // console.log("deleteRestaurant");
+  // console.log("tripId", "restaurantId");
+  // console.log(tripId, restaurantId);
+  // console.log("restaurant");
+  // console.log(restaurant);
   return async (dispatch, getState) => {
     let data = await tripservice.removeRestaurantFromTrip(
       tripId,
@@ -115,9 +120,13 @@ const deleteRestaurant = (tripId, restaurantId, restaurant) => {
       type: "DELETE_RESTAURANT",
       payload: restaurantId,
     });
-    // dispatch(
-    //   actions.deleteHotelFromTripItinerary(tripId, hotelId, hotel.startDate),
-    // );
+    dispatch(
+      actions.deleteHotelFromTripItinerary(
+        tripId,
+        restaurantId,
+        restaurant.startDate,
+      ),
+    );
   };
 };
 

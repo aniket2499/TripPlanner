@@ -77,6 +77,8 @@ router.patch("/update/:id", async (req, res) => {
 
 router.patch("/:tripid/attractions/add/:attractionid", async (req, res) => {
   try {
+    console.log("attraction added route");
+    console.log(req);
     const trip = await addAttractionToTrip(req, res);
     res.status(200).json(trip);
   } catch (e) {
@@ -87,8 +89,14 @@ router.patch("/:tripid/attractions/add/:attractionid", async (req, res) => {
 router.patch(
   "/:tripid/attractions/remove/:attractionid/:visitDate",
   async (req, res) => {
+    console.log("req.params");
+    console.log(req.params);
     try {
-      const trip = await removeAttractionFromTrip(req, res);
+      const trip = await removeAttractionFromTrip(
+        req.params.tripid,
+        req.params.attractionid,
+        req.params.visitDate,
+      );
       res.status(200).json(trip);
     } catch (e) {
       res.status(e.status ? e.status : 500).json(e);
@@ -128,7 +136,11 @@ router.patch(
   "/:tripid/restaurants/remove/:restaurantid/:visitDate",
   async (req, res) => {
     try {
-      const trip = await removeRestaurantFromTrip(req, res);
+      const trip = await removeRestaurantFromTrip(
+        req.params.tripid,
+        req.params.restaurantid,
+        req.params.visitDate,
+      );
       res.status(200).json(trip);
     } catch (e) {
       res.status(e.status ? e.status : 500).json(e);

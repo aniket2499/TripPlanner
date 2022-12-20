@@ -58,10 +58,15 @@ const addAttractionToTrip = (id, body) => {
     });
 };
 
-const removeAttractionFromTrip = (id, body) => {
-  const attractionid = body;
+const removeAttractionFromTrip = (id, attractionId, visitDate) => {
+  const attractionid = attractionId;
+  console.log("attractionid", attractionid);
+  console.log("visitDate", visitDate);
+  console.log("id", id);
   return axios
-    .patch(DATA_URL + `/trips/${id}/attractions/remove/${attractionid}`)
+    .patch(
+      DATA_URL + `/trips/${id}/attractions/remove/${attractionid}/${visitDate}`,
+    )
     .then((response) => {
       return response.data;
     });
@@ -98,10 +103,8 @@ const addRestaurantToTrip = (id, body) => {
     });
 };
 
-const removeRestaurantFromTrip = (id, body, visitDate) => {
-  const restaurantId = body;
-  console.log("body");
-  console.log(body);
+const removeRestaurantFromTrip = (id, restaurantid, visitDate) => {
+  const restaurantId = restaurantid;
   return axios
     .patch(
       DATA_URL + `/trips/${id}/restaurants/remove/${restaurantId}/${visitDate}`,

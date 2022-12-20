@@ -20,6 +20,7 @@ const amadeus = new Amadeus({
 });
 const getAllRestaurant = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
+  // console.log(baseData);
   let latitude = baseData.lat;
   let longitude = baseData.long;
   let min = 1;
