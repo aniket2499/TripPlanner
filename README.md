@@ -30,6 +30,3 @@ npm run start-app
 ```
 npm run dev
 ```
-
-## Note
-Please refer to the "final" branch for the latest code
