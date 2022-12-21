@@ -50,6 +50,9 @@ router.get("/:id", async (req, res) => {
 
 router.post("/create/:userId", async (req, res) => {
   try {
+    console.log("create trip");
+    console.log(req.body);
+    console.log(req.params.userId);
     const newTrip = await createTrip(req.params.userId, req.body);
     res.status(200).json(newTrip);
   } catch (e) {
