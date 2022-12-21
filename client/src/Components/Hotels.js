@@ -47,6 +47,7 @@ const Hotels = () => {
   const trips = useSelector((state) => state.trips);
   const currUser = useContext(AuthContext);
   const a = useParams().tripid;
+  const dateIdMap = [];
 
   useEffect(() => {
     console.log("event fired");
@@ -104,8 +105,9 @@ const Hotels = () => {
     setOpen(false);
   };
 
+  let index = null;
   if (trips.length !== 0) {
-    let index = trips.findIndex((x) => x._id === a);
+    index = trips.findIndex((x) => x._id === a);
     console.log("index is : " + index);
     destination = trips[index].destination.split(",")[0];
     console.log(destination);
@@ -119,12 +121,27 @@ const Hotels = () => {
           if (data.length === 0) {
             return;
           }
+          for (let i = 0; i < trips[index].itinerary.length; i++) {
+            for (
+              let j = 0;
+              j < trips[index].itinerary[i].placesToVisit.length;
+              j++
+            ) {
+              dateIdMap.push({
+                id: trips[index].itinerary[i].placesToVisit[j].id,
+                date: trips[index].itinerary[i].date,
+              });
+            }
+          }
           for (let i = 0; i < data.length; i++) {
             data[i].saved = false;
             data[i].pickerOpen = false;
-            data[i].startDate = dayjs(new Date())
-              .format("MM/DD/YYYY")
-              .toString();
+            let arr = dateIdMap.find((x) => x.id === data[i].dupeId.toString());
+            if (arr) {
+              data[i].startDate = arr.date;
+            } else {
+              data[i].startDate = trips[index].tripDate.startDate;
+            }
             console.log(
               "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
             );
@@ -151,8 +168,7 @@ const Hotels = () => {
       rangeEndDate = allState.trips[i].tripDate.endDate;
     }
   }
-  console.log("+++++++++++++");
-  console.log(hotels);
+
   if (loading) {
     return (
       <div>

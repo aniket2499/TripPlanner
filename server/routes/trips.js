@@ -50,9 +50,6 @@ router.get("/:id", async (req, res) => {
 
 router.post("/create/:userId", async (req, res) => {
   try {
-    console.log("create trip");
-    console.log(req.body);
-    console.log(req.params.userId);
     const newTrip = await createTrip(req.params.userId, req.body);
     res.status(200).json(newTrip);
   } catch (e) {
@@ -107,7 +104,7 @@ router.patch(
   },
 );
 
-router.patch("/:tripid/hotels/add/:hotelid", async (req, res) => {
+router.patch("/:tripid/hotels/add/:hotelid/", async (req, res) => {
   try {
     const trip = await addHotelToTrip(req, res);
     res.status(200).json(trip);

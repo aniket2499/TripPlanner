@@ -7,7 +7,6 @@ const validation = require("../validation/routesValidation");
 const nodemailer = require("nodemailer");
 const invite = require("./inviteEmail");
 const e = require("express");
-const data = require("../data/base.js");
 const apiImage = require("../data/base.js");
 
 const getTripById = async (id) => {
@@ -39,9 +38,6 @@ const createTrip = async (userId, tripBody) => {
   let parsedId = validation.checkString(userId, "UserId");
   let startDate = tripBody.body.tripDate.startDate.split("T")[0];
   let endDate = tripBody.body.tripDate.endDate.split("T")[0];
-  let image = await data.getPhotos(tripBody.body.destination);
-  let coords = await data.getLocationsCoordinates(tripBody.body.destination);
-
   const newObj = {
     cur_location: tripBody.body.cur_location,
     destination: tripBody.body.destination,
@@ -50,11 +46,7 @@ const createTrip = async (userId, tripBody) => {
       endDate: endDate,
     },
     notes: "",
-    image: image,
-    destCord: coords,
   };
-  console.log("newObj");
-  console.log(newObj);
 
   let loop = new Date(startDate);
   endDate = new Date(endDate);

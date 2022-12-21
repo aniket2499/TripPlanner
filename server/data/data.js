@@ -22,7 +22,7 @@ const getAllRestaurant = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
   // console.log(baseData);
   let latitude = baseData.lat;
-  let longitude = baseData.long;
+  let longitude = baseData.lon;
   let min = 1;
   let max = 100;
   try {
@@ -54,8 +54,6 @@ const getAllRestaurant = async (location, pg, rating) => {
             "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
           },
         });
-
-        console.log("Displaying Data from API!!" + data);
         for (let i = 0; i < data.length; i++) {
           let imageID = Math.floor(Math.random() * (max - min) + min);
           let getImage = await cityData.getRestarauntImages(imageID);
@@ -88,7 +86,7 @@ const getAllRestaurant = async (location, pg, rating) => {
 const getAllAttractions = async (location, pg, rating) => {
   const baseData = await cityData.getLocationsCoordinates(location);
   let latitude = baseData.lat;
-  let longitude = baseData.long;
+  let longitude = baseData.lon;
   try {
     const cachedData = await client.hGet(`${location}cachedAttractions`, pg);
     if (cachedData) {
@@ -157,7 +155,7 @@ const getAllHotels = async (location, pg) => {
         const data = await amadeus.referenceData.locations.hotels.byGeocode.get(
           {
             latitude: newLocation.lat,
-            longitude: newLocation.long,
+            longitude: newLocation.lon,
             radius: 50,
             radiusUnit: "MILE",
             hotelSource: "ALL",
