@@ -59,6 +59,7 @@ const Restaurants = () => {
   const allState = useSelector((state) => state);
   const trips = useSelector((state) => state.trips);
   const id = useParams().tripid;
+  const dateIdMap = [];
   console.log("id", id);
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const Restaurants = () => {
   }, []);
 
   const addRestToBin = (tripId, restaurantId, restaurant, visitDate) => {
+    console.log(visitDate);
     dispatch(actions.binRestaurant(tripId, restaurantId));
     dispatch(addRestaurant(tripId, restaurant, visitDate));
   };
@@ -103,8 +105,9 @@ const Restaurants = () => {
   // console.log("trips");
 
   // console.log(trips);
+  let index = null;
   if (trips.length !== 0) {
-    let index = trips.findIndex((x) => x._id === id);
+    index = trips.findIndex((x) => x._id === id);
     console.log("index is : " + index);
     destination = trips[index].destination.split(",")[0];
   }
@@ -118,15 +121,27 @@ const Restaurants = () => {
             return;
           }
           let resData = [];
+          for (let i = 0; i < trips[index].itinerary.length; i++) {
+            for (
+              let j = 0;
+              j < trips[index].itinerary[i].placesToVisit.length;
+              j++
+            ) {
+              dateIdMap.push({
+                id: trips[index].itinerary[i].placesToVisit[j].id,
+                date: trips[index].itinerary[i].date,
+              });
+            }
+          }
           for (let i = 0; i < data.length; i++) {
             data[i].saved = false;
             data[i].pickerOpen = false;
-            data[i].startDate = dayjs(new Date())
-              .format("MM/DD/YYYY")
-              .toString();
-            console.log(
-              "date is aniket : " + dayjs(new Date()).format("MM/DD/YYYY"),
-            );
+            let arr = dateIdMap.find((x) => x.id === data[i].location_id);
+            if (arr) {
+              data[i].startDate = arr.date;
+            } else {
+              data[i].startDate = trips[index].tripDate.startDate;
+            }
           }
           for (let i = 0; i < data.length; i++) {
             if (data[i].ad_position) {
@@ -493,288 +508,6 @@ const Restaurants = () => {
         </Grid>
         <Grid item xs={12} sm={12} md={5.5} lg={5.5}>
           <Maps />
-          <Paper elevation={3}>
-            <Box sx={{ p: 2 }}>
-              {/* {open && (
-                    <div>
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          top: "90%",
-                          left: "80%",
-                          transform: "translate(-61%, -84%)",
-                          width: "33rem",
-                          height: "20rem",
-                          bgcolor: "background.paper",
-                          border: "2px solid #000",
-                          boxShadow: 24,
-                          borderRadius: 2,
-                          p: 4,
-                        }}
-                      >
-                        <Grid container sx={{ mt: "0.2rem" }}>
-                          <Grid item xs={12} sm={9} md={8} lg={12}>
-                            <Typography
-                              variant="body2"
-                              component="div"
-                              fontWeight="fontWeightBold"
-                            >
-                              {hotel.name}
-                            </Typography>
-                            <div style={{ marginTop: "0.3rem" }}>
-                              <Typography
-                                variant="body2"
-                                fontWeight="fontWeightLight"
-                              >
-                                Grand, Indo-Saracenic-style, 26m-tall triumphal
-                                stone arch, built on the waterfront in 1924.Situated
-                                at the tip of Apollo’s Blunder in South Mumbai, the
-                                Gateway of India is a great place to start your
-                                sightseeing in Mumbai. The gateway was built in
-                                1924, in memorial to King George V of England, who
-                                landed in India at the same place in 1911.
-                              </Typography>
-                            </div>
-                            <Grid container sx={{ mt: "0.7rem" }}>
-                              <Grid item xs={12} sm={9} md={8} lg={8}>
-                                <Button
-                                  variant="contained"
-                                  id={hotel.dupeId}
-                                  onClick={(e) => {
-                                    if (hotel.saved === true) {
-                                      tripService.addHotelToTrip(id, {
-                                        dupeId: hotel.id,
-                                      });
-                                    } else {
-                                    }
-                                    hotel.saved = !hotel.saved;
-                                    setSavedButton(!savedButton);
-                                  }}
-                                >
-                                  {hotel.saved ? (
-                                    <TurnedInIcon />
-                                  ) : (
-                                    <TurnedInNotIcon />
-                                  )}
-                                  <Typography variant="body2">
-                                    {hotel.saved ? "Remove From Bin" : "Add To Bin"}
-                                  </Typography>
-                                </Button>
-                              </Grid>
-                              <Grid item xs={12} sm={9} md={8} lg={4}>
-                                <Stack direction="row">
-                                  {hotel.rating === 1 ? (
-                                    <StarIcon
-                                      sx={{
-                                        color: "primary.main",
-                                        "&.half": {
-                                          color: "yellow",
-                                          width: 20,
-                                          height: 20,
-                                        },
-                                      }}
-                                    />
-                                  ) : hotel.rating === 2 ? (
-                                    <div>
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                    </div>
-                                  ) : hotel.rating === 3 ? (
-                                    <div>
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                    </div>
-                                  ) : hotel.rating === 4 ? (
-                                    <div>
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                    </div>
-                                  ) : hotel.rating === 5 ? (
-                                    <div>
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                      <StarIcon
-                                        sx={{
-                                          color: "primary.main",
-                                          "&.half": {
-                                            color: "yellow",
-                                            width: 20,
-                                            height: 20,
-                                          },
-                                        }}
-                                      />
-                                    </div>
-                                  ) : (
-                                    <div></div>
-                                  )}
-                                </Stack>
-                              </Grid>
-                            </Grid>
-                            <Grid style={{ marginTop: "1rem" }}>
-                              <Typography
-                                variant="body2"
-                                fontWeight="fontWeightBold"
-                              >
-                                Amenities :
-                              </Typography>
-                              <Stack direction="row" spacing={2} sx={{ pt: 1 }}>
-                                {hotel.amenities.map((amenity) => (
-                                  <div>
-                                    <Typography
-                                      variant="body2"
-                                      fontWeight="fontWeightLight"
-                                    >
-                                      {amenity}
-                                    </Typography>
-                                  </div>
-                                ))}
-                              </Stack>
-                            </Grid>
-                            <Grid
-                              style={{
-                                marginTop: "0.8rem",
-                                textAlign: "center",
-                              }}
-                            >
-                              <Button onClick={handleClose}>
-                                <DisabledByDefaultTwoToneIcon
-                                  sx={{
-                                    color: "primary.main",
-                                    width: 40,
-                                    height: 40,
-                                  }}
-                                />
-                              </Button>
-                            </Grid>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </div>
-                  )} */}
-            </Box>
-          </Paper>
         </Grid>
       </Grid>
     );
