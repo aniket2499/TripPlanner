@@ -53,6 +53,8 @@ const createTrip = async (userId, tripBody) => {
     image: image,
     destCord: coords,
   };
+  console.log("newObj");
+  console.log(newObj);
 
   let loop = new Date(startDate);
   endDate = new Date(endDate);
@@ -122,7 +124,7 @@ const updateTripById = async (id, updateTripBody) => {
       const updatedTrip = await Trip.findByIdAndUpdate(
         id,
         { $set: trip },
-        { new: true }
+        { new: true },
       );
 
       if (updatedTrip) {
